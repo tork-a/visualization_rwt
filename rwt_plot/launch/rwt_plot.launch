@@ -1,0 +1,5 @@
+<launch>
+  <node pkg="roswww" type="webserver.py" name="roswww">
+  </node>
+  <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" />
+</launch>
