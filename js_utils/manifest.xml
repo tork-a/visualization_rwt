@@ -1,0 +1,14 @@
+<package>
+  <description brief="js_utils">
+
+     js_utils
+
+  </description>
+  <author>Ryohei Ueda</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/js_utils</url>
+
+</package>
+
+
