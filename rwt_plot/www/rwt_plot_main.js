@@ -113,7 +113,7 @@ $(function() {
         }
         else {
             if (accessor[0].match(/\[[\d]+\]/)) {
-                var array_index = parseInt(accessor[0].match(/\[[\d]+\]/)[0], 10);
+                var array_index = parseInt(accessor[0].match(/\[([\d])+\]/)[1], 10);
                 return getValFromAccessor(msg[accessor[0][array_index]], accessor.slice(1));
             }
             else {
