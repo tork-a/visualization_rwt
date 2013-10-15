@@ -1,9 +1,6 @@
 visualization_rwt
 =================
 
-visualization packages visualization_rwt
-=================
-
 visualization packages using rwt
 
 INSTALL
