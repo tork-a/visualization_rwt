@@ -117,7 +117,7 @@ $(function() {
         else {
             if (accessor[0].match(/\[[\d]+\]/)) {
                 var array_index = parseInt(accessor[0].match(/\[([\d]+)\]/)[1], 10);
-                return getValFromAccessor(msg[accessor[0][array_index]], accessor.slice(1));
+                return getValFromAccessor(msg[accessor[0].split("[")[0]][array_index], accessor.slice(1));
             }
             else {
                 return getValFromAccessor(msg[accessor[0]], accessor.slice(1));
@@ -166,7 +166,7 @@ $(function() {
         ros.getTopicType(topic_name, function(topic_type) {
             ros.getMessageDetails(topic_type, function(details) {
                 var decoded = ROSLIB.Ros.decodeTypeDefs(details);
-                $("#message-detail").find("pre").html(JSON.stringify(decoded, null, "  "));
+                $("#message-detail").find("pre").html(JSON.stringify(decoded, null, "  ")); // pretty print
             });
         });
     });
