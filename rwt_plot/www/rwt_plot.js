@@ -9,6 +9,9 @@ ROSLIB.RWTPlot = function(spec) {
     this.plot = null;
     this.use_timestamp = spec.timestamp;
 };
+ROSLIB.RWTPlot.prototype.clearData = function() {
+    this.data = [];
+};
 
 ROSLIB.RWTPlot.prototype.initializePlot = function($content, spec, data) {
     // creating plot object integrating with jquery object

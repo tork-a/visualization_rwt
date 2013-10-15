@@ -5,9 +5,29 @@
   </head>
   <body>
     <div class="container">
-      <h1>hello world</h1>
+      <div class="page-heading">
+        <h1>rwt_plot</h1>
+      </div>
+      <div id="topic-area">
+        <form id="topic-form">
+          <label for="topic-select">topic</label>
+          <select id="topic-select">
+          </select>
+          <input type="name" name="field-accessor" id="field-accessor" placeholder="like header/seq"/>
+          <input type="submit" value="OK" />
+        </form>
+      </div>
+      <div id="plot-area" style="width: 800px; height: 400px;"></div>
+    </div>
+    <div id="message-detail">
+      <pre></pre>
     </div>
     <script type="text/javascript" src="/rwt_plot/flot/jquery.min.js"></script>
+    <script type="text/javascript" src="/roslibjs/eventemitter2.min.js"></script>
+    <script type="text/javascript" src="/roslibjs/roslibjs/build/roslib.js"></script>
     <script type="text/javascript" src="/rwt_plot/flot/jquery.flot.js"></script>
+    <script type="text/javascript" src="/js_utils/lodash.min.js"></script>
+    <script type="text/javascript" src="/rwt_plot/rwt_plot.js"></script>
+    <script type="text/javascript" src="/rwt_plot/rwt_plot_main.js"></script>
   </body>
 </html>
