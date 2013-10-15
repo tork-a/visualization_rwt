@@ -7,7 +7,7 @@ INSTALL
 -------
 Please install [rwt_ros](https://github.com/tork-a/rwt_ros) first
 ```sh
-rosws set --git visualization_rwt https://github.com/tork-a/rwt_ros.git
+rosws set --git rwt_ros https://github.com/tork-a/rwt_ros.git
 rosws update rwt_ros
 ```
 
