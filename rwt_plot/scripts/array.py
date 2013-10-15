@@ -15,7 +15,9 @@ def main():
             counter = 0
         arr = Float64MultiArray()
         arr.data = [math.sin(2 * math.pi / RESOLUTION * counter),
-                    math.cos(2 * math.pi / RESOLUTION * counter)]
+                    math.cos(2 * math.pi / RESOLUTION * counter),
+                    -math.sin(2 * math.pi / RESOLUTION * counter),
+                    -math.cos(2 * math.pi / RESOLUTION * counter)]
         pub.publish(arr)
         rospy.sleep(0.05)
         counter = counter + 1
