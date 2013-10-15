@@ -2,31 +2,46 @@
 <html>
   <head>
     <meta charset="utf-8" />
+    <link rel="stylesheet" href="/rwt_utils_3rdparty/bootstrap/css/bootstrap.min.css">
   </head>
   <body>
     <div class="container">
-      <div class="page-heading">
-        <h1>rwt_plot</h1>
+      <div class="page-header">
+        <h1><span class="glyphicon glyphicon-star"></span>rwt_plot <small>robotwebtools plot</small></h1>
       </div>
       <div id="topic-area">
-        <form id="topic-form">
-          <label for="topic-select">topic</label>
-          <select id="topic-select">
-          </select>
-          <input type="name" name="field-accessor" id="field-accessor" placeholder="like header/seq"/>
-          <input type="submit" value="OK" />
+        <form id="topic-form" role="form" class="form-inline">
+          <div class="form-group">
+            <label class="sr-only" for="topic-select">topic</label>
+            <select id="topic-select" class="form-control">
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="sr-only" for="field-accessor">field-accessor</label>
+            <input type="name" class="form-control" name="field-accessor" id="field-accessor" placeholder="field like header/seq"/>
+          </div>
+          <button type="submit" class="btn btn-primary">plot</button>
         </form>
       </div>
-      <div id="plot-area" style="width: 800px; height: 400px;"></div>
-    </div>
-    <div id="message-detail">
-      <pre></pre>
+      <div class="row">
+        <div id="plot-area" class="col-md-8" style="height: 400px;"></div>
+        <div id="message-detail" class="col-md-4">
+          <div class="row">
+            <h2>topic type info</h2>
+          </div>
+          <div class="row">
+            <pre></pre>
+          </div>
+          
+        </div>
+        
+      </div>
     </div>
     <script type="text/javascript" src="/rwt_plot/flot/jquery.min.js"></script>
     <script type="text/javascript" src="/roslibjs/eventemitter2.min.js"></script>
     <script type="text/javascript" src="/roslibjs/roslibjs/build/roslib.js"></script>
     <script type="text/javascript" src="/rwt_plot/flot/jquery.flot.js"></script>
-    <script type="text/javascript" src="/js_utils/lodash.min.js"></script>
+    <script type="text/javascript" src="/rwt_utils_3rdparty/lodash.min.js"></script>
     <script type="text/javascript" src="/rwt_plot/rwt_plot.js"></script>
     <script type="text/javascript" src="/rwt_plot/rwt_plot_main.js"></script>
   </body>

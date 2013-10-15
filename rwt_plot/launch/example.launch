@@ -6,4 +6,7 @@
   </node>
   <node pkg="rwt_plot" type="random_point.py" name="$(anon random_point)">
   </node>
+  <node pkg="rwt_plot" type="sin.py" name="$(anon sin)"></node>
+  <node pkg="rwt_plot" type="cos.py" name="$(anon cos)"></node>
+  <node pkg="rwt_plot" type="array.py" name="$(anon array)"></node>
 </launch>
