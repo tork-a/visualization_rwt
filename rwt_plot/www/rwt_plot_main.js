@@ -101,7 +101,7 @@ $(function() {
     
     plot.initializePlot("#plot-area", {
         interaction: {
-            redrawOverlayInterval: 10000 / 60
+            redrawOverlayInterval: 100000 / 60
         },
         yaxis: {
             auto_scale: true
