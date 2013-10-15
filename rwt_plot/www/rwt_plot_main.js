@@ -112,7 +112,13 @@ $(function() {
             return msg;
         }
         else {
-            return getValFromAccessor(msg[accessor[0]], accessor.slice(1));
+            if (accessor[0].match(/\[[\d]+\]/)) {
+                var array_index = parseInt(accessor[0].match(/\[[\d]+\]/)[0], 10);
+                return getValFromAccessor(msg[accessor[0][array_index]], accessor.slice(1));
+            }
+            else {
+                return getValFromAccessor(msg[accessor[0]], accessor.slice(1));
+            }
         }
     };
     
@@ -126,7 +132,6 @@ $(function() {
         e.preventDefault();
         var topic_name = $("#topic-select").val();
         var accessor = $("#field-accessor").val().split("/");
-        console.log(accessor);
         
         if (sub) {
             console.log("unsubscribe");
