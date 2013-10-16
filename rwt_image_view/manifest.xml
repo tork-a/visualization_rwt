@@ -1,0 +1,14 @@
+<package>
+  <description brief="rwt_image_view">
+
+     rwt_image_view
+
+  </description>
+  <author>jskuser</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/rwt_image_view</url>
+
+</package>
+
+
