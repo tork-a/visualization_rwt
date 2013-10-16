@@ -1,10 +1,11 @@
+
 $(function() {
 
     // ROSLIB extention
     /**
      * Retrieves a type of ROS topic.
      *
-     * @param callback function with params:
+     * @param callback - function with params:
      *   * type - String of the topic type
      */
     ROSLIB.Ros.prototype.getTopicType = function(topic, callback) {
@@ -24,8 +25,9 @@ $(function() {
     /**
      * Retrieves a detail of ROS message.
      *
-     * @param callback function with params:
+     * @param callback - function with params:
      *   * details - Array of the message detail
+     * @param message - String of a topic type
      */
     ROSLIB.Ros.prototype.getMessageDetails = function(message, callback) {
         var messageDetailClient = new ROSLIB.Service({
@@ -43,15 +45,22 @@ $(function() {
     };
     
     /**
-     * encode a typedefs into dictionary.
-     * @param type_defs array of type_def dictionary
+     * Encode a typedefs into a dictionary like `rosmsg show foo/bar`
+     * @param type_defs - array of type_def dictionary
      */
     ROSLIB.Ros.decodeTypeDefs = function(type_defs) {
         var type_def_dict = {};
         var the_type = type_defs[0];
         return ROSLIB.Ros._decodeTypeDefs(type_defs[0], type_defs);
     };
-    
+
+    /**
+     * Internal function of ROSLIB.Ros.decodeTypeDefs.
+     * It calls itself recursively to resolve type definition
+     * using hint_defs.
+     * @param the_type - array of type_def dictionary
+     * @param hint_defs - array of typedefs
+     */
     ROSLIB.Ros._decodeTypeDefs = function(the_type, hint_defs) {
         var type_def_dict = {};
         for (var i = 0; i < the_type.fieldnames.length; i++) {
