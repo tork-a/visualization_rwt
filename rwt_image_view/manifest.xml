@@ -4,9 +4,13 @@
      rwt_image_view
 
   </description>
-  <author>jskuser</author>
+  <author>Ryohei Ueda</author>
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
+  <depend package="mjpeg_server" />
+  <depend package="roslibjs" />
+  <depend package="rwt_utils_3rdparty" />
+  <depend package="mjpegcanvas" />
   <url>http://ros.org/wiki/rwt_image_view</url>
 
 </package>
