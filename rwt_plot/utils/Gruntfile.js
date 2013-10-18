@@ -15,7 +15,16 @@ module.exports = function(grunt) {
         src: '../www/rwt_plot.js',
         dest: '../www/rwt_plot.min.js'
       }
-    }
+    },
+    jshint: {
+      options: {
+        jshintrc: '.jshintrc'
+      },
+      files: [
+        'Gruntfile.js',
+        '../www/rwt_plot.js'
+      ]
+    },
   });
 
   // reading npm tasks
