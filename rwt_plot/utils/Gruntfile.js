@@ -25,6 +25,10 @@ module.exports = function(grunt) {
         '../www/rwt_plot.js'
       ]
     },
+    watch: {
+      files: ['../src/*.js', 'Gruntfile.js'],
+      tasks: ['build']
+    }
   });
 
   // reading npm tasks
