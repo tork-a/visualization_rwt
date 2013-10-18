@@ -1,0 +1,12 @@
+{
+  "name": "rwt_plot",
+  "version": "0.0.0",
+  "description": "rwt_plot",
+  "main": "Gruntfile.js",
+  "author": "Ryohei Ueda",
+  "license": "BSD",
+  "repository": "http://github.com/tork-a/visualization_rwt/rwt_plot",
+  "devDependencies": {
+    "grunt": "~0.4.1"
+  }
+}
