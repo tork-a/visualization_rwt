@@ -104,7 +104,7 @@ ROSLIB.RWTPlot.prototype.addTimestampedData = function(stamp, data) {
         data = [data];          // force to encapsulate into array
     data.stamp = stamp;
     this.data.push(data);
-
+  
     var plot_data = [];
     var oldest_stamp = this.data[0].stamp;
     // plot_data := [[[x1, y1], [x1, y2], [x1, y3], ...], [[x1, z1], [x1, z2], ...], ...]
