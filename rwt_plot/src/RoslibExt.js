@@ -93,34 +93,38 @@ ROSLIB.Ros.prototype.decodeTypeDefs = function(type_defs) {
   return decodeTypeDefsRec(type_defs[0], type_defs);
 };
 
-  ROSLIB.Time = function(spec) {
-    this.nsecs = (spec || {}).nsecs || 0;
-    this.secs = (spec || {}).secs || 0;
-  };
+ROSLIB.Time = function(spec) {
+  this.nsecs = (spec || {}).nsecs || 0;
+  this.secs = (spec || {}).secs || 0;
+};
 
-  ROSLIB.Time.now = function() {
-    var now = new Date();
-    var msec = now.getTime();
-    return new ROSLIB.Time({
-      secs: Math.ceil(msec / 1000),
-      nsecs: (msec % 1000) * 1000000
-    });
-  };
+ROSLIB.Time.now = function() {
+  var now = new Date();
+  var msec = now.getTime();
+  return new ROSLIB.Time({
+    secs: Math.ceil(msec / 1000),
+    nsecs: (msec % 1000) * 1000000
+  });
+};
 
-  ROSLIB.Time.prototype.toSec = function() {
-      return this.secs + this.nsecs / 1000000000.0;
-  };
+ROSLIB.Time.prototype.toSec = function() {
+  return this.secs + this.nsecs / 1000000000.0;
+};
 
-  ROSLIB.Time.prototype.substract = function(another) {
-    var sec_diff = this.secs - another.secs;
-    var nsec_diff = this.nsecs - another.nsecs;
-    if (nsec_diff < 0) {
-      sec_diff = sec_diff - 1;
-      nsec_diff = 1000000000 + nsec_diff;
-    }
-    return new ROSLIB.Time({
-      secs: sec_diff,
-      nsecs: nsec_diff
-    });
-  };
+ROSLIB.Time.prototype.substract = function(another) {
+  var sec_diff = this.secs - another.secs;
+  var nsec_diff = this.nsecs - another.nsecs;
+  if (nsec_diff < 0) {
+    sec_diff = sec_diff - 1;
+    nsec_diff = 1000000000 + nsec_diff;
+  }
+  return new ROSLIB.Time({
+    secs: sec_diff,
+    nsecs: nsec_diff
+  });
+};
 
+ROSLIB.Time.prototype.equal = function(another) {
+  var diff = this.substract(another);
+  return ((diff.secs === 0) && (diff.nsecs === 0));
+};

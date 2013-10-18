@@ -50,8 +50,9 @@ ROSLIB.RWTPlot.prototype.addRawData = function(data) {
 
   // check the dimension
   var data_dimension = _.isArray(data) ? data.length : 1;
-  if (data_dimension == 1)
+  if (data_dimension === 1) {
     data = [data];          // force to encapsulate into array
+  }
   this.data.push(data);
 
   // auto scalling
@@ -82,7 +83,7 @@ ROSLIB.ROSTimeDifference = function(timea, timeb) {
   return (timea.secs - timeb.secs) + (timea.nsecs - timeb.nsecs) / 1000000000.0;
 };
 
-ROSLIB.RWTPlot.prototype.addTimestampedData = function(stamp, data) {
+ROSLIB.RWTPlot.prototype.chopTimestampedData = function(stamp, data) {
   // check the oldest message
   if (this.data.length > 0) {
     // chop here
@@ -98,10 +99,14 @@ ROSLIB.RWTPlot.prototype.addTimestampedData = function(stamp, data) {
     }
     this.data = this.data.slice(chop_num);
   }
-  
+};
+
+ROSLIB.RWTPlot.prototype.addTimestampedData = function(stamp, data) {
+  this.chopTimestampedData(stamp, data);
   var data_dimension = _.isArray(data) ? data.length : 1;
-  if (data_dimension == 1)
+  if (data_dimension === 1) {
     data = [data];          // force to encapsulate into array
+  }
   data.stamp = stamp;
   this.data.push(data);
   
@@ -113,7 +118,7 @@ ROSLIB.RWTPlot.prototype.addTimestampedData = function(stamp, data) {
       var value = this.data[i][j];
       // scale x(i) here
       // oldest_stamp = 0, stamp = this.max_data
-      if (stamp != oldest_stamp) {
+      if (!stamp.equal(oldest_stamp)) {
         var x = ROSLIB.ROSTimeDifference(this.data[i].stamp, oldest_stamp);
         var new_data = [x, value]; // [x1, y1] or [x1, z1]
         if (plot_data.length <= j) {
@@ -241,34 +246,38 @@ ROSLIB.Ros.prototype.decodeTypeDefs = function(type_defs) {
   return decodeTypeDefsRec(type_defs[0], type_defs);
 };
 
-  ROSLIB.Time = function(spec) {
-    this.nsecs = (spec || {}).nsecs || 0;
-    this.secs = (spec || {}).secs || 0;
-  };
+ROSLIB.Time = function(spec) {
+  this.nsecs = (spec || {}).nsecs || 0;
+  this.secs = (spec || {}).secs || 0;
+};
 
-  ROSLIB.Time.now = function() {
-    var now = new Date();
-    var msec = now.getTime();
-    return new ROSLIB.Time({
-      secs: Math.ceil(msec / 1000),
-      nsecs: (msec % 1000) * 1000000
-    });
-  };
+ROSLIB.Time.now = function() {
+  var now = new Date();
+  var msec = now.getTime();
+  return new ROSLIB.Time({
+    secs: Math.ceil(msec / 1000),
+    nsecs: (msec % 1000) * 1000000
+  });
+};
 
-  ROSLIB.Time.prototype.toSec = function() {
-      return this.secs + this.nsecs / 1000000000.0;
-  };
+ROSLIB.Time.prototype.toSec = function() {
+  return this.secs + this.nsecs / 1000000000.0;
+};
 
-  ROSLIB.Time.prototype.substract = function(another) {
-    var sec_diff = this.secs - another.secs;
-    var nsec_diff = this.nsecs - another.nsecs;
-    if (nsec_diff < 0) {
-      sec_diff = sec_diff - 1;
-      nsec_diff = 1000000000 + nsec_diff;
-    }
-    return new ROSLIB.Time({
-      secs: sec_diff,
-      nsecs: nsec_diff
-    });
-  };
+ROSLIB.Time.prototype.substract = function(another) {
+  var sec_diff = this.secs - another.secs;
+  var nsec_diff = this.nsecs - another.nsecs;
+  if (nsec_diff < 0) {
+    sec_diff = sec_diff - 1;
+    nsec_diff = 1000000000 + nsec_diff;
+  }
+  return new ROSLIB.Time({
+    secs: sec_diff,
+    nsecs: nsec_diff
+  });
+};
 
+ROSLIB.Time.prototype.equal = function(another) {
+  var diff = this.substract(another);
+  return ((diff.secs === 0) && (diff.nsecs === 0));
+};

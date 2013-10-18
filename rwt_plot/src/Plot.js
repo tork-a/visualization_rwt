@@ -50,8 +50,9 @@ ROSLIB.RWTPlot.prototype.addRawData = function(data) {
 
   // check the dimension
   var data_dimension = _.isArray(data) ? data.length : 1;
-  if (data_dimension == 1)
+  if (data_dimension === 1) {
     data = [data];          // force to encapsulate into array
+  }
   this.data.push(data);
 
   // auto scalling
@@ -82,7 +83,7 @@ ROSLIB.ROSTimeDifference = function(timea, timeb) {
   return (timea.secs - timeb.secs) + (timea.nsecs - timeb.nsecs) / 1000000000.0;
 };
 
-ROSLIB.RWTPlot.prototype.addTimestampedData = function(stamp, data) {
+ROSLIB.RWTPlot.prototype.chopTimestampedData = function(stamp, data) {
   // check the oldest message
   if (this.data.length > 0) {
     // chop here
@@ -98,10 +99,14 @@ ROSLIB.RWTPlot.prototype.addTimestampedData = function(stamp, data) {
     }
     this.data = this.data.slice(chop_num);
   }
-  
+};
+
+ROSLIB.RWTPlot.prototype.addTimestampedData = function(stamp, data) {
+  this.chopTimestampedData(stamp, data);
   var data_dimension = _.isArray(data) ? data.length : 1;
-  if (data_dimension == 1)
+  if (data_dimension === 1) {
     data = [data];          // force to encapsulate into array
+  }
   data.stamp = stamp;
   this.data.push(data);
   
@@ -113,7 +118,7 @@ ROSLIB.RWTPlot.prototype.addTimestampedData = function(stamp, data) {
       var value = this.data[i][j];
       // scale x(i) here
       // oldest_stamp = 0, stamp = this.max_data
-      if (stamp != oldest_stamp) {
+      if (!stamp.equal(oldest_stamp)) {
         var x = ROSLIB.ROSTimeDifference(this.data[i].stamp, oldest_stamp);
         var new_data = [x, value]; // [x1, y1] or [x1, z1]
         if (plot_data.length <= j) {

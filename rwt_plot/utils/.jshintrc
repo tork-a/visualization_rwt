@@ -18,7 +18,6 @@
   "eqnull": false,
   "browser": true,
   "devel": true,
-  "es5": true,
   "strict": false,
   "trailing": true,
   "quotmark": "single",

@@ -26,14 +26,14 @@ module.exports = function(grunt) {
       ]
     },
     watch: {
-      files: ['../src/*.js', 'Gruntfile.js'],
+      files: ['../src/*.js', 'Gruntfile.js', '.jshintrc'],
       tasks: ['build']
     }
   });
 
   // reading npm tasks
   for(var taskName in pkg.devDependencies) {
-    if(taskName.substring(0, 6) == 'grunt-') {
+    if(taskName.substring(0, 6) === 'grunt-'.toString()) {
       grunt.loadNpmTasks(taskName);
     }
   }
@@ -41,4 +41,3 @@ module.exports = function(grunt) {
   grunt.registerTask('build', ['concat', 'jshint', 'uglify']);
   grunt.registerTask('default', ['build']);
 };
-
