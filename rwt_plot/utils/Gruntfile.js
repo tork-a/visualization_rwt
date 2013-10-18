@@ -38,6 +38,7 @@ module.exports = function(grunt) {
     }
   }
   
-  grunt.registerTask('build', ['concat', 'uglify']);
+  grunt.registerTask('build', ['concat', 'jshint', 'uglify']);
   grunt.registerTask('default', ['build']);
 };
+
