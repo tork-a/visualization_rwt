@@ -1,8 +1,17 @@
 // Plot.js
 
-// jquery, jquery.flot, lodash.js and roslib.js are required to be loaded before.
+/**
+ * @fileOverview a file to define RWTPlot class.
+ * @author Ryohei Ueda
+ */
+
 
 // class
+/**
+ * a class for plotting
+ * @class RWTPlot
+ * @param spec
+ */
 ROSLIB.RWTPlot = function(spec) {
   this.max_data = spec.max_data || 100; // defaults to 100
   this.data = [];

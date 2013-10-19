@@ -105,10 +105,12 @@ ROSLIB.Ros.prototype.decodeTypeDefs = function(type_defs) {
  * Represents a time whith seconds and nanoseconds
  * @class Time
  * @param spec - a dictionary which include nsecs and secs as the keys.
+ * @property secs {Integer} seconds
+ * @property nsecscs {Integer} nanoseconds (10^-9)
  */
 ROSLIB.Time = function(spec) {
-  this.nsecs = (spec || {}).nsecs || 0;
-  this.secs = (spec || {}).secs || 0;
+  this.nsecs = Math.ceil((spec || {}).nsecs || 0);
+  this.secs = Math.ceil((spec || {}).secs || 0);
 };
 
 ROSLIB.Time.now = function() {

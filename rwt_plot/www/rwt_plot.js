@@ -1,8 +1,17 @@
 // Plot.js
 
-// jquery, jquery.flot, lodash.js and roslib.js are required to be loaded before.
+/**
+ * @fileOverview a file to define RWTPlot class.
+ * @author Ryohei Ueda
+ */
+
 
 // class
+/**
+ * a class for plotting
+ * @class RWTPlot
+ * @param spec
+ */
 ROSLIB.RWTPlot = function(spec) {
   this.max_data = spec.max_data || 100; // defaults to 100
   this.data = [];
@@ -271,11 +280,13 @@ ROSLIB.Ros.prototype.decodeTypeDefs = function(type_defs) {
 /**
  * Represents a time whith seconds and nanoseconds
  * @class Time
- * @param spec - a dictionary which include nsecs and secs.
+ * @param spec - a dictionary which include nsecs and secs as the keys.
+ * @property secs {Integer} seconds
+ * @property nsecscs {Integer} nanoseconds (10^-9)
  */
 ROSLIB.Time = function(spec) {
-  this.nsecs = (spec || {}).nsecs || 0;
-  this.secs = (spec || {}).secs || 0;
+  this.nsecs = Math.ceil((spec || {}).nsecs || 0);
+  this.secs = Math.ceil((spec || {}).secs || 0);
 };
 
 ROSLIB.Time.now = function() {
