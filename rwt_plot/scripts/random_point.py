@@ -14,7 +14,7 @@ def main():
         msg.point.y = random() * 100;
         msg.point.z = random() * 100;
         pub.publish(msg)
-        rospy.sleep(0.1 * random())
+        rospy.sleep(0.003)
 
 
 if __name__ == "__main__":
