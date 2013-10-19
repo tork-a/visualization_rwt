@@ -2,7 +2,7 @@
 $(function() {
   
   var plot = new ROSLIB.RWTPlot({
-    max_data: 3,          // when using timestamp, it is regarded as seconds
+    max_data: 10,          // when using timestamp, it is regarded as seconds
     timestamp: true
   });
   
@@ -22,9 +22,8 @@ $(function() {
       return msg;
     }
     else {
-      if (accessor[0].match(/\[[\d]+\]/)) {
-        var array_index = parseInt(accessor[0].match(/\[([\d]+)\]/)[1], 10);
-        return getValFromAccessor(msg[accessor[0].split("[")[0]][array_index], accessor.slice(1));
+      if (_.isArray(accessor[0])) {
+        return getValFromAccessor(msg[accessor[0][0]][accessor[0][1]], accessor.slice(1));
       }
       else {
         return getValFromAccessor(msg[accessor[0]], accessor.slice(1));
@@ -54,10 +53,29 @@ $(function() {
         messageType: topic_type
       });
       plot.clearData();
+      var i = 0;
+      var prev = ROSLIB.Time.now();
+      accessor = _.map(accessor, function(a) {
+        if (a.match(/\[[\d]+\]/)) {
+          var array_index = parseInt(a.match(/\[([\d]+)\]/)[1], 10);
+          return [a.split("[")[0], array_index];
+        }
+        else {
+          return a;
+        }
+      });
       sub.subscribe(function(msg) {
+        var now = ROSLIB.Time.now();
+        //plot.addData(getValFromAccessor(msg, accessor));
         plot.addData(ROSLIB.Time.now(),
                      getValFromAccessor(msg, accessor));
+        
         plot.draw();
+        var diff = now.substract(prev);
+        //if (diff.toSec() > 1.0) {
+        //console.log('sec: ' + diff.toSec());
+        //}
+        prev = now;
       });
     });
     return false;

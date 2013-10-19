@@ -27,7 +27,15 @@ module.exports = function(grunt) {
     },
     watch: {
       files: ['../src/*.js', 'Gruntfile.js', '.jshintrc'],
-      tasks: ['build']
+      tasks: ['build', 'doc']
+    },
+    jsdoc: {
+      dist: {
+        src: ['../src/*.js'],
+        options: {
+          destination: '../doc'
+        }
+      }
     }
   });
 
@@ -40,4 +48,5 @@ module.exports = function(grunt) {
   
   grunt.registerTask('build', ['concat', 'jshint', 'uglify']);
   grunt.registerTask('default', ['build']);
+  grunt.registerTask('doc', ['jsdoc']);
 };

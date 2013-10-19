@@ -8,6 +8,7 @@ ROSLIB.RWTPlot = function(spec) {
   this.data = [];
   this.plot = null;
   this.use_timestamp = spec.timestamp;
+  this.drawingp = false;
 };
 ROSLIB.RWTPlot.prototype.clearData = function() {
   this.data = [];
@@ -145,13 +146,33 @@ ROSLIB.RWTPlot.prototype.addData = function(data, data2) {
 };
 
 ROSLIB.RWTPlot.prototype.draw = function() {
+  var now = ROSLIB.Time.now();
   if (this.plot) {
     this.plot.setupGrid();
     this.plot.draw();
+    this.last_draw_time = now;
   }
 };
 
+
+
+
+ROSLIB.profile = function(func) {
+  var before = ROSLIB.Time.now();
+  func.call();
+  var after = ROSLIB.Time.now();
+  var diff = after.substract(before);
+  console.log('profile: ' + diff.toSec());
+};
+
 // RoslibExt.js
+
+/**
+ * @fileOverview a file to extend ROSLIB.
+ *  these are should be merged into roslibjs.
+ * @author Ryohei Ueda
+ */
+
 /**
  * Retrieves a type of ROS topic.
  *
@@ -246,6 +267,12 @@ ROSLIB.Ros.prototype.decodeTypeDefs = function(type_defs) {
   return decodeTypeDefsRec(type_defs[0], type_defs);
 };
 
+
+/**
+ * Represents a time whith seconds and nanoseconds
+ * @class Time
+ * @param spec - a dictionary which include nsecs and secs.
+ */
 ROSLIB.Time = function(spec) {
   this.nsecs = (spec || {}).nsecs || 0;
   this.secs = (spec || {}).secs || 0;
