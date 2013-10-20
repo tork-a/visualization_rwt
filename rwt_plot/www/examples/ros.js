@@ -1,6 +1,6 @@
 $(function() {
     var plot = new ROSLIB.RWTPlot({
-        max_data: 100
+        max_data: 50
     });
 
     plot.initializePlot("#plot-area", {
@@ -17,11 +17,14 @@ $(function() {
     });
     var sub = new ROSLIB.Topic({
             ros: ros,
-            name: "/random_float",
-            messageType: "std_msgs/Float64"
+      name: "/atlas/joint_states",
+      messageType: "sensor_msgs/JointState"
+            // name: "/random_float",
+            // messageType: "std_msgs/Float64"
     });
     sub.subscribe(function(msg) {
-        plot.addData(msg.data);
+      //plot.addData(msg.data);
+      plot.addData(msg.position[10]);
         plot.draw();
     });
 });

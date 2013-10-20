@@ -29,59 +29,108 @@ ROSLIB.RWTPlot.prototype.clearData = function() {
 };
 
 ROSLIB.RWTPlot.prototype.initializePlot = function($content, spec, data) {
-  // creating plot object integrating with jquery object
-  // `spec' is the spec for jquery.flot
-  var default_y_axis = {
-    min: 0,
-    //max: 1.0,
-    show: true
-  };
-  var default_x_axis = {
-    min: 0,
-    max: this.max_data,
-    show: true
-  };
-  var spec_x_axis = _.extend(default_x_axis, spec.xaxis || {});
-  var spec_y_axis = _.extend(default_y_axis, spec.yaxis || {});
-  if (spec_x_axis.auto_scale) {
-    this.x_auto_scale = true;
-    spec_x_axis.min = null;
-    spec_x_axis.max = null;
-  }
-  if (spec_y_axis.auto_scale) {
-    this.y_auto_scale = true;
-    spec_y_axis.min = null;
-    spec_y_axis.max = null;
-  }
-  var new_spec = _.extend(spec, {xaxis: spec_x_axis, yaxis: spec_y_axis});
-  this.plot = $.plot($content, [[[0, 200]]], new_spec);
+  var width = $($content).width();
+  var height = $($content).height();
+  var margin = {top: 20, right: 20, bottom: 20, left: 40};
+  var that = this;
+  this.x = d3.scale.linear()
+    .domain([0, this.max_data - 1])
+    .range([0, width - margin.left - margin.right]);
+
+  this.y = d3.scale.linear()
+    .domain([0, 0.3])
+    .range([height - margin.top - margin.bottom, 0]);
+
+  
+  this.svg = d3.select($content).append('svg')
+    .attr('class', 'rwt-plot')
+    .attr('width', width)
+    .attr('height', height)
+    .append('g')
+    .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+  
+  this.svg.append('defs').append('clipPath')
+    .attr('id', 'clip')
+    .append('rect')
+    .attr('width', width - margin.left - margin.right)
+    .attr('height', height - margin.top - margin.bottom);
+
+  // draw x axis
+  this.svg.append('g')
+    .attr('class', 'x axis')
+    .attr('transform', 'translate(0,' + this.y(0) + ')')
+    .call(d3.svg.axis().scale(this.x).orient('bottom'));
+  this.svg.append('g')
+    .attr('class', 'y axis')
+    .call(d3.svg.axis().scale(this.y).orient('left'));
+  this.line = d3.svg.line()
+    .x(function(d, i) { return that.x(i); })
+    .y(function(d, i) { return that.y(d); });
+  
+  this.paths = [];
+  this.arr_data = [];
+};
+
+ROSLIB.RWTPlot.prototype.allocatePath = function() {
+  this.last_time = ROSLIB.Time.now();
+  return this.svg.append('g')
+    .attr('clip-path', 'url(#clip)')
+    .append('path')
+    .datum(this.arr_data)
+    .attr('class', 'line')
+    .attr('d', this.line);
 };
 
 ROSLIB.RWTPlot.prototype.addRawData = function(data) {
   // check the dimension
-  var data_dimension = _.isArray(data) ? data.length : 1;
-  if (data_dimension === 1) {
-    data = [data];          // force to encapsulate into array
-  }
+  // var data_dimension = _.isArray(data) ? data.length : 1;
+  // if (data_dimension === 1) {
+  //   data = [data];          // force to encapsulate into array
+  // }
+  
+  var now = ROSLIB.Time.now();
   this.data.push(data);
-
-  var plot_data = [];
-  // plot_data := [[[x1, y1], [x1, y2], [x1, y3], ...], [[x1, z1], [x1, z2], ...], ...]
-  for (var i = 0; i < this.data.length(); i++) { // x_i := i
-    var arr = this.data.toArray();
-    for (var j = 0; j < arr[i].length; j++) {
-      var value = arr[i][j];
-      var new_data = [i, value]; // [x1, y1] or [x1, z1]
-      if (plot_data.length <= j) {
-        // adding new empty array to plot_data
-        plot_data.push([]);
-      }
-      plot_data[j].push(new_data);
-    }
+  this.arr_data = this.data.toArray();
+  if (this.paths.length == 0) {
+    // alloc path
+    this.paths.push(this.allocatePath());
   }
-  if (this.plot) {
-    this.plot.setData(plot_data);
+  if (this.data.length() == this.max_data) {
+    this.paths[0]
+      .datum(this.arr_data)
+      .attr('d', this.line)
+      .attr('transform', null)
+      .transition()
+      //.duration(0)
+      .ease('linear')
+      .attr('transform', 'translate(' + this.x(-1) + ',0)');
   }
+  else {
+    this.paths[0].datum(this.arr_data)
+    .attr('d', this.line)
+      .attr('transform', null)
+      .transition();
+    
+  }
+  this.last_time = now;
+  
+  // var plot_data = [];
+  // // plot_data := [[[x1, y1], [x1, y2], [x1, y3], ...], [[x1, z1], [x1, z2], ...], ...]
+  // for (var i = 0; i < this.data.length(); i++) { // x_i := i
+  //   var arr = this.data.toArray();
+  //   for (var j = 0; j < arr[i].length; j++) {
+  //     var value = arr[i][j];
+  //     var new_data = [i, value]; // [x1, y1] or [x1, z1]
+  //     if (plot_data.length <= j) {
+  //       // adding new empty array to plot_data
+  //       plot_data.push([]);
+  //     }
+  //     plot_data[j].push(new_data);
+  //   }
+  // }
+  // if (this.plot) {
+  //   this.plot.setData(plot_data);
+  // }
 };
 
 ROSLIB.ROSTimeToSec = function(timea) {
@@ -364,6 +413,10 @@ ROSLIB.Time.now = function() {
 
 ROSLIB.Time.prototype.toSec = function() {
   return this.secs + this.nsecs / 1000000000.0;
+};
+
+ROSLIB.Time.prototype.toMillSec = function() {
+  return this.secs * 1000 + this.nsecs / 1000000.0;
 };
 
 ROSLIB.Time.prototype.substract = function(another) {

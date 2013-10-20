@@ -126,6 +126,10 @@ ROSLIB.Time.prototype.toSec = function() {
   return this.secs + this.nsecs / 1000000000.0;
 };
 
+ROSLIB.Time.prototype.toMillSec = function() {
+  return this.secs * 1000 + this.nsecs / 1000000.0;
+};
+
 ROSLIB.Time.prototype.substract = function(another) {
   var sec_diff = this.secs - another.secs;
   var nsec_diff = this.nsecs - another.nsecs;
