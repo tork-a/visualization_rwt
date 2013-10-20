@@ -117,7 +117,7 @@ ROSLIB.Time.now = function() {
   var now = new Date();
   var msec = now.getTime();
   return new ROSLIB.Time({
-    secs: Math.ceil(msec / 1000),
+    secs: Math.floor(msec / 1000),
     nsecs: (msec % 1000) * 1000000
   });
 };
