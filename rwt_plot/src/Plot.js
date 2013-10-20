@@ -44,10 +44,16 @@ ROSLIB.RWTPlot.prototype.initializePlot = function($content, spec, data) {
   this.y_min_value = yaxis_min;
   this.y_max_value = yaxis_max;
 
-  
-  this.x = d3.scale.linear()
-    .domain([0, this.max_data - 1])
-    .range([0, width - margin.left - margin.right]);
+  if (this.use_timestamp) {
+    this.x = d3.scale.linear()
+      .domain([0, this.max_data])
+      .range([0, width - margin.left - margin.right]);
+  }
+  else {
+    this.x = d3.scale.linear()
+      .domain([0, this.max_data - 1])
+      .range([0, width - margin.left - margin.right]);
+  }
   
   this.y = d3.scale.linear()
     .domain([yaxis_min, yaxis_max])
@@ -75,12 +81,18 @@ ROSLIB.RWTPlot.prototype.initializePlot = function($content, spec, data) {
   this.svg.append('g')
     .attr('class', 'y axis')
     .call(d3.svg.axis().scale(this.y).orient('left'));
-  this.line = d3.svg.line()
-    .x(function(d, i) { return that.x(i); })
-    .y(function(d, i) { return that.y(d); });
+  if (this.use_timestamp) {
+    this.line = d3.svg.line()
+      .x(function(d, i) { return that.x(d[0]); })
+      .y(function(d, i) { return that.y(d[1]); });
+  }
+  else {
+   this.line = d3.svg.line()
+      .x(function(d, i) { return that.x(i); })
+      .y(function(d, i) { return that.y(d); });
+  }
   
   this.paths = [];
-  this.arr_data = [];
 };
 
 ROSLIB.RWTPlot.prototype.allocatePath = function(num) {
@@ -92,32 +104,35 @@ ROSLIB.RWTPlot.prototype.allocatePath = function(num) {
     .attr('d', this.line);
 };
 
+ROSLIB.RWTPlot.prototype.checkYAxisMinMax = function(data) {
+  var need_to_update = false;
+  for (var dataIndex = 0; dataIndex < data.length; dataIndex++) {
+    var val = data[dataIndex];
+    if (val < this.y_min_value) {
+      this.y_min_value = val;
+      need_to_update = true;
+    }
+    if (val > this.y_max_value) {
+      this.y_max_value = val;
+      need_to_update = true;
+    }
+  }
+  if (need_to_update) {
+    this.y.domain([this.y_min_value, this.y_max_value]);
+    this.svg.select('.y.axis')
+      .call(d3.svg.axis().scale(this.y).orient('left'));
+  }
+};
+
 ROSLIB.RWTPlot.prototype.addRawData = function(data) {
   // check the dimension
-  var data_dimension = _.isArray(data) ? data.length : 1;
-  if (data_dimension === 1) {
+  var data_dimension = _.isArray(data) ? data.length : 0;
+  if (data_dimension === 0) {
     data = [data];          // force to encapsulate into array
   }
-
   // check auto scale
   if (this.y_autoscale) {
-    var need_to_update = false;
-    for (var dataIndex = 0; dataIndex < data.length; dataIndex++) {
-      var val = data[dataIndex];
-      if (val < this.y_min_value) {
-        this.y_min_value = val;
-        need_to_update = true;
-      }
-      if (val > this.y_max_value) {
-        this.y_max_value = val;
-        need_to_update = true;
-      }
-    }
-    if (need_to_update) {
-      this.y.domain([this.y_min_value, this.y_max_value]);
-      this.svg.select('.y.axis')
-        .call(d3.svg.axis().scale(this.y).orient('left'));
-    }
+    this.checkYAxisMinMax();
   }
   
   var now = ROSLIB.Time.now();
@@ -169,7 +184,8 @@ ROSLIB.RWTPlot.prototype.chopTimestampedData = function(stamp, data) {
     // chop here
     var chop_num = 0;
     for (var i = 0; i < this.data.length; i++) {
-      var diff = ROSLIB.ROSTimeDifference(stamp, this.data[i].stamp);
+      //var diff = ROSLIB.ROSTimeDifference(stamp, this.data[i].stamp);
+      var diff = stamp.substract(this.data[i].stamp).toSec();
       if (diff > this.max_data) {
         chop_num = chop_num + 1;
       }
@@ -178,39 +194,62 @@ ROSLIB.RWTPlot.prototype.chopTimestampedData = function(stamp, data) {
       }
     }
     this.data = this.data.slice(chop_num);
+    return chop_num > 0;
+  }
+  else {
+    return false;
   }
 };
 
 ROSLIB.RWTPlot.prototype.addTimestampedData = function(stamp, data) {
-  this.chopTimestampedData(stamp, data);
-  var data_dimension = _.isArray(data) ? data.length : 1;
-  if (data_dimension === 1) {
+  var data_dimension = _.isArray(data) ? data.length : 0;
+  if (data_dimension === 0) {
     data = [data];          // force to encapsulate into array
   }
+  if (this.paths.length < data.length) {
+    for (var pathIndex = this.paths.length; pathIndex < data.length; pathIndex++) {
+      this.paths.push(this.allocatePath(pathIndex % 7));
+    }
+  }
+  var before_chop_oldest_time = null;
+  if (this.data.length > 0) {
+    before_chop_oldest_time = this.data[0].stamp;
+  }
+  var need_to_animate = this.chopTimestampedData(stamp, data);
+  
   data.stamp = stamp;
   this.data.push(data);
-  
-  var plot_data = [];
   var oldest_stamp = this.data[0].stamp;
-  // plot_data := [[[x1, y1], [x1, y2], [x1, y3], ...], [[x1, z1], [x1, z2], ...], ...]
-  for (var i = 0; i < this.data.length; i++) { // x_i := i
-    for (var j = 0; j < this.data[i].length; j++) {
-      var value = this.data[i][j];
+  for (var i = 0; i < data.length; i++) { // x_i := i
+    var plot_data = [];
+    for (var j = 0; j < this.data.length; j++) {
+      var value = this.data[j][i];
       // scale x(i) here
       // oldest_stamp = 0, stamp = this.max_data
       if (!stamp.equal(oldest_stamp)) {
-        var x = ROSLIB.ROSTimeDifference(this.data[i].stamp, oldest_stamp);
+        var x = this.data[j].stamp.substract(oldest_stamp).toSec();
         var new_data = [x, value]; // [x1, y1] or [x1, z1]
-        if (plot_data.length <= j) {
-          // adding new empty array to plot_data
-          plot_data.push([]);
-        }
-        plot_data[j].push(new_data);
+        plot_data.push(new_data);
       }
     }
-  }
-  if (this.plot) {
-    this.plot.setData(plot_data);
+    //console.log(this.paths.length + ' ' + i);
+    if (need_to_animate) {
+      var translation = oldest_stamp.substract(before_chop_oldest_time).toSec();
+      this.paths[i]
+        .datum(plot_data)
+        .attr('d', this.line)
+        .attr('transform', null)
+        .transition()
+      //.duration(0)
+        .ease('linear')
+        .attr('transform', 'translate(' + (-translation) + ',0)');
+    }
+    else {
+      this.paths[i].datum(plot_data)
+        .attr('d', this.line)
+        .attr('transform', null)
+        .transition();
+    }
   }
   
 };
