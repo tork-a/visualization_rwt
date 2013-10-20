@@ -39,6 +39,11 @@ ROSLIB.RWTPlot.prototype.initializePlot = function($content, spec, data) {
   var yaxis_spec = spec.yaxis || {};
   var yaxis_min = yaxis_spec.min || 0.0;
   var yaxis_max = yaxis_spec.max || 1.0;
+
+  this.y_autoscale = yaxis_spec.auto_scale || false;
+  this.y_min_value = yaxis_min;
+  this.y_max_value = yaxis_max;
+
   
   this.x = d3.scale.linear()
     .domain([0, this.max_data - 1])
@@ -93,6 +98,27 @@ ROSLIB.RWTPlot.prototype.addRawData = function(data) {
   if (data_dimension === 1) {
     data = [data];          // force to encapsulate into array
   }
+
+  // check auto scale
+  if (this.y_autoscale) {
+    var need_to_update = false;
+    for (var dataIndex = 0; dataIndex < data.length; dataIndex++) {
+      var val = data[dataIndex];
+      if (val < this.y_min_value) {
+        this.y_min_value = val;
+        need_to_update = true;
+      }
+      if (val > this.y_max_value) {
+        this.y_max_value = val;
+        need_to_update = true;
+      }
+    }
+    if (need_to_update) {
+      this.y.domain([this.y_min_value, this.y_max_value]);
+      this.svg.select('.y.axis')
+        .call(d3.svg.axis().scale(this.y).orient('left'));
+    }
+  }
   
   var now = ROSLIB.Time.now();
   this.data.push(data);
@@ -127,23 +153,6 @@ ROSLIB.RWTPlot.prototype.addRawData = function(data) {
   if (this.data.length() === this.max_data) {
     this.need_to_animate = true;
   }
-  // var plot_data = [];
-  // // plot_data := [[[x1, y1], [x1, y2], [x1, y3], ...], [[x1, z1], [x1, z2], ...], ...]
-  // for (var i = 0; i < this.data.length(); i++) { // x_i := i
-  //   var arr = this.data.toArray();
-  //   for (var j = 0; j < arr[i].length; j++) {
-  //     var value = arr[i][j];
-  //     var new_data = [i, value]; // [x1, y1] or [x1, z1]
-  //     if (plot_data.length <= j) {
-  //       // adding new empty array to plot_data
-  //       plot_data.push([]);
-  //     }
-  //     plot_data[j].push(new_data);
-  //   }
-  // }
-  // if (this.plot) {
-  //   this.plot.setData(plot_data);
-  // }
 };
 
 ROSLIB.ROSTimeToSec = function(timea) {
