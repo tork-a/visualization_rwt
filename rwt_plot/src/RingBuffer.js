@@ -60,3 +60,6 @@ ROSLIB.RingBuffer.prototype.toArray = function() {
   return this.map(function(x) { return x; });
 };
 
+ROSLIB.RingBuffer.prototype.length = function() {
+  return Math.min(this.bufferCount, this.count);
+};
