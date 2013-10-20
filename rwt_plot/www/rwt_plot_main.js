@@ -2,20 +2,16 @@
 $(function() {
   
   var plot = new ROSLIB.RWTPlot({
-    max_data: 10,          // when using timestamp, it is regarded as seconds
+    max_data: 5,          // when using timestamp, it is regarded as seconds
     timestamp: true
   });
   
   plot.initializePlot("#plot-area", {
-    interaction: {
-      redrawOverlayInterval: 100000 / 60
-    },
     yaxis: {
-      auto_scale: true
+      auto_scale: true,
+      min: 0.1
     }
   });
-
-  plot.draw();
 
   function getValFromAccessor(msg, accessor) {
     if (accessor.length == 0) {
@@ -70,7 +66,6 @@ $(function() {
         plot.addData(ROSLIB.Time.now(),
                      getValFromAccessor(msg, accessor));
         
-        plot.draw();
         var diff = now.substract(prev);
         //if (diff.toSec() > 1.0) {
         //console.log('sec: ' + diff.toSec());

@@ -109,21 +109,25 @@ ROSLIB.Ros.prototype.decodeTypeDefs = function(type_defs) {
  * @property nsecscs {Integer} nanoseconds (10^-9)
  */
 ROSLIB.Time = function(spec) {
-  this.nsecs = Math.ceil((spec || {}).nsecs || 0);
-  this.secs = Math.ceil((spec || {}).secs || 0);
+  this.nsecs = Math.floor((spec || {}).nsecs || 0);
+  this.secs = Math.floor((spec || {}).secs || 0);
 };
 
 ROSLIB.Time.now = function() {
   var now = new Date();
   var msec = now.getTime();
   return new ROSLIB.Time({
-    secs: Math.ceil(msec / 1000),
+    secs: Math.floor(msec / 1000),
     nsecs: (msec % 1000) * 1000000
   });
 };
 
 ROSLIB.Time.prototype.toSec = function() {
   return this.secs + this.nsecs / 1000000000.0;
+};
+
+ROSLIB.Time.prototype.toMillSec = function() {
+  return this.secs * 1000 + this.nsecs / 1000000.0;
 };
 
 ROSLIB.Time.prototype.substract = function(another) {
