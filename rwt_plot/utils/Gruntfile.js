@@ -1,6 +1,24 @@
 module.exports = function(grunt) {
   var pkg = grunt.file.readJSON('package.json');
   grunt.initConfig({
+    less: {
+      development: {
+        options: {
+          paths: ['../less/']
+        },
+        files: {
+          '../www/css/rwt_plot.css': '../less/rwt_plot.less'
+        }
+      },
+      production: {
+        options: {
+          paths: ['../less/']
+        },
+        files: {
+          '../www/css/rwt_plot.css': '../less/rwt_plot.less'
+        }
+      },
+    },
     concat: {
       build: {
         src: ['../src/*.js'],
@@ -46,7 +64,7 @@ module.exports = function(grunt) {
     }
   }
   
-  grunt.registerTask('build', ['concat', 'jshint', 'uglify']);
+  grunt.registerTask('build', ['concat', 'jshint', 'uglify', 'less']);
   grunt.registerTask('default', ['build']);
   grunt.registerTask('doc', ['jsdoc']);
 };
