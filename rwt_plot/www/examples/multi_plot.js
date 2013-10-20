@@ -9,7 +9,7 @@ $(function() {
         }
     });
 
-    for (var i = 0; i < 101; i++)
+    for (var i = 0; i < 100; i++)
         plot.addData([i * i, 10000 - i * i]);    // quadratic and linear
     plot.draw();
 });

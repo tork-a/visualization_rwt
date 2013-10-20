@@ -78,49 +78,53 @@ ROSLIB.RWTPlot.prototype.initializePlot = function($content, spec, data) {
   this.arr_data = [];
 };
 
-ROSLIB.RWTPlot.prototype.allocatePath = function() {
-  this.last_time = ROSLIB.Time.now();
+ROSLIB.RWTPlot.prototype.allocatePath = function(num) {
   return this.svg.append('g')
     .attr('clip-path', 'url(#clip)')
     .append('path')
-    .datum(this.arr_data)
-    .attr('class', 'line')
+    .datum([])
+    .attr('class', 'line line' + num)
     .attr('d', this.line);
 };
 
 ROSLIB.RWTPlot.prototype.addRawData = function(data) {
   // check the dimension
-  // var data_dimension = _.isArray(data) ? data.length : 1;
-  // if (data_dimension === 1) {
-  //   data = [data];          // force to encapsulate into array
-  // }
+  var data_dimension = _.isArray(data) ? data.length : 1;
+  if (data_dimension === 1) {
+    data = [data];          // force to encapsulate into array
+  }
   
   var now = ROSLIB.Time.now();
   this.data.push(data);
-  this.arr_data = this.data.toArray();
-  if (this.paths.length == 0) {
-    // alloc path
-    this.paths.push(this.allocatePath());
+  var arr_data = this.data.toArray();
+  var decomposed_arr = _.zip(arr_data);
+  if (this.paths.length < data.length) {
+    for (var pathIndex = this.paths.length; pathIndex < data.length; pathIndex++) {
+      this.paths.push(this.allocatePath(pathIndex % 7));
+    }
   }
-  if (this.need_to_animate) {
-    this.paths[0]
-      .datum(this.arr_data)
-      .attr('d', this.line)
-      .attr('transform', null)
-      .transition()
+  
+  for (var i = 0; i < decomposed_arr.length; i++) {
+    var target_arr = decomposed_arr[i];
+    if (this.need_to_animate) {
+      this.paths[i]
+        .datum(target_arr)
+        .attr('d', this.line)
+        .attr('transform', null)
+        .transition()
       //.duration(0)
-      .ease('linear')
-      .attr('transform', 'translate(' + this.x(-1) + ',0)');
+        .ease('linear')
+        .attr('transform', 'translate(' + this.x(-1) + ',0)');
+    }
+    else {
+      this.paths[i].datum(target_arr)
+        .attr('d', this.line)
+        .attr('transform', null)
+        .transition();
+    }
   }
-  else {
-    this.paths[0].datum(this.arr_data)
-    .attr('d', this.line)
-      .attr('transform', null)
-      .transition();
-    
-  }
-  this.last_time = now;
-  if (this.data.length() == this.max_data) {
+  // this.last_time = now;
+  if (this.data.length() === this.max_data) {
     this.need_to_animate = true;
   }
   // var plot_data = [];
