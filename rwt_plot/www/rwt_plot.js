@@ -44,7 +44,7 @@ ROSLIB.RWTPlot.prototype.initializePlot = function($content, spec) {
 
   var yaxis_spec = spec.yaxis || {};
   var yaxis_min = yaxis_spec.min || 0.0;
-  var yaxis_max = yaxis_spec.max || 1.0;
+  var yaxis_max = yaxis_spec.max || 0.1;
 
   this.y_autoscale = yaxis_spec.auto_scale || false;
   this.y_min_value = yaxis_min;
@@ -473,7 +473,7 @@ ROSLIB.Time.now = function() {
   var now = new Date();
   var msec = now.getTime();
   return new ROSLIB.Time({
-    secs: Math.floorsl(msec / 1000),
+    secs: Math.floor(msec / 1000),
     nsecs: (msec % 1000) * 1000000
   });
 };

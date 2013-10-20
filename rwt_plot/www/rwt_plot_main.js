@@ -8,7 +8,8 @@ $(function() {
   
   plot.initializePlot("#plot-area", {
     yaxis: {
-      auto_scale: true
+      auto_scale: true,
+      min: 0.1
     }
   });
 
