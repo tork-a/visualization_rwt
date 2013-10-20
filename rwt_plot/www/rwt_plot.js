@@ -15,17 +15,19 @@
 ROSLIB.RWTPlot = function(spec) {
   this.max_data = spec.max_data || 100; // defaults to 100
   this.use_timestamp = spec.timestamp;
+  
+  this.plot = null;
+  this.drawingp = false;
+  this.clearData();
+};
+ROSLIB.RWTPlot.prototype.clearData = function() {
   if (this.use_timestamp) {
     this.data = [];
   }
   else {
     this.data = new ROSLIB.RingBuffer({bufferCount: this.max_data});
   }
-  this.plot = null;
-  this.drawingp = false;
-};
-ROSLIB.RWTPlot.prototype.clearData = function() {
-  this.data = [];
+  this.need_to_animate = false;
 };
 
 ROSLIB.RWTPlot.prototype.initializePlot = function($content, spec, data) {
@@ -33,12 +35,17 @@ ROSLIB.RWTPlot.prototype.initializePlot = function($content, spec, data) {
   var height = $($content).height();
   var margin = {top: 20, right: 20, bottom: 20, left: 40};
   var that = this;
+
+  var yaxis_spec = spec.yaxis || {};
+  var yaxis_min = yaxis_spec.min || 0.0;
+  var yaxis_max = yaxis_spec.max || 1.0;
+  
   this.x = d3.scale.linear()
     .domain([0, this.max_data - 1])
     .range([0, width - margin.left - margin.right]);
-
+  
   this.y = d3.scale.linear()
-    .domain([0, 0.3])
+    .domain([yaxis_min, yaxis_max])
     .range([height - margin.top - margin.bottom, 0]);
 
   
@@ -95,7 +102,7 @@ ROSLIB.RWTPlot.prototype.addRawData = function(data) {
     // alloc path
     this.paths.push(this.allocatePath());
   }
-  if (this.data.length() == this.max_data) {
+  if (this.need_to_animate) {
     this.paths[0]
       .datum(this.arr_data)
       .attr('d', this.line)
@@ -113,7 +120,9 @@ ROSLIB.RWTPlot.prototype.addRawData = function(data) {
     
   }
   this.last_time = now;
-  
+  if (this.data.length() == this.max_data) {
+    this.need_to_animate = true;
+  }
   // var plot_data = [];
   // // plot_data := [[[x1, y1], [x1, y2], [x1, y3], ...], [[x1, z1], [x1, z2], ...], ...]
   // for (var i = 0; i < this.data.length(); i++) { // x_i := i
@@ -202,17 +211,14 @@ ROSLIB.RWTPlot.prototype.addData = function(data, data2) {
   }
 };
 
-ROSLIB.RWTPlot.prototype.draw = function() {
-  var now = ROSLIB.Time.now();
-  if (this.plot) {
-    this.plot.setupGrid();
-    this.plot.draw();
-    this.last_draw_time = now;
-  }
-};
-
-
-
+// ROSLIB.RWTPlot.prototype.draw = function() {
+//   var now = ROSLIB.Time.now();
+//   if (this.plot) {
+//     this.plot.setupGrid();
+//     this.plot.draw();
+//     this.last_draw_time = now;
+//   }
+// };
 
 ROSLIB.profile = function(func) {
   var before = ROSLIB.Time.now();

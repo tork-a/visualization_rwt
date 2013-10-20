@@ -1,4 +1,4 @@
-// $(function() {
+$(function() {
     var plot = new ROSLIB.RWTPlot({
         max_data: 100
     });
@@ -7,7 +7,6 @@
             max: 1.0
         }
     });
-    for (var i = 0; i < 101; i++)
+    for (var i = 0; i < 100; i++)
         plot.addData(i * i / 100 / 100);    // quadratic
-    plot.draw();
-// });
+});
