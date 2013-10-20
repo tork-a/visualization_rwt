@@ -383,3 +383,7 @@ ROSLIB.Time.prototype.equal = function(another) {
   var diff = this.substract(another);
   return ((diff.secs === 0) && (diff.nsecs === 0));
 };
+
+ROSLIB.Time.fromROSMsg = function(msg) {
+  return new ROSLIB.Time({secs: msg.secs, nsecs: msg.nsecs});
+};
