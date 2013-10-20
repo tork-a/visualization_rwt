@@ -14,9 +14,14 @@
  */
 ROSLIB.RWTPlot = function(spec) {
   this.max_data = spec.max_data || 100; // defaults to 100
-  this.data = [];
-  this.plot = null;
   this.use_timestamp = spec.timestamp;
+  if (this.use_timestamp) {
+    this.data = [];
+  }
+  else {
+    this.data = new ROSLIB.RingBuffer({bufferCount: this.max_data});
+  }
+  this.plot = null;
   this.drawingp = false;
 };
 ROSLIB.RWTPlot.prototype.clearData = function() {
@@ -53,11 +58,6 @@ ROSLIB.RWTPlot.prototype.initializePlot = function($content, spec, data) {
 };
 
 ROSLIB.RWTPlot.prototype.addRawData = function(data) {
-  // cut this.data if the data is longer than this.max_data
-  if (this.data.length > this.max_data) {
-    this.data = this.data.slice(1);
-  }
-
   // check the dimension
   var data_dimension = _.isArray(data) ? data.length : 1;
   if (data_dimension === 1) {
@@ -65,13 +65,12 @@ ROSLIB.RWTPlot.prototype.addRawData = function(data) {
   }
   this.data.push(data);
 
-  // auto scalling
-  
   var plot_data = [];
   // plot_data := [[[x1, y1], [x1, y2], [x1, y3], ...], [[x1, z1], [x1, z2], ...], ...]
-  for (var i = 0; i < this.data.length; i++) { // x_i := i
-    for (var j = 0; j < this.data[i].length; j++) {
-      var value = this.data[i][j];
+  for (var i = 0; i < this.data.length(); i++) { // x_i := i
+    var arr = this.data.toArray();
+    for (var j = 0; j < arr[i].length; j++) {
+      var value = arr[i][j];
       var new_data = [i, value]; // [x1, y1] or [x1, z1]
       if (plot_data.length <= j) {
         // adding new empty array to plot_data

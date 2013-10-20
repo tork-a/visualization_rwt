@@ -22,7 +22,7 @@ $(function() {
             messageType: "geometry_msgs/PointStamped"
     });
     sub.subscribe(function(msg) {
-        plot.addData(msg.header.stamp, [msg.point.x, msg.point.y, msg.point.z])
+      plot.addData(ROSLIB.Time.fromROSMsg(msg.header.stamp), [msg.point.x, msg.point.y, msg.point.z])
         plot.draw();
     });
 });
