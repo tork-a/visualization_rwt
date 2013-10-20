@@ -28,9 +28,15 @@ ROSLIB.RWTPlot.prototype.clearData = function() {
     this.data = new ROSLIB.RingBuffer({bufferCount: this.max_data});
   }
   this.need_to_animate = false;
+  if (this.spec) {
+    $(this.content).find('svg').remove();
+    this.initializePlot(this.content, this.spec);
+  }
 };
 
-ROSLIB.RWTPlot.prototype.initializePlot = function($content, spec, data) {
+ROSLIB.RWTPlot.prototype.initializePlot = function($content, spec) {
+  this.spec = spec;
+  this.content = $content;
   var width = $($content).width();
   var height = $($content).height();
   var margin = {top: 20, right: 20, bottom: 20, left: 40};
@@ -132,7 +138,7 @@ ROSLIB.RWTPlot.prototype.addRawData = function(data) {
   }
   // check auto scale
   if (this.y_autoscale) {
-    this.checkYAxisMinMax();
+    this.checkYAxisMinMax(data);
   }
   
   var now = ROSLIB.Time.now();
@@ -205,6 +211,9 @@ ROSLIB.RWTPlot.prototype.addTimestampedData = function(stamp, data) {
   var data_dimension = _.isArray(data) ? data.length : 0;
   if (data_dimension === 0) {
     data = [data];          // force to encapsulate into array
+  }
+  if (this.y_autoscale) {
+    this.checkYAxisMinMax(data);
   }
   if (this.paths.length < data.length) {
     for (var pathIndex = this.paths.length; pathIndex < data.length; pathIndex++) {
