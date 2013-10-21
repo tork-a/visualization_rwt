@@ -49,21 +49,26 @@ ROSLIB.RWTPlot.prototype.initializePlot = function($content, spec) {
   this.y_autoscale = yaxis_spec.auto_scale || false;
   this.y_min_value = yaxis_min;
   this.y_max_value = yaxis_max;
-
+  this.y_autoscale_margin = yaxis_spec.auto_scale_margin || 0.2;
   if (this.use_timestamp) {
     this.x = d3.scale.linear()
       .domain([0, this.max_data])
       .range([0, width - margin.left - margin.right]);
+    var y_middle = (yaxis_max + yaxis_min) / 2.0;
+    var y_min = (yaxis_min - y_middle) * (1.0 + this.y_autoscale_margin) + y_middle;
+    var y_max = (yaxis_max - y_middle) * (1.0 + this.y_autoscale_margin) + y_middle;
+    this.y = d3.scale.linear()
+    .domain([y_min, y_max])
+    .range([height - margin.top - margin.bottom, 0]);
   }
   else {
     this.x = d3.scale.linear()
       .domain([0, this.max_data - 1])
       .range([0, width - margin.left - margin.right]);
-  }
-  
-  this.y = d3.scale.linear()
+    this.y = d3.scale.linear()
     .domain([yaxis_min, yaxis_max])
     .range([height - margin.top - margin.bottom, 0]);
+  }
 
   
   this.svg = d3.select($content).append('svg')
@@ -124,7 +129,10 @@ ROSLIB.RWTPlot.prototype.checkYAxisMinMax = function(data) {
     }
   }
   if (need_to_update) {
-    this.y.domain([this.y_min_value, this.y_max_value]);
+    var y_middle = (this.y_max_value + this.y_min_value) / 2.0;
+    var y_min = (this.y_min_value - y_middle) * (1.0 + this.y_autoscale_margin) + y_middle;
+    var y_max = (this.y_max_value - y_middle) * (1.0 + this.y_autoscale_margin) + y_middle;
+    this.y.domain([y_min, y_max]);
     this.svg.select('.y.axis')
       .call(d3.svg.axis().scale(this.y).orient('left'));
   }

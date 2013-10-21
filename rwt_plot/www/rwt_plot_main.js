@@ -9,6 +9,7 @@ $(function() {
   plot.initializePlot("#plot-area", {
     yaxis: {
       auto_scale: true,
+      auto_scale_margin: 0.2,
       min: 0.1
     }
   });
