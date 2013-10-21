@@ -1,4 +1,4 @@
-visualization_rwt
+visualization_rwt [![Build Status](https://travis-ci.org/tork-a/visualization_rwt.png)]
 =================
 
 visualization packages using rwt
@@ -19,3 +19,8 @@ rosws update roswww
 rosws set --git visualization_rwt https://github.com/tork-a/visualization_rwt.git
 rosws update visualization_rwt
 ```
+
+PROJECTS
+--------
+
+* [rwt_plot](https://github.com/tork-a/visualization_rwt/blob/master/rwt_plot/README.md) 
