@@ -11,10 +11,10 @@ def main():
         msg = PointStamped()
         msg.header.stamp = rospy.Time.now()
         msg.point.x = random() * 100;
-        msg.point.y = random() * 100;
-        msg.point.z = random() * 100;
+        msg.point.y = random() * 100 + 100;
+        msg.point.z = random() * 100 + 200;
         pub.publish(msg)
-        rospy.sleep(0.1 * random())
+        rospy.sleep(0.01)
 
 
 if __name__ == "__main__":

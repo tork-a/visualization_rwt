@@ -8,9 +8,9 @@ def main():
     rospy.init_node("random_float")
     pub = rospy.Publisher("/random_float", Float64)
     while not rospy.is_shutdown():
-        val = random() * 100
+        val = random() * 1.0
         pub.publish(Float64(val))
-        rospy.sleep(0.05)
+        rospy.sleep(0.1)
 
 
 if __name__ == "__main__":
