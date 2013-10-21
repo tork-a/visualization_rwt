@@ -1,4 +1,4 @@
-visualization_rwt ![Build Status](https://travis-ci.org/tork-a/visualization_rwt.png)
+visualization_rwt [![Build Status](https://api.travis-ci.org/tork-a/visualization_rwt.png)](https://travis-ci.org/tork-a/visualization_rwt)
 =================
 
 visualization packages using rwt
