@@ -54,22 +54,22 @@ ROSLIB.RWTPlot.prototype.initializePlot = function($content, spec) {
     this.x = d3.scale.linear()
       .domain([0, this.max_data])
       .range([0, width - margin.left - margin.right]);
-    var y_middle = (yaxis_max + yaxis_min) / 2.0;
-    var y_min = (yaxis_min - y_middle) * (1.0 + this.y_autoscale_margin) + y_middle;
-    var y_max = (yaxis_max - y_middle) * (1.0 + this.y_autoscale_margin) + y_middle;
-    this.y = d3.scale.linear()
-    .domain([y_min, y_max])
-    .range([height - margin.top - margin.bottom, 0]);
   }
   else {
     this.x = d3.scale.linear()
       .domain([0, this.max_data - 1])
       .range([0, width - margin.left - margin.right]);
+  }
+  if (this.y_autoscale) {
+    this.y = d3.scale.linear()
+      .domain(this.axisMinMaxWithMargin(this.y_min_value, this.y_max_value, this.y_autoscale_margin))
+      .range([height - margin.top - margin.bottom, 0]);
+  }
+  else {
     this.y = d3.scale.linear()
     .domain([yaxis_min, yaxis_max])
     .range([height - margin.top - margin.bottom, 0]);
   }
-
   
   this.svg = d3.select($content).append('svg')
     .attr('class', 'rwt-plot')
@@ -115,6 +115,13 @@ ROSLIB.RWTPlot.prototype.allocatePath = function(num) {
     .attr('d', this.line);
 };
 
+ROSLIB.RWTPlot.prototype.axisMinMaxWithMargin = function(min, max, margin) {
+  var y_middle = (max + min) / 2.0;
+  var y_min = (min - y_middle) * (1.0 + margin) + y_middle;
+  var y_max = (max - y_middle) * (1.0 + margin) + y_middle;
+  return [y_min, y_max];
+};
+
 ROSLIB.RWTPlot.prototype.checkYAxisMinMax = function(data) {
   var need_to_update = false;
   for (var dataIndex = 0; dataIndex < data.length; dataIndex++) {
@@ -129,10 +136,8 @@ ROSLIB.RWTPlot.prototype.checkYAxisMinMax = function(data) {
     }
   }
   if (need_to_update) {
-    var y_middle = (this.y_max_value + this.y_min_value) / 2.0;
-    var y_min = (this.y_min_value - y_middle) * (1.0 + this.y_autoscale_margin) + y_middle;
-    var y_max = (this.y_max_value - y_middle) * (1.0 + this.y_autoscale_margin) + y_middle;
-    this.y.domain([y_min, y_max]);
+    this.y.domain(this.axisMinMaxWithMargin(this.y_min_value, this.y_max_value,
+                                            this.y_autoscale_margin));
     this.svg.select('.y.axis')
       .call(d3.svg.axis().scale(this.y).orient('left'));
   }
