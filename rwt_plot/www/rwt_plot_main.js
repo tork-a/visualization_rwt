@@ -62,9 +62,16 @@ $(function() {
         }
       });
       sub.subscribe(function(msg) {
-        var now = ROSLIB.Time.now();
+        var now = null;
+        if (msg.header && msg.header.stamp) {
+          now = ROSLIB.Time.fromROSMsg(msg.header.stamp);
+        }
+        else {
+          now = ROSLIB.Time.now();
+        }
+        
         //plot.addData(getValFromAccessor(msg, accessor));
-        plot.addData(ROSLIB.Time.now(),
+        plot.addData(now,
                      getValFromAccessor(msg, accessor));
         
         var diff = now.substract(prev);
