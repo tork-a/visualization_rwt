@@ -8,7 +8,6 @@ before_script:
   - npm install .
 
 script:
-  - cd rwt_plot/utils
   - grunt build
 
 
