@@ -30,7 +30,7 @@ $(function() {
   
   // subscribe topic
   var ros = new ROSLIB.Ros({
-    url: "ws://" + location.hostname + ":9090"
+    url: "ws://" + location.hostname + ":8888"
   });
   
   var sub = null;
