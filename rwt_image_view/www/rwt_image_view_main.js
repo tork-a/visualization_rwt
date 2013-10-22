@@ -19,7 +19,7 @@ $(function() {
     url: "ws://" + location.hostname + ":9090"
   });
 
-  function extractImageTopics(topics, callback, prev_result) {
+  function extractImageTopics(topics, callback, each_cb, prev_result) {
     if (!_.isArray(prev_result)) {
       prev_result = [];
     }
@@ -28,11 +28,12 @@ $(function() {
     }
     else {
       isImageTopic(topics[0], function(result) {
+        each_cb(result, topics[0]);
         if (result) {
-          extractImageTopics(topics.slice(1), callback, prev_result.concat([topics[0]]));
+          extractImageTopics(topics.slice(1), callback, each_cb, prev_result.concat([topics[0]]));
         }
         else {
-          extractImageTopics(topics.slice(1), callback, prev_result);
+          extractImageTopics(topics.slice(1), callback, each_cb, prev_result);
         }
       });
     }
@@ -50,12 +51,19 @@ $(function() {
   };
   
   ros.getTopics(function(topics) {
+    var count = 0;
+    // we need to extract sensor_msgs/Image topics
     extractImageTopics(topics, function(image_topics) {
-      // we need to extract sensor_msgs/Image topics
-      $("#topic-select").append(_.map(image_topics, function(topic) {
-        return '<option value="' + topic + '">' + topic + "</option>";
-      }).join("\n"));
-      $("#topic-select").change();
+      image_topics.sort();
+      _.map(image_topics, function(topic) {
+        $("#topic-select").append('<option value="' + topic + '">' + topic + "</option>");
+      });
+      $('#overlay').remove();
+    }, function(result, topic) {
+      ++count;
+      $('#topic-progress-bar')
+        .attr('aria-valuenow', Math.ceil(count / topics.length * 100))
+        .css('width', Math.ceil(count / topics.length * 100) + '%');
     });
   });
 

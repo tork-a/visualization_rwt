@@ -2,7 +2,7 @@
   <node pkg="roswww" type="webserver.py" name="roswww">
   </node>
   <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" />
-  <include file="$(find openni_launch)/launch/openni.launch" />
+  <!-- <include file="$(find openni_launch)/launch/openni.launch" /> -->
   <node pkg="mjpeg_server" type="mjpeg_server"
         name="mjpeg_server"
         output="screen"
