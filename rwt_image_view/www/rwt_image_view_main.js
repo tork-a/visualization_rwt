@@ -1,23 +1,23 @@
 $(function() {
 
-  ROSLIB.Ros.prototype.getTopicType = function(topic, callback) {
-    var topicTypeClient = new ROSLIB.Service({
-      ros : this,
-      name : '/rosapi/topic_type',
-      serviceType : 'rosapi/TopicType'
-    });
-    var request = new ROSLIB.ServiceRequest({
-      topic: topic
-    });
-    topicTypeClient.callService(request, function(result) {
-      callback(result.type);
-    });
-  };
+    ROSLIB.Ros.prototype.getTopicType = function(topic, callback) {
+        var topicTypeClient = new ROSLIB.Service({
+            ros : this,
+            name : '/rosapi/topic_type',
+            serviceType : 'rosapi/TopicType'
+        });
+        var request = new ROSLIB.ServiceRequest({
+            topic: topic
+        });
+        topicTypeClient.callService(request, function(result) {
+            callback(result.type);
+        });
+    };
 
-  
-  var ros = new ROSLIB.Ros({
-    url: "ws://" + location.hostname + ":9090"
-  });
+    
+    var ros = new ROSLIB.Ros({
+        url: "ws://" + location.hostname + ":8888"
+    });
 
   function extractImageTopics(topics, callback, each_cb, prev_result) {
     if (!_.isArray(prev_result)) {
