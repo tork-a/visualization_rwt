@@ -85,6 +85,7 @@ $(function() {
   });
   
   ros.getTopics(function(topics) {
+    topics.sort();
     $("#topic-select").append(_.map(topics, function(topic) {
       return '<option value="' + topic + '">' + topic + "</option>";
     }).join("\n"));
