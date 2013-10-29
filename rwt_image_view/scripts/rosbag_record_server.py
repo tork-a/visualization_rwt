@@ -16,15 +16,16 @@ g_pobj = None
 def rosbagRecordRequestCB(req):
     global g_pobj
     rospy.loginfo("topics: " + str(req.topics))
-    args = ["rosbag", "record", "-O", os.path.join(os.path.dirname(__file__), "..", "www", "tmp.bag")] + req.topics
+    record_path = roslib.packages.find_node("rosbag", "record")
+    args = [record_path[0], "-O", os.path.join(os.path.dirname(__file__), "..", "www", "tmp.bag")] + req.topics
     g_pobj = subprocess.Popen(args)
-    return RosbagRecordRequestResponse("foo")
+    return RosbagRecordRequestResponse()
 
 def rosbagRecordStopCB(req):
     global g_pobj
     if g_pobj:
         rospy.loginfo("sending SIGINT")
-        g_pobj.terminate()
+        g_pobj.send_signal(signal.SIGINT)
         #os.kill(g_pobj.pid, signal.SIGINT)
         g_pobj = None
     return EmptyResponse()

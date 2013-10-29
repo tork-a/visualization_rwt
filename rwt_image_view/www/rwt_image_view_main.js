@@ -96,24 +96,16 @@ $(function() {
         var request = new ROSLIB.ServiceRequest({});
         rosbagClient.callService(request, function(result) {
           // download here
-          $.get({url: "/rwt_image_view/tmp.bag"}, function(content) {
-            var downloadAsFile = function(fileName) {
-              var blob = new Blob([content]);
-              var url = window.URL || window.webkitURL;
-              var blobURL = url.createObjectURL(blob);
-
-              var a = document.createElement('a');
-              a.download = fileName;
-              a.href = blobURL;
-              return a;
-            };
-            downloadAsFile("download.bag");
-            //var href = "data:application/octet-stream," + encodeURIComponent(content);
-            $button.removeClass("btn-danger")
-              .addClass("btn-success")
-              .html("record");  
-          });
-          
+          //var $alert = $('');
+          var html = '<div class="alert alert-info alert-dismissable" id="download-alert">\
+          <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>\
+          <a class="alert-link" href="/rwt_image_view/tmp.bag">download the bagfile from here via right-click</a>\
+</div>';
+          //$button.html('<a href="/rwt_image_view/tmp.bag">download</a>');
+          $("#topic-area").before(html);
+          $button.removeClass("btn-danger")
+            .addClass("btn-success")
+            .html("record");  
         });
       }
     }
