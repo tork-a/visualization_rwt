@@ -1,0 +1,19 @@
+<launch>
+  <node pkg="roswww" type="webserver.py" name="roswww">
+  </node>
+  <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" >
+    <arg name="port" value="8888" />
+  </include>
+  <include file="$(find openni_launch)/launch/openni.launch" />
+  <node pkg="mjpeg_server" type="mjpeg_server"
+        name="mjpeg_server"
+        output="screen"
+        clear_params="true">
+   <param name="quality" value="100" />
+  </node>
+  <node pkg="rwt_image_view" type="rosbag_record_server.py"
+        name="rosbag_record_server"
+        output="screen"
+        clear_params="true">
+  </node>
+</launch>
