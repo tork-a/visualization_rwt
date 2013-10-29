@@ -11,6 +11,8 @@
   <depend package="roslibjs" />
   <depend package="rwt_utils_3rdparty" />
   <depend package="mjpegcanvas" />
+
+  <rosdep name="rosbridge_suite" />
   <url>http://ros.org/wiki/rwt_image_view</url>
 
 </package>
