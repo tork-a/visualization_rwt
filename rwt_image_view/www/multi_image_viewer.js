@@ -1,5 +1,5 @@
 $(function() {
-    var hostname = "localhost";
+    var hostname = location.hostname;
   ROSLIB.Ros.prototype.getTopicsForType = function(type, callback) {
     var topicsForTypeClient = new ROSLIB.Service({
       ros : this,
