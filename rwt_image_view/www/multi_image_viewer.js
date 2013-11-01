@@ -1,5 +1,4 @@
 $(function() {
-    //var hostname = "133.11.216.211";
     var hostname = "localhost";
   ROSLIB.Ros.prototype.getTopicsForType = function(type, callback) {
     var topicsForTypeClient = new ROSLIB.Service({
