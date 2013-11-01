@@ -30,38 +30,70 @@ $(function() {
 
   
   var ros = new ROSLIB.Ros({
-    url: "ws://" + location.hostname + ":8888"
+      url: "ws://" + "133.11.216.211" + ":8888"
+      //url: "ws://" + location.hostname + ":8888"
   });
-
+    var mjpeg_canvas_list = [];
   ros.getTopicsForType('sensor_msgs/Image', function(image_topics) {
+      _.remove(image_topics, function(topic_name) {
+          return topic_name.indexOf("image_rect_color") === -1;
+      });
     image_topics.sort();
-    _.map(image_topics, function(topic) {
-      $("#topic-select").append('<option value="' + topic + '">' + topic + "</option>");
-    });
+      var images_num = image_topics.length;
+      //var $html = $('<div class="canvases"></div>');
+      var html = "";
+      for (var i = 0; i < images_num; i++) {
+          var topic_name = image_topics[i];
+          if (i % 3 === 0) {
+              html = html + '<div class="row">';
+          }
+          html = html + '<div class="image-canvas col-md-4">' + topic_name + '<div id="image-' + i + '"></div></div>';
+          
+          if (i % 3 === 2) {
+              html = html + '</div>'; // end of row
+          }
+      }
+      if (images_num % 3 !== 2) {
+          html = html + '</div>'; // end of row
+      }
+      
+      // inserting to canvas-area
+      $("#canvas-area").append(html);
+
+      for (var i = 0; i < images_num; i++) {
+          var divid = "image-" + i;
+          mjpeg_canvas = new MJPEGCANVAS.Viewer({
+              divID : divid,
+              host : "133.11.216.211",
+              topic : image_topics[i],
+              width: $("#" + divid).width(),
+              height: $("#" + divid).width() * 480 / 640.0
+          });
+      }
   });
 
-  var mjpeg_canvas = null;
-  var current_image_topic = null;
-  $("#topic-form").submit(function(e) {
-    if (mjpeg_canvas) {
-      // remove the canvas here
-      mjpeg_canvas = null;
-      $("#canvas-area canvas").remove();
-    }
-    e.preventDefault();
-    var topic = $("#topic-select").val();
-    // first of all, subscribe the topic and detect the width/height
-    var div_width = $("#canvas-area").width();
-    current_image_topic = topic;
-    mjpeg_canvas = new MJPEGCANVAS.Viewer({
-      divID : "canvas-area",
-      host : location.hostname,
-      topic : topic,
-      width: div_width,
-      height: 480 * div_width / 640.0
-    });
-    return false;
-  });
+  // var mjpeg_canvas = null;
+  // var current_image_topic = null;
+  // $("#topic-form").submit(function(e) {
+  //   if (mjpeg_canvas) {
+  //     // remove the canvas here
+  //     mjpeg_canvas = null;
+  //     $("#canvas-area canvas").remove();
+  //   }
+  //   e.preventDefault();
+  //   var topic = $("#topic-select").val();
+  //   // first of all, subscribe the topic and detect the width/height
+  //   var div_width = $("#canvas-area").width();
+  //   current_image_topic = topic;
+  //   mjpeg_canvas = new MJPEGCANVAS.Viewer({
+  //     divID : "canvas-area",
+  //     host : location.hostname,
+  //     topic : topic,
+  //     width: div_width,
+  //     height: 480 * div_width / 640.0
+  //   });
+  //   return false;
+  // });
 
   var recordingp = false;
   $("#record-button").click(function(e) {
