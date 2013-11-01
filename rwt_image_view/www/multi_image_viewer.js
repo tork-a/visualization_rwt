@@ -1,5 +1,6 @@
 $(function() {
-
+    //var hostname = "133.11.216.211";
+    var hostname = "localhost";
   ROSLIB.Ros.prototype.getTopicsForType = function(type, callback) {
     var topicsForTypeClient = new ROSLIB.Service({
       ros : this,
@@ -30,13 +31,22 @@ $(function() {
 
   
   var ros = new ROSLIB.Ros({
-      url: "ws://" + location.hostname + ":8888"
+      url: "ws://" + hostname + ":8888"
   });
     var mjpeg_canvas_list = [];
   ros.getTopicsForType('sensor_msgs/Image', function(image_topics) {
       _.remove(image_topics, function(topic_name) {
           return topic_name.indexOf("image_rect_color") === -1;
       });
+      _.remove(image_topics, function(topic_name) {
+          return topic_name.indexOf("textured") !== -1;
+      });
+      _.remove(image_topics, function(topic_name) {
+          return topic_name.indexOf("right") !== -1;
+      });
+      // _.remove(image_topics, function(topic_name) {
+      //     return topic_name.indexOf("prosilica") !== -1;
+      // });
     image_topics.sort();
       var images_num = image_topics.length;
       //var $html = $('<div class="canvases"></div>');
@@ -63,7 +73,7 @@ $(function() {
           var divid = "image-" + i;
           mjpeg_canvas = new MJPEGCANVAS.Viewer({
               divID : divid,
-              host : location.href,
+              host : hostname,
               topic : image_topics[i],
               width: $("#" + divid).width(),
               height: $("#" + divid).width() * 480 / 640.0
