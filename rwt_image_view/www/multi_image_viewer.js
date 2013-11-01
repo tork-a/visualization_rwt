@@ -30,8 +30,7 @@ $(function() {
 
   
   var ros = new ROSLIB.Ros({
-      url: "ws://" + "133.11.216.211" + ":8888"
-      //url: "ws://" + location.hostname + ":8888"
+      url: "ws://" + location.hostname + ":8888"
   });
     var mjpeg_canvas_list = [];
   ros.getTopicsForType('sensor_msgs/Image', function(image_topics) {
@@ -64,7 +63,7 @@ $(function() {
           var divid = "image-" + i;
           mjpeg_canvas = new MJPEGCANVAS.Viewer({
               divID : divid,
-              host : "133.11.216.211",
+              host : location.href,
               topic : image_topics[i],
               width: $("#" + divid).width(),
               height: $("#" + divid).width() * 480 / 640.0
