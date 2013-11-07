@@ -249,7 +249,11 @@ ROSLIB.RWTPlot.prototype.addTimestampedData = function(stamp, data) {
     return;
   }
   var oldest_stamp = this.data[0].stamp;
-  this.x.domain([oldest_stamp.toDate(), data.stamp.toDate()]);
+  var latest_stamp = data.stamp;
+  if (!need_to_animate) {
+    latest_stamp = this.data[0].stamp.add(ROSLIB.Time.fromSec(this.max_data));
+  }
+  this.x.domain([oldest_stamp.toDate(), latest_stamp.toDate()]);
   this.svg.select('.x.axis')
     .call(d3.svg.axis().scale(this.x).orient('bottom'));
   

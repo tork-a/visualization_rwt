@@ -130,6 +130,19 @@ ROSLIB.Time.prototype.toMillSec = function() {
   return this.secs * 1000 + this.nsecs / 1000000.0;
 };
 
+ROSLIB.Time.prototype.add = function(another) {
+  var sec_added = this.secs + another.secs;
+  var nsec_added = this.nsecs + another.nsecs;
+  if (nsec_added > 1000000000) {
+    sec_added = sec_added + 1;
+    nsec_added = nsec_added - 1000000000;
+  }
+  return new ROSLIB.Time({
+    secs: sec_added,
+    nsec_added: nsec_added
+  });
+};
+
 ROSLIB.Time.prototype.substract = function(another) {
   var sec_diff = this.secs - another.secs;
   var nsec_diff = this.nsecs - another.nsecs;
@@ -154,6 +167,10 @@ ROSLIB.Time.prototype.equal = function(another) {
  */
 ROSLIB.Time.fromROSMsg = function(msg) {
   return new ROSLIB.Time({secs: msg.secs, nsecs: msg.nsecs});
+};
+
+ROSLIB.Time.fromSec = function(sec) {
+  return new ROSLIB.Time({secs: sec, nsecs: 0});
 };
 
 /**
