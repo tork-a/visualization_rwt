@@ -148,6 +148,19 @@ ROSLIB.Time.prototype.equal = function(another) {
   return ((diff.secs === 0) && (diff.nsecs === 0));
 };
 
+/**
+ * Converts a JSON-ized message of stamp into ROSLIB.Time
+ * @param msg - a message of stamp.
+ */
 ROSLIB.Time.fromROSMsg = function(msg) {
   return new ROSLIB.Time({secs: msg.secs, nsecs: msg.nsecs});
+};
+
+/**
+ * Converts ROSLIB.Time into Date object
+ */
+ROSLIB.Time.prototype.toDate = function() {
+  var d = new Date();
+  d.setTime(this.secs * 1000 + this.nsecs / 1000000);
+  return d;
 };
