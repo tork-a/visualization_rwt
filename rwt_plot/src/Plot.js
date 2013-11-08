@@ -20,6 +20,8 @@ ROSLIB.RWTPlot = function(spec) {
   this.drawingp = false;
   this.clearData();
 };
+
+
 ROSLIB.RWTPlot.prototype.clearData = function() {
   if (this.use_timestamp) {
     this.data = [];
@@ -35,11 +37,11 @@ ROSLIB.RWTPlot.prototype.clearData = function() {
 };
 
 ROSLIB.RWTPlot.prototype.initializePlot = function($content, spec) {
-  this.spec = spec;
+  this.spec = spec || {};
   this.content = $content;
   var width = $($content).width();
   var height = $($content).height();
-  var margin = {top: 20, right: 20, bottom: 20, left: 40};
+  var margin = spec.margin || {top: 20, right: 20, bottom: 20, left: 40};
   var that = this;
 
   var yaxis_spec = spec.yaxis || {};
@@ -50,10 +52,11 @@ ROSLIB.RWTPlot.prototype.initializePlot = function($content, spec) {
   this.y_min_value = yaxis_min;
   this.y_max_value = yaxis_max;
   this.y_autoscale_margin = yaxis_spec.auto_scale_margin || 0.2;
+  
   if (this.use_timestamp) {
-    this.x = d3.scale.linear()
-      .domain([0, this.max_data])
-      .range([0, width - margin.left - margin.right]);
+    //this.x = d3.scale.linear().domain([0, this.max_data]).range([0, width - margin.left - margin.right]);
+    this.x = d3.time.scale().range([0, width - margin.left - margin.right]);
+    //.domain([0, this.max_data])
   }
   else {
     this.x = d3.scale.linear()
@@ -94,11 +97,11 @@ ROSLIB.RWTPlot.prototype.initializePlot = function($content, spec) {
     .call(d3.svg.axis().scale(this.y).orient('left'));
   if (this.use_timestamp) {
     this.line = d3.svg.line()
-      .x(function(d, i) { return that.x(d[0]); })
+      .x(function(d, i) { return that.x(d[0].toDate()); })
       .y(function(d, i) { return that.y(d[1]); });
   }
   else {
-   this.line = d3.svg.line()
+    this.line = d3.svg.line()
       .x(function(d, i) { return that.x(i); })
       .y(function(d, i) { return that.y(d); });
   }
@@ -228,6 +231,7 @@ ROSLIB.RWTPlot.prototype.addTimestampedData = function(stamp, data) {
   if (this.y_autoscale) {
     this.checkYAxisMinMax(data);
   }
+  
   if (this.paths.length < data.length) {
     for (var pathIndex = this.paths.length; pathIndex < data.length; pathIndex++) {
       this.paths.push(this.allocatePath(pathIndex % 7));
@@ -241,7 +245,18 @@ ROSLIB.RWTPlot.prototype.addTimestampedData = function(stamp, data) {
   
   data.stamp = stamp;
   this.data.push(data);
+  if (this.data.length < 1) {
+    return;
+  }
   var oldest_stamp = this.data[0].stamp;
+  var latest_stamp = data.stamp;
+  if (!need_to_animate) {
+    latest_stamp = oldest_stamp.add(ROSLIB.Time.fromSec(this.max_data));
+  }
+  this.x.domain([oldest_stamp.toDate(), latest_stamp.toDate()]);
+  this.svg.select('.x.axis')
+    .call(d3.svg.axis().scale(this.x).orient('bottom'));
+  
   for (var i = 0; i < data.length; i++) { // x_i := i
     var plot_data = [];
     for (var j = 0; j < this.data.length; j++) {
@@ -250,11 +265,12 @@ ROSLIB.RWTPlot.prototype.addTimestampedData = function(stamp, data) {
       // oldest_stamp = 0, stamp = this.max_data
       if (!stamp.equal(oldest_stamp)) {
         var x = this.data[j].stamp.substract(oldest_stamp).toSec();
-        var new_data = [x, value]; // [x1, y1] or [x1, z1]
+        var new_data = [this.data[j].stamp, value]; // [x1, y1] or [x1, z1]
+        //var new_data = [x, value]; // [x1, y1] or [x1, z1]
         plot_data.push(new_data);
       }
     }
-    //console.log(this.paths.length + ' ' + i);
+
     if (need_to_animate) {
       var translation = oldest_stamp.substract(before_chop_oldest_time).toSec();
       this.paths[i]

@@ -6,13 +6,13 @@ svg.rwt-plot .line {
   stroke-width: 1.5px;
 }
 svg.rwt-plot .line0 {
-  stroke: #f00;
+  stroke: #1f77b4;
 }
 svg.rwt-plot .line1 {
-  stroke: #0f0;
+  stroke: #ff7f0e;
 }
 svg.rwt-plot .line2 {
-  stroke: #00f;
+  stroke: #2ca02c;
 }
 svg.rwt-plot .line3 {
   stroke: #ff0;

@@ -44,8 +44,8 @@ module.exports = function(grunt) {
       ]
     },
     watch: {
-      files: ['../src/*.js', 'Gruntfile.js', '.jshintrc'],
-      tasks: ['build', 'doc']
+      files: ['../src/*.js', 'Gruntfile.js', '.jshintrc', '../less/rwt_plot.less'],
+      tasks: ['build', 'less', 'doc']
     },
     jsdoc: {
       dist: {
