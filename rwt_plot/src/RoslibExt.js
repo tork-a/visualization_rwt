@@ -139,7 +139,7 @@ ROSLIB.Time.prototype.add = function(another) {
   }
   return new ROSLIB.Time({
     secs: sec_added,
-    nsec_added: nsec_added
+    nsecs: nsec_added
   });
 };
 

@@ -249,13 +249,14 @@ ROSLIB.RWTPlot.prototype.addTimestampedData = function(stamp, data) {
     return;
   }
   var oldest_stamp = this.data[0].stamp;
-  var latest_stamp = data.stamp;
-  if (!need_to_animate) {
-    latest_stamp = oldest_stamp.add(ROSLIB.Time.fromSec(this.max_data));
-  }
-  this.x.domain([oldest_stamp.toDate(), latest_stamp.toDate()]);
+  this.x.domain([oldest_stamp.toDate(),
+                 oldest_stamp.add(ROSLIB.Time.fromSec(this.max_data)).toDate()]);
+  // this.svg.select('.x.axis')
+  //   .transition()
+  //   .ease('linear')
+  //   .call(d3.svg.axis().scale(this.x).orient('bottom'));
   this.svg.select('.x.axis')
-    .call(d3.svg.axis().scale(this.x).orient('bottom'));
+  .call(d3.svg.axis().scale(this.x).orient('bottom'));
   
   for (var i = 0; i < data.length; i++) { // x_i := i
     var plot_data = [];
@@ -278,9 +279,15 @@ ROSLIB.RWTPlot.prototype.addTimestampedData = function(stamp, data) {
         .attr('d', this.line)
         .attr('transform', null)
         .transition()
-      //.duration(0)
+        .duration(0)
         .ease('linear')
         .attr('transform', 'translate(' + (-translation) + ',0)');
+      
+      // this.svg.select('.x.axis')
+      //   .transition()
+      //   .ease('linear')
+      //   .duration(0)
+      //   .call(this.x);
     }
     else {
       this.paths[i].datum(plot_data)
@@ -524,7 +531,7 @@ ROSLIB.Time.prototype.add = function(another) {
   }
   return new ROSLIB.Time({
     secs: sec_added,
-    nsec_added: nsec_added
+    nsecs: nsec_added
   });
 };
 
