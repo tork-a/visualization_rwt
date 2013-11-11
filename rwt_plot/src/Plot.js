@@ -92,7 +92,10 @@ ROSLIB.RWTPlot.prototype.initializePlot = function($content, spec) {
   this.x = d3.svg.axis()
     .scale(this.x_scale)
     .orient('bottom')
-    .ticks(3);
+    .ticks(3)
+    .tickFormat(function(d) {
+      return d.getTime() / 1000.0;
+    });
   
   this.svg.append('g')
     .attr('class', 'x axis')
