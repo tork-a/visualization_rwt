@@ -5,27 +5,6 @@ svg.rwt-plot .line {
   fill: none;
   stroke-width: 1.5px;
 }
-svg.rwt-plot .line0 {
-  stroke: #1f77b4;
-}
-svg.rwt-plot .line1 {
-  stroke: #ff7f0e;
-}
-svg.rwt-plot .line2 {
-  stroke: #2ca02c;
-}
-svg.rwt-plot .line3 {
-  stroke: #ff0;
-}
-svg.rwt-plot .line4 {
-  stroke: #0ff;
-}
-svg.rwt-plot .line5 {
-  stroke: #0ff;
-}
-svg.rwt-plot .line6 {
-  stroke: #000;
-}
 svg.rwt-plot .axis path,
 svg.rwt-plot .axis line {
   fill: none;

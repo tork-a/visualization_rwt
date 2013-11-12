@@ -116,16 +116,19 @@ ROSLIB.RWTPlot.prototype.initializePlot = function($content, spec) {
       .x(function(d, i) { return that.x_scale(i); })
       .y(function(d, i) { return that.y_scale(d); });
   }
-  
+  this.color = d3.scale.category10();
   this.paths = [];
 };
 
 ROSLIB.RWTPlot.prototype.allocatePath = function(num) {
+  var that = this;
+  this.color.domain(_.range(num)); // update the domain of the color
   return this.svg.append('g')
     .attr('clip-path', 'url(#clip)')
     .append('path')
     .datum([])
     .attr('class', 'line line' + num)
+    .style('stroke', function(d) { return that.color(num - 1); })
     .attr('d', this.line);
 };
 
