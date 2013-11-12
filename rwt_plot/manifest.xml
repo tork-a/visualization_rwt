@@ -13,7 +13,7 @@
   <depend package="geometry_msgs"></depend>
   <depend package="roslibjs"></depend>
 
-  <rosdep name="rosbridge_suite">
+  <rosdep name="rosbridge_suite"/>
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/rwt_plot</url>
 
