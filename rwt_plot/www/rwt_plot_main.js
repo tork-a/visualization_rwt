@@ -2,7 +2,7 @@
 $(function() {
   
   var plot = new ROSLIB.RWTPlot({
-    max_data: 5,          // when using timestamp, it is regarded as seconds
+    max_data: 2,          // when using timestamp, it is regarded as seconds
     timestamp: true
   });
   
