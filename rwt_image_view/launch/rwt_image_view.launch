@@ -4,7 +4,7 @@
   <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" >
     <arg name="port" value="8888" />
   </include>
-  <include file="$(find openni_launch)/launch/openni.launch" />
+  <!-- <include file="$(find openni_launch)/launch/openni.launch" /> -->
   <node pkg="mjpeg_server" type="mjpeg_server"
         name="mjpeg_server"
         output="screen"
