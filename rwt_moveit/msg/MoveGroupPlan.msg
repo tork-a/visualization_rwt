@@ -1,0 +1,4 @@
+std_msgs/Float64MultiArray start_joint
+std_msgs/Float64MultiArray goal_joint
+bool plan_only
+string group_name

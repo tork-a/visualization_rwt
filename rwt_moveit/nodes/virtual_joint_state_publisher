@@ -1,0 +1,169 @@
+#!/usr/bin/python
+
+import roslib; roslib.load_manifest('joint_state_publisher')
+import rospy
+import wx
+import xml.dom.minidom
+from sensor_msgs.msg import JointState
+from math import pi
+from threading import Thread
+from std_msgs.msg import Float64MultiArray
+
+RANGE = 10000
+
+def get_param(name, value=None):
+    private = "~%s" % name
+    if rospy.has_param(private):
+        return rospy.get_param(private)
+    elif rospy.has_param(name):
+        return rospy.get_param(name)
+    else:
+        return value
+
+def set_param(name, value):
+    private = "~%s" % name
+    rospy.set_param(private, value)
+
+class JointStatePublisher():
+    def __init__(self):
+        description = get_param('robot_description')
+        robot = xml.dom.minidom.parseString(description).getElementsByTagName('robot')[0]
+        self.free_start_joints = {}
+        self.free_goal_joints = {}
+        self.joint_list = [] # for maintaining the original order of the joints
+        self.dependent_joints = get_param("dependent_joints", {})
+        
+        # Find all non-fixed joints
+        for child in robot.childNodes:
+            if child.nodeType is child.TEXT_NODE:
+                continue
+            if child.localName == 'joint':
+                jtype = child.getAttribute('type')
+                if jtype == 'fixed':
+                    continue
+                name = child.getAttribute('name')
+                if jtype == 'continuous':
+                    minval = -pi
+                    maxval = pi
+                else:
+                    limit = child.getElementsByTagName('limit')[0]
+                    minval = float(limit.getAttribute('lower'))
+                    maxval = float(limit.getAttribute('upper'))
+
+                if name in self.dependent_joints:
+                    continue
+                if minval > 0 or maxval < 0:
+                    zeroval = (maxval + minval)/2
+                else:
+                    zeroval = 0
+
+                    start_joint = {'min':minval, 'max':maxval, 'zero':zeroval, 'value':zeroval }
+                    goal_joint = {'min':minval, 'max':maxval, 'zero':zeroval, 'value':zeroval }
+
+                    # set parameter server
+                    set_param('/joint/' + name + '/min/', start_joint['min'])
+                    set_param('/joint/' + name + '/max/', start_joint['max'])
+
+                    self.free_start_joints[name] = start_joint
+                    self.free_goal_joints[name] = goal_joint
+                    self.joint_list.append(name)
+
+
+        use_gui = get_param("use_gui", False)
+        set_param('/joint/names', self.joint_list)
+
+
+        source_list = get_param("source_list", [])
+        self.sources = []
+        for source in source_list:
+            self.sources.append(rospy.Subscriber(source, JointState, self.source_cb))
+
+        self.start_pub = rospy.Publisher('start_joint_states', JointState)
+        self.goal_pub = rospy.Publisher('goal_joint_states', JointState)
+
+    def source_cb(self, msg):
+        for i in range(len(msg.name)):
+            name = msg.name[i]
+            position = msg.position[i]
+            if name in self.free_start_joints:
+                joint = self.free_start_joints[name]
+                joint['value'] = position
+
+            if name in self.free_goal_joints:
+                joint = self.free_goal_joints[name]
+                joint['value'] = position
+        
+    def start_callback(self, data):
+        for (name,joint) in self.free_start_joints.items():
+            i = 0
+            for link in data.layout.dim:
+                if link.label == name:
+                    joint['value'] = data.data[i]
+                    break
+                i = i + 1
+
+    def goal_callback(self, data):
+        for (name,joint) in self.free_goal_joints.items():
+            i = 0
+            for link in data.layout.dim:
+                if link.label == name:
+                    joint['value'] = data.data[i]
+                    break
+                i = i + 1
+
+    def loop(self):
+        hz = get_param("rate", 10) # 10hz
+        r = rospy.Rate(hz)
+
+        rospy.Subscriber("/update_start_joint_position", Float64MultiArray, self.start_callback)
+        rospy.Subscriber("/update_goal_joint_position", Float64MultiArray, self.goal_callback)
+
+        # Publish Joint States
+        while not rospy.is_shutdown():
+            start_msg = JointState()
+            start_msg.header.stamp = rospy.Time.now()
+            goal_msg = JointState()
+            goal_msg.header.stamp = rospy.Time.now()
+
+            # Add Free Joints
+            for (name,joint) in self.free_start_joints.items():
+                start_msg.name.append(str(name))
+                start_msg.position.append(joint['value'])
+                start_msg.velocity.append(0)
+
+            for (name,joint) in self.free_goal_joints.items():
+                goal_msg.name.append(str(name))
+                goal_msg.position.append(joint['value'])
+                goal_msg.velocity.append(0)
+
+            # Add Dependent Joints
+            for (name,param) in self.dependent_joints.items():
+                parent = param['parent']
+                start_baseval = self.free_start_joints[parent]['value']
+                start_value = start_baseval * param.get('factor', 1) + param.get('offset', 0)
+                goal_baseval = self.free_goal_joints[parent]['value']
+                goal_value = goal_baseval * param.get('factor', 1) + param.get('offset', 0)
+
+                start_msg.name.append(str(name))
+                start_msg.position.append(value)
+                start_msg.velocity.append(0)
+
+                goal_msg.name.append(str(name))
+                goal_msg.position.append(value)
+                goal_msg.velocity.append(0)
+
+            self.start_pub.publish(start_msg)
+            self.goal_pub.publish(goal_msg)
+
+            r.sleep()
+
+
+
+if __name__ == '__main__':
+    try:
+        rospy.init_node('virtual_joint_state_publisher')
+        jsp = JointStatePublisher()
+        jsp.loop()
+        
+    except rospy.ROSInterruptException: pass
+

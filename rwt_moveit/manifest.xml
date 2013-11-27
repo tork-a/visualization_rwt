@@ -1,0 +1,12 @@
+<package>
+  <description brief="rwt_moveit">
+    rwt_moveit
+  </description>
+  <author>KazutoMurase</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/rwt_moveit</url>
+  <depend package="kdl_parser" />
+  <depend package="kdl" />
+  <depend package="visualization_msgs" />
+</package>
