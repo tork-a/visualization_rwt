@@ -7,7 +7,7 @@ module.exports = function(grunt) {
           paths: ['../less/']
         },
         files: {
-          '../www/css/rwt_plot.css': '../less/rwt_plot.less'
+          '../www/css/rwt_robot_monitor.css': '../less/rwt_robot_monitor.less'
         }
       },
       production: {
@@ -15,14 +15,14 @@ module.exports = function(grunt) {
           paths: ['../less/']
         },
         files: {
-          '../www/css/rwt_plot.css': '../less/rwt_plot.less'
+          '../www/css/rwt_robot_monitor.css': '../less/rwt_robot_monitor.less'
         }
       },
     },
     concat: {
       build: {
         src: ['../src/*.js'],
-        dest: '../www/rwt_plot.js'
+        dest: '../www/rwt_robot_monitor.js'
       }
     },
     uglify: {
@@ -30,8 +30,8 @@ module.exports = function(grunt) {
         report: 'min'
       },
       build: {
-        src: '../www/rwt_plot.js',
-        dest: '../www/rwt_plot.min.js'
+        src: '../www/rwt_robot_monitor.js',
+        dest: '../www/rwt_robot_monitor.min.js'
       }
     },
     jshint: {
@@ -40,11 +40,11 @@ module.exports = function(grunt) {
       },
       files: [
         'Gruntfile.js',
-        '../www/rwt_plot.js'
+        '../www/rwt_robot_monitor.js'
       ]
     },
     watch: {
-      files: ['../src/*.js', 'Gruntfile.js', '.jshintrc', '../less/rwt_plot.less'],
+      files: ['../src/*.js', 'Gruntfile.js', '.jshintrc', '../less/rwt_robot_monitor.less'],
       tasks: ['build', 'less', 'doc']
     },
     jsdoc: {
