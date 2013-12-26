@@ -10,11 +10,11 @@
  * @class DiagnosticsStatus
  * @param spec
  */
-ROSLIB.RWTRobotMonitor.DiagnosticsStatus = function(spec) {
+ROSLIB.DiagnosticsStatus = function(spec) {
   
 };
 
 
-ROSLIB.RWTRobotMonitor.DiagnosticsStatus.createFromArray = function(msg) {
+ROSLIB.DiagnosticsStatus.createFromArray = function(msg) {
   
 };

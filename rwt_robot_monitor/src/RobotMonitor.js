@@ -14,7 +14,7 @@ ROSLIB.RWTRobotMonitor = function(spec) {
   // spec, ros
   var diagnostics_agg_topic = spec.diagnostics_agg_topic || '/diagnostics_agg';
   var ros = spec.ros;
-
+  this.last_diagnostics_update = new Date();
   this.diagnostics_agg_subscriber = new ROSLIB.Topic({
     ros: ros,
     name: diagnostics_agg_topic,

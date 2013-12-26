@@ -10,12 +10,12 @@
  * @class DiagnosticsStatus
  * @param spec
  */
-ROSLIB.RWTRobotMonitor.DiagnosticsStatus = function(spec) {
+ROSLIB.DiagnosticsStatus = function(spec) {
   
 };
 
 
-ROSLIB.RWTRobotMonitor.DiagnosticsStatus.createFromArray = function(msg) {
+ROSLIB.DiagnosticsStatus.createFromArray = function(msg) {
   
 };
 
@@ -35,13 +35,14 @@ ROSLIB.RWTRobotMonitor = function(spec) {
   // spec, ros
   var diagnostics_agg_topic = spec.diagnostics_agg_topic || '/diagnostics_agg';
   var ros = spec.ros;
-
+  this.last_diagnostics_update = new Date();
   this.diagnostics_agg_subscriber = new ROSLIB.Topic({
     ros: ros,
     name: diagnostics_agg_topic,
     messageType: 'diagnostic_msgs/DiagnosticArray'
   });
   this.diagnostics_agg_subscriber.subscribe(this.diagnosticsCallback);
+  
 };
 
 /**
