@@ -2,23 +2,20 @@
     window.__msgStore = {};
     window.__persistMsgStore = function(lang, data) {
         if(window.localStorage) {
-            localStorage.setItem("localizationMsgStore"+lang, JSON.stringify(data));
+            localStorage.setItem('localizationMsgStore'+lang, JSON.stringify(data));
             window.__msgStore = data;
         } else {
             window.__msgStore = data;
         }
     };
     window.__getLanguageJSON = function(lang) {
-/*        var res = $.getJSON("locale/" + lang + ".json", function (json){
-            window.__persistMsgStore(lang, json);
-        });*/
         var res = false;
         $.ajax({
             async: false,
-            url: "locale/" + lang + ".json",
-            dataType: "json",
+            url: 'locale/' + lang + '.json',
+            dataType: 'json',
             success: function (json){
-                console.log("get json success");
+                console.log('get json success');
                 res = true;
             }
         });
@@ -26,12 +23,12 @@
     };
 
     window.setLanguage = function(l) {
-        var lang = l || "ja-JP";
+        var lang = l || 'ja-JP';
 
         if(window.localStorage) {
-            var localMsgStore = localStorage.getItem("localizationMsgStore"+lang);
+            var localMsgStore = localStorage.getItem('localizationMsgStore'+lang);
             if(localMsgStore) {
-                console.log("use local cache");
+                console.log('use local cache');
                 window.__msgStore = JSON.parse(localMsgStore);
             } else {
                 window.__getLanguageJSON(lang);
