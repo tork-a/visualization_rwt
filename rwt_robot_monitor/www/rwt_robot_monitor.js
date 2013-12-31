@@ -16,7 +16,8 @@ ROSLIB.DiagnosticsStatus = function(spec) {
 
 
 ROSLIB.DiagnosticsStatus.createFromArray = function(msg) {
-  
+  var header = msg.header;
+  var header_stamp = ROSLIB.Time.fromROSMsg(header);
 };
 
 // RobotMonitor.js
@@ -42,10 +43,12 @@ ROSLIB.RWTRobotMonitor = function(spec) {
     name: diagnostics_agg_topic,
     messageType: 'diagnostic_msgs/DiagnosticArray'
   });
-  this.diagnostics_agg_subscriber.subscribe(this.diagnosticsCallback);
-
-  // timer to update last_time_id
   var that = this;
+  this.diagnostics_agg_subscriber.subscribe(function(msg) {
+    that.diagnosticsCallback(msg);
+  });
+  // timer to update last_time_id
+  
   setTimeout(function() {
     that.updateLastTimeString();
   }, 1000);
@@ -56,9 +59,10 @@ ROSLIB.RWTRobotMonitor = function(spec) {
  * @param msg - message of /diagnostics_agg.
  */
 ROSLIB.RWTRobotMonitor.prototype.diagnosticsCallback = function(msg) {
-  console.log('hogee');
-  // var diagnostics_statuses
-  //   = ROSLIB.RWTRobotMonitor.DiagnosticsStatus.createFromArray(msg);
+  this.last_diagnostics_update = ROSLIB.Time.now();
+  var diagnostics_statuses
+    = ROSLIB.DiagnosticsStatus.createFromArray(msg);
+  
 };
 
 /**
@@ -66,9 +70,11 @@ ROSLIB.RWTRobotMonitor.prototype.diagnosticsCallback = function(msg) {
  */
 ROSLIB.RWTRobotMonitor.prototype.updateLastTimeString = function() {
   var that = this;
+  console.log(this.last_diagnostics_update);
   if (that.last_diagnostics_update) {
     var now = ROSLIB.Time.now();
     var diff = now.substract(that.last_diagnostics_update).toSec();
+    console.log(diff);
     $(that.last_time_id).html(Math.floor(diff));
   }
   else {

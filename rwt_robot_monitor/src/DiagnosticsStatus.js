@@ -16,5 +16,6 @@ ROSLIB.DiagnosticsStatus = function(spec) {
 
 
 ROSLIB.DiagnosticsStatus.createFromArray = function(msg) {
-  
+  var header = msg.header;
+  var header_stamp = ROSLIB.Time.fromROSMsg(header);
 };
