@@ -45,13 +45,13 @@ ROSLIB.RWTRobotMonitor.prototype.diagnosticsCallback = function(msg) {
  */
 ROSLIB.RWTRobotMonitor.prototype.updateLastTimeString = function() {
   var that = this;
-  if (this.last_diagnostics_update) {
+  if (that.last_diagnostics_update) {
     var now = ROSLIB.Time.now();
-    var diff = now.substract(this.last_diagnostics_update).toSec();
-    $(this.last_time_id).html(Math.floor(diff));
+    var diff = now.substract(that.last_diagnostics_update).toSec();
+    $(that.last_time_id).html(Math.floor(diff));
   }
   else {
-    $(this.last_time_id).html(-1);
+    $(that.last_time_id).html(-1);
   }
   setTimeout(function() {
     that.updateLastTimeString();
