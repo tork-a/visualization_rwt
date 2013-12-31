@@ -14,7 +14,7 @@ ROSLIB.RWTRobotMonitor = function(spec) {
   // spec, ros
   var diagnostics_agg_topic = spec.diagnostics_agg_topic || '/diagnostics_agg';
   var ros = spec.ros;
-  this.last_diagnostics_update = ROSLIB.Time.now();
+  this.last_diagnostics_update = null;
   this.last_time_id = spec.last_time_id;
   this.diagnostics_agg_subscriber = new ROSLIB.Topic({
     ros: ros,
@@ -44,10 +44,15 @@ ROSLIB.RWTRobotMonitor.prototype.diagnosticsCallback = function(msg) {
  * callback function to update string to show the last message received
  */
 ROSLIB.RWTRobotMonitor.prototype.updateLastTimeString = function() {
-  var now = ROSLIB.Time.now();
-  var diff = now.substract(this.last_diagnostics_update).toSec();
-  $(this.last_time_id).html(Math.floor(diff));
   var that = this;
+  if (this.last_diagnostics_update) {
+    var now = ROSLIB.Time.now();
+    var diff = now.substract(this.last_diagnostics_update).toSec();
+    $(this.last_time_id).html(Math.floor(diff));
+  }
+  else {
+    $(this.last_time_id).html(-1);
+  }
   setTimeout(function() {
     that.updateLastTimeString();
   }, 1000);
