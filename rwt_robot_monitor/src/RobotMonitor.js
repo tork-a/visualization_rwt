@@ -14,13 +14,20 @@ ROSLIB.RWTRobotMonitor = function(spec) {
   // spec, ros
   var diagnostics_agg_topic = spec.diagnostics_agg_topic || '/diagnostics_agg';
   var ros = spec.ros;
-  this.last_diagnostics_update = new Date();
+  this.last_diagnostics_update = ROSLIB.Time.now();
+  this.last_time_id = spec.last_time_id;
   this.diagnostics_agg_subscriber = new ROSLIB.Topic({
     ros: ros,
     name: diagnostics_agg_topic,
     messageType: 'diagnostic_msgs/DiagnosticArray'
   });
   this.diagnostics_agg_subscriber.subscribe(this.diagnosticsCallback);
+
+  // timer to update last_time_id
+  var that = this;
+  setTimeout(function() {
+    that.updateLastTimeString();
+  }, 1000);
 };
 
 /**
@@ -33,3 +40,15 @@ ROSLIB.RWTRobotMonitor.prototype.diagnosticsCallback = function(msg) {
   //   = ROSLIB.RWTRobotMonitor.DiagnosticsStatus.createFromArray(msg);
 };
 
+/**
+ * callback function to update string to show the last message received
+ */
+ROSLIB.RWTRobotMonitor.prototype.updateLastTimeString = function() {
+  var now = ROSLIB.Time.now();
+  var diff = now.substract(this.last_diagnostics_update).toSec();
+  $(this.last_time_id).html(Math.floor(diff));
+  var that = this;
+  setTimeout(function() {
+    that.updateLastTimeString();
+  }, 1000);
+};
