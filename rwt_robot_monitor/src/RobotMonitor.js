@@ -48,11 +48,9 @@ ROSLIB.RWTRobotMonitor.prototype.diagnosticsCallback = function(msg) {
  */
 ROSLIB.RWTRobotMonitor.prototype.updateLastTimeString = function() {
   var that = this;
-  console.log(this.last_diagnostics_update);
   if (that.last_diagnostics_update) {
     var now = ROSLIB.Time.now();
     var diff = now.substract(that.last_diagnostics_update).toSec();
-    console.log(diff);
     $(that.last_time_id).html(Math.floor(diff));
   }
   else {
