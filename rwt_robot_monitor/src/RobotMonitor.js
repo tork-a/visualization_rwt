@@ -74,15 +74,13 @@ ROSLIB.RWTRobotMonitor.prototype.updateLastTimeString = function() {
  */
 ROSLIB.RWTRobotMonitor.prototype.updateView = function() {
   this.updateErrorList();
+  this.updateWarnList();
 };
 
-/**
- * update error list
- */
-ROSLIB.RWTRobotMonitor.prototype.updateErrorList = function() {
-  $('#error-list li').remove();
-  var error_directories = this.history.root.getErrorDirectories();
-  error_directories.sort(function(a, b) {
+ROSLIB.RWTRobotMonitor.prototype.updateList = function(list_id, level) {
+  $('#' + list_id + ' li').remove();
+  var directories = this.history.root.getDirectories(level);
+  directories.sort(function(a, b) {
     var apath = a.fullName();
     var bpath = b.fullName();
     if (apath > bpath) {
@@ -96,12 +94,25 @@ ROSLIB.RWTRobotMonitor.prototype.updateErrorList = function() {
     }
   });
 
-  _.forEach(error_directories, function(dir) {
-    var html_pre = '<li class="list-group-item"><span class="glyphicon glyphicon-minus-sign"></span>';
+  _.forEach(directories, function(dir) {
+    var html_pre = '<li class="list-group-item"><span class="glyphicon glyphicon-exclamation-sign"></span>';
     var html_suf = '</li>';
-    $('#error-list').append(html_pre
+    $('#' + list_id).append(html_pre
                             + dir.fullName() + ':' + dir.status.message
                             + html_suf);
-    //console.log(dir.fullName() + ':' + dir.status.message);
   });
+};
+
+/**
+ * update warn list
+ */
+ROSLIB.RWTRobotMonitor.prototype.updateWarnList = function() {
+  this.updateList('warn-list', ROSLIB.DiagnosticsStatus.LEVEL.WARN);
+};
+
+/**
+ * update error list
+ */
+ROSLIB.RWTRobotMonitor.prototype.updateErrorList = function() {
+  this.updateList('error-list', ROSLIB.DiagnosticsStatus.LEVEL.ERROR);
 };

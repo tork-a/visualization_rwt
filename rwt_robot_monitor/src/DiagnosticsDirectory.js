@@ -124,12 +124,12 @@ ROSLIB.DiagnosticsDirectory.prototype.fullName = function() {
 };
 
 /**
- * return an array of directories which has error status
+ * get an array of directories which has `level' such as error, warning and ok.
  */
-ROSLIB.DiagnosticsDirectory.prototype.getErrorDirectories = function() {
+ROSLIB.DiagnosticsDirectory.prototype.getDirectories = function(level) {
   var rec = function(target_dir) {
     if (target_dir.children.length === 0) {
-      if (target_dir.isErrorStatus()) {
+      if (target_dir.status && target_dir.status.level === level) {
         return [target_dir];
       }
       else {
@@ -142,11 +142,32 @@ ROSLIB.DiagnosticsDirectory.prototype.getErrorDirectories = function() {
         var child_result = rec(target_dir.children[i]);
         result = result.concat(child_result);
       }
-      if (target_dir.isErrorStatus()) {
+      if (target_dir.status && target_dir.status.level === level) {
         result.push(target_dir);
       }
       return result;
     }
   };
   return rec(this);
+};
+
+/**
+ * return an array of directories which has error status
+ */
+ROSLIB.DiagnosticsDirectory.prototype.getErrorDirectories = function() {
+  return this.getDirectories(ROSLIB.DiagnosticsStatus.LEVEL.ERROR);
+};
+
+/**
+ * return an array of directories which has warn status
+ */
+ROSLIB.DiagnosticsDirectory.prototype.getWarnDirectories = function() {
+  return this.getDirectories(ROSLIB.DiagnosticsStatus.LEVEL.WARN);
+};
+
+/**
+ * return an array of directories which has ok status
+ */
+ROSLIB.DiagnosticsDirectory.prototype.getOkDirectories = function() {
+  return this.getDirectories(ROSLIB.DiagnosticsStatus.LEVEL.OK);
 };

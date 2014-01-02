@@ -124,12 +124,12 @@ ROSLIB.DiagnosticsDirectory.prototype.fullName = function() {
 };
 
 /**
- * return an array of directories which has error status
+ * get an array of directories which has `level' such as error, warning and ok.
  */
-ROSLIB.DiagnosticsDirectory.prototype.getErrorDirectories = function() {
+ROSLIB.DiagnosticsDirectory.prototype.getDirectories = function(level) {
   var rec = function(target_dir) {
     if (target_dir.children.length === 0) {
-      if (target_dir.isErrorStatus()) {
+      if (target_dir.status && target_dir.status.level === level) {
         return [target_dir];
       }
       else {
@@ -142,13 +142,34 @@ ROSLIB.DiagnosticsDirectory.prototype.getErrorDirectories = function() {
         var child_result = rec(target_dir.children[i]);
         result = result.concat(child_result);
       }
-      if (target_dir.isErrorStatus()) {
+      if (target_dir.status && target_dir.status.level === level) {
         result.push(target_dir);
       }
       return result;
     }
   };
   return rec(this);
+};
+
+/**
+ * return an array of directories which has error status
+ */
+ROSLIB.DiagnosticsDirectory.prototype.getErrorDirectories = function() {
+  return this.getDirectories(ROSLIB.DiagnosticsStatus.LEVEL.ERROR);
+};
+
+/**
+ * return an array of directories which has warn status
+ */
+ROSLIB.DiagnosticsDirectory.prototype.getWarnDirectories = function() {
+  return this.getDirectories(ROSLIB.DiagnosticsStatus.LEVEL.WARN);
+};
+
+/**
+ * return an array of directories which has ok status
+ */
+ROSLIB.DiagnosticsDirectory.prototype.getOkDirectories = function() {
+  return this.getDirectories(ROSLIB.DiagnosticsStatus.LEVEL.OK);
 };
 
 // DiagnosticsHistory
@@ -346,15 +367,13 @@ ROSLIB.RWTRobotMonitor.prototype.updateLastTimeString = function() {
  */
 ROSLIB.RWTRobotMonitor.prototype.updateView = function() {
   this.updateErrorList();
+  this.updateWarnList();
 };
 
-/**
- * update error list
- */
-ROSLIB.RWTRobotMonitor.prototype.updateErrorList = function() {
-  $('#error-list li').remove();
-  var error_directories = this.history.root.getErrorDirectories();
-  error_directories.sort(function(a, b) {
+ROSLIB.RWTRobotMonitor.prototype.updateList = function(list_id, level) {
+  $('#' + list_id + ' li').remove();
+  var directories = this.history.root.getDirectories(level);
+  directories.sort(function(a, b) {
     var apath = a.fullName();
     var bpath = b.fullName();
     if (apath > bpath) {
@@ -368,12 +387,25 @@ ROSLIB.RWTRobotMonitor.prototype.updateErrorList = function() {
     }
   });
 
-  _.forEach(error_directories, function(dir) {
-    var html_pre = '<li class="list-group-item"><span class="glyphicon glyphicon-minus-sign"></span>';
+  _.forEach(directories, function(dir) {
+    var html_pre = '<li class="list-group-item"><span class="glyphicon glyphicon-exclamation-sign"></span>';
     var html_suf = '</li>';
-    $('#error-list').append(html_pre
+    $('#' + list_id).append(html_pre
                             + dir.fullName() + ':' + dir.status.message
                             + html_suf);
-    //console.log(dir.fullName() + ':' + dir.status.message);
   });
+};
+
+/**
+ * update warn list
+ */
+ROSLIB.RWTRobotMonitor.prototype.updateWarnList = function() {
+  this.updateList('warn-list', ROSLIB.DiagnosticsStatus.LEVEL.WARN);
+};
+
+/**
+ * update error list
+ */
+ROSLIB.RWTRobotMonitor.prototype.updateErrorList = function() {
+  this.updateList('error-list', ROSLIB.DiagnosticsStatus.LEVEL.ERROR);
 };
