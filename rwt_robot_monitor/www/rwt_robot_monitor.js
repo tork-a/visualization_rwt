@@ -172,6 +172,24 @@ ROSLIB.DiagnosticsDirectory.prototype.getOkDirectories = function() {
   return this.getDirectories(ROSLIB.DiagnosticsStatus.LEVEL.OK);
 };
 
+/**
+ * look up the directory by name throught directory tree return the instance of the directory
+ */
+ROSLIB.DiagnosticsDirectory.prototype.findByName = function(name) {
+  if (this.status && this.status.name.toString() === name.toString()) {
+    return this;
+  }
+  else {
+    for (var i = 0; i < this.children.length; i++) {
+      var child_result = this.children[i].findByName(name);
+      if (child_result) {
+        return child_result;
+      }
+    }
+    return null;
+  }
+};
+
 // DiagnosticsHistory
 
 /**
@@ -291,6 +309,22 @@ ROSLIB.DiagnosticsStatus.createFromArray = function(msg) {
   });
 };
 
+/**
+ * return the level as string
+ */
+
+ROSLIB.DiagnosticsStatus.prototype.levelString = function() {
+  if (this.isERROR()) {
+    return 'Error';
+  }
+  else if (this.isWARN()) {
+    return 'Warn';
+  }
+  else if (this.isOK()){
+    return 'OK';
+  }
+};
+
 // RobotMonitor.js
 
 /**
@@ -368,6 +402,7 @@ ROSLIB.RWTRobotMonitor.prototype.updateLastTimeString = function() {
 ROSLIB.RWTRobotMonitor.prototype.updateView = function() {
   this.updateErrorList();
   this.updateWarnList();
+  this.registerBrowserCallback();
 };
 
 ROSLIB.RWTRobotMonitor.prototype.updateList = function(list_id, level) {
@@ -388,7 +423,7 @@ ROSLIB.RWTRobotMonitor.prototype.updateList = function(list_id, level) {
   });
 
   _.forEach(directories, function(dir) {
-    var html_pre = '<li class="list-group-item"><span class="glyphicon glyphicon-exclamation-sign"></span>';
+    var html_pre = '<li class="list-group-item" data-name="' + dir.fullName() + '"><span class="glyphicon glyphicon-exclamation-sign"></span>';
     var html_suf = '</li>';
     $('#' + list_id).append(html_pre
                             + dir.fullName() + ':' + dir.status.message
@@ -408,4 +443,57 @@ ROSLIB.RWTRobotMonitor.prototype.updateWarnList = function() {
  */
 ROSLIB.RWTRobotMonitor.prototype.updateErrorList = function() {
   this.updateList('error-list', ROSLIB.DiagnosticsStatus.LEVEL.ERROR);
+};
+
+ROSLIB.RWTRobotMonitor.prototype.registerBrowserCallback = function() {
+  var root = this.history.root;
+  $('.list-group-item').dblclick(function() {
+    var html = '<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">'
+      + '<div class="modal-dialog">'
+      + '<div class="modal-content">'
+      + '<div class="modal-header">'
+      + '<button type="button" class="close dismiss-button" aria-hidden="true">&times;</button>'
+      + '<h4 class="modal-title" id="myModalLabel">Modal title</h4>'
+      + '</div>'
+      + '<div class="modal-body">'
+      + '</div>'
+      + '<div class="modal-footer">'
+      + '<button type="button" class="btn btn-default dismiss-button">Close</button>'
+      + '<button type="button" class="btn btn-primary">Save changes</button>'
+      + '</div>'
+      + '</div><!-- /.modal-content -->'
+      + '</div><!-- /.modal-dialog -->'
+      +' </div><!-- /.modal -->';
+    var the_directory = root.findByName($(this).attr('data-name'));
+    var $html = $(html);
+    var $first_body_html = $('<dl></dl>');
+    var first_dict = {
+      'Full name': the_directory.fullName(),
+      'Component': the_directory.status.name,
+      'Hardware ID': the_directory.status.hardware_id,
+      'Level': the_directory.status.levelString(),
+      'Message': the_directory.status.message
+    };
+    for (var first_key in first_dict) {
+      $first_body_html.append('<dt>' + first_key + '</dt>' + '<dd>' + first_dict[first_key] + '</dd>');
+    }
+    $html.find('.modal-body').append($first_body_html);
+    var $second_body_html = $('<dl></dl>');
+    for (var second_key in the_directory.status.values) {
+      $second_body_html.append('<dt>' + second_key + '</dt>' + '<dd>' + the_directory.status.values[second_key] + '</dd>');
+    }
+    $html.find('.modal-title').html(the_directory.fullName());
+    
+    $html.find('.modal-body').append($second_body_html);
+    $html.find('.dismiss-button').click(function() {
+      $html.on('hidden.bs.modal', function() {
+        $('#modal').remove();
+      });
+      $html.modal('hide');
+    });
+    //$html.find('.modal-title').html()
+    $('.container').append($html);
+    $('#modal').modal();
+    
+  });
 };

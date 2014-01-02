@@ -75,3 +75,19 @@ ROSLIB.DiagnosticsStatus.createFromArray = function(msg) {
     });
   });
 };
+
+/**
+ * return the level as string
+ */
+
+ROSLIB.DiagnosticsStatus.prototype.levelString = function() {
+  if (this.isERROR()) {
+    return 'Error';
+  }
+  else if (this.isWARN()) {
+    return 'Warn';
+  }
+  else if (this.isOK()){
+    return 'OK';
+  }
+};

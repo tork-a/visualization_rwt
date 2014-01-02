@@ -171,3 +171,21 @@ ROSLIB.DiagnosticsDirectory.prototype.getWarnDirectories = function() {
 ROSLIB.DiagnosticsDirectory.prototype.getOkDirectories = function() {
   return this.getDirectories(ROSLIB.DiagnosticsStatus.LEVEL.OK);
 };
+
+/**
+ * look up the directory by name throught directory tree return the instance of the directory
+ */
+ROSLIB.DiagnosticsDirectory.prototype.findByName = function(name) {
+  if (this.status && this.status.name.toString() === name.toString()) {
+    return this;
+  }
+  else {
+    for (var i = 0; i < this.children.length; i++) {
+      var child_result = this.children[i].findByName(name);
+      if (child_result) {
+        return child_result;
+      }
+    }
+    return null;
+  }
+};
