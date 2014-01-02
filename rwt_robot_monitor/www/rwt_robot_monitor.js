@@ -405,7 +405,7 @@ ROSLIB.RWTRobotMonitor.prototype.updateView = function() {
   this.registerBrowserCallback();
 };
 
-ROSLIB.RWTRobotMonitor.prototype.updateList = function(list_id, level) {
+ROSLIB.RWTRobotMonitor.prototype.updateList = function(list_id, level, icon) {
   $('#' + list_id + ' li').remove();
   var directories = this.history.root.getDirectories(level);
   directories.sort(function(a, b) {
@@ -423,7 +423,7 @@ ROSLIB.RWTRobotMonitor.prototype.updateList = function(list_id, level) {
   });
 
   _.forEach(directories, function(dir) {
-    var html_pre = '<li class="list-group-item" data-name="' + dir.fullName() + '"><span class="glyphicon glyphicon-exclamation-sign"></span>';
+    var html_pre = '<li class="list-group-item" data-name="' + dir.fullName() + '"><span class="glyphicon ' + icon + '"></span>';
     var html_suf = '</li>';
     $('#' + list_id).append(html_pre
                             + dir.fullName() + ':' + dir.status.message
@@ -435,14 +435,14 @@ ROSLIB.RWTRobotMonitor.prototype.updateList = function(list_id, level) {
  * update warn list
  */
 ROSLIB.RWTRobotMonitor.prototype.updateWarnList = function() {
-  this.updateList('warn-list', ROSLIB.DiagnosticsStatus.LEVEL.WARN);
+  this.updateList('warn-list', ROSLIB.DiagnosticsStatus.LEVEL.WARN, 'glyphicon-exclamation-sign');
 };
 
 /**
  * update error list
  */
 ROSLIB.RWTRobotMonitor.prototype.updateErrorList = function() {
-  this.updateList('error-list', ROSLIB.DiagnosticsStatus.LEVEL.ERROR);
+  this.updateList('error-list', ROSLIB.DiagnosticsStatus.LEVEL.ERROR, 'glyphicon-minus-sign');
 };
 
 ROSLIB.RWTRobotMonitor.prototype.registerBrowserCallback = function() {
@@ -458,8 +458,7 @@ ROSLIB.RWTRobotMonitor.prototype.registerBrowserCallback = function() {
       + '<div class="modal-body">'
       + '</div>'
       + '<div class="modal-footer">'
-      + '<button type="button" class="btn btn-default dismiss-button">Close</button>'
-      + '<button type="button" class="btn btn-primary">Save changes</button>'
+      + '<button type="button" class="btn btn-primary dismiss-button">Close</button>'
       + '</div>'
       + '</div><!-- /.modal-content -->'
       + '</div><!-- /.modal-dialog -->'
@@ -475,12 +474,12 @@ ROSLIB.RWTRobotMonitor.prototype.registerBrowserCallback = function() {
       'Message': the_directory.status.message
     };
     for (var first_key in first_dict) {
-      $first_body_html.append('<dt>' + first_key + '</dt>' + '<dd>' + first_dict[first_key] + '</dd>');
+      $first_body_html.append('<dt>' + first_key + ':</dt>' + '<dd>' + first_dict[first_key] + '</dd>');
     }
     $html.find('.modal-body').append($first_body_html);
     var $second_body_html = $('<dl></dl>');
     for (var second_key in the_directory.status.values) {
-      $second_body_html.append('<dt>' + second_key + '</dt>' + '<dd>' + the_directory.status.values[second_key] + '</dd>');
+      $second_body_html.append('<dt>' + second_key + ':</dt>' + '<dd>' + the_directory.status.values[second_key] + '</dd>');
     }
     $html.find('.modal-title').html(the_directory.fullName());
     

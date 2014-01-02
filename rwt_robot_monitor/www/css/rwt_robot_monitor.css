@@ -8,3 +8,16 @@
   color: red;
   margin-right: 5px;
 }
+#modal .modal-body {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+#modal dl {
+  margin-top: 0px;
+}
+#modal dl dt {
+  float: left;
+  clear: both;
+  font-weight: bold;
+  margin-right: 5px;
+}
