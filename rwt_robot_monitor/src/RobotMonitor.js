@@ -16,6 +16,8 @@ ROSLIB.RWTRobotMonitor = function(spec) {
   var ros = spec.ros;
   this.last_diagnostics_update = null;
   this.last_time_id = spec.last_time_id;
+
+  this.history = new ROSLIB.DiagnosticsHistory(spec);
   this.diagnostics_agg_subscriber = new ROSLIB.Topic({
     ros: ros,
     name: diagnostics_agg_topic,
@@ -40,7 +42,10 @@ ROSLIB.RWTRobotMonitor.prototype.diagnosticsCallback = function(msg) {
   this.last_diagnostics_update = ROSLIB.Time.now();
   var diagnostics_statuses
     = ROSLIB.DiagnosticsStatus.createFromArray(msg);
-  
+  var that = this;
+  _.forEach(diagnostics_statuses, function(status) {
+    that.history.registerStatus(status);
+  });
 };
 
 /**
