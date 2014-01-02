@@ -64,6 +64,7 @@ ROSLIB.DiagnosticsDirectory.prototype.createChild = function(name) {
   var child = new ROSLIB.DiagnosticsDirectory({
     name: name
   }, this);
+  this.addChild(child);
   return child;
 };
 
@@ -74,4 +75,78 @@ ROSLIB.DiagnosticsDirectory.prototype.createChild = function(name) {
 ROSLIB.DiagnosticsDirectory.prototype.registerStatus = function(status) {
   this.status = status;
   return status;
+};
+
+/**
+ * return the instance of directory if the directory has error instance 
+ * as children.
+ */
+ROSLIB.DiagnosticsDirectory.prototype.isChildrenHasError = function() {
+  if (this.isErrorStatus()) {
+    return this;
+  }
+  else {
+    for (var i = 0; i < this.children.length; i++) {
+      var child_result = this.children[i].isChildrenHasError();
+      if (child_result) {
+        return child_result;
+      }
+    }
+  }
+};
+
+/**
+ * return true if the status registered to the directory has error level.
+ */
+ROSLIB.DiagnosticsDirectory.prototype.isErrorStatus = function() {
+  if (this.status) {
+    return this.status.isERROR();
+  }
+  else {
+    return false;
+  }
+};
+
+/**
+ * return full path of the directory
+ */
+ROSLIB.DiagnosticsDirectory.prototype.fullName = function() {
+  var rec = function(target_dir) {
+    if (target_dir.parent === null) { // root
+      return '';
+    }
+    else {
+      var parent_result = rec(target_dir.parent);
+      return parent_result + '/' + target_dir.name;
+    }
+  };
+  return rec(this);
+};
+
+/**
+ * return an array of directories which has error status
+ */
+ROSLIB.DiagnosticsDirectory.prototype.getErrorDirectories = function() {
+  var rec = function(target_dir) {
+    if (target_dir.children.length === 0) {
+      if (target_dir.isErrorStatus()) {
+        return [target_dir];
+      }
+      else {
+        return [];
+      }
+    }
+    else {
+      var result = [];
+      for (var i = 0; i < target_dir.children.length; i++) {
+        var child_result = rec(target_dir.children[i]);
+        result = result.concat(child_result);
+      }
+      if (target_dir.isErrorStatus()) {
+        result.push(target_dir);
+      }
+      return result;
+    }
+  };
+  return rec(this);
 };

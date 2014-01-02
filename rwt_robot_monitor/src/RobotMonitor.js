@@ -46,6 +46,9 @@ ROSLIB.RWTRobotMonitor.prototype.diagnosticsCallback = function(msg) {
   _.forEach(diagnostics_statuses, function(status) {
     that.history.registerStatus(status);
   });
+
+  this.updateView();
+  
 };
 
 /**
@@ -64,4 +67,41 @@ ROSLIB.RWTRobotMonitor.prototype.updateLastTimeString = function() {
   setTimeout(function() {
     that.updateLastTimeString();
   }, 1000);
+};
+
+/**
+ * update html view
+ */
+ROSLIB.RWTRobotMonitor.prototype.updateView = function() {
+  this.updateErrorList();
+};
+
+/**
+ * update error list
+ */
+ROSLIB.RWTRobotMonitor.prototype.updateErrorList = function() {
+  $('#error-list li').remove();
+  var error_directories = this.history.root.getErrorDirectories();
+  error_directories.sort(function(a, b) {
+    var apath = a.fullName();
+    var bpath = b.fullName();
+    if (apath > bpath) {
+      return 1;
+    }
+    else if (bpath > apath) {
+      return -1;
+    }
+    else {
+      return 0;
+    }
+  });
+
+  _.forEach(error_directories, function(dir) {
+    var html_pre = '<li class="list-group-item"><span class="glyphicon glyphicon-minus-sign"></span>';
+    var html_suf = '</li>';
+    $('#error-list').append(html_pre
+                            + dir.fullName() + ':' + dir.status.message
+                            + html_suf);
+    //console.log(dir.fullName() + ':' + dir.status.message);
+  });
 };

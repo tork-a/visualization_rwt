@@ -26,8 +26,9 @@ ROSLIB.DiagnosticsStatus = function(spec) {
 
   // parsing name
   // name has a directory separated by /
-  this.path = this.name.split('/');
-  
+  this.path = _.filter(this.name.split('/'), function(str) {
+    return str.toString() !== ''.toString();
+  });
 };
 
 ROSLIB.DiagnosticsStatus.LEVEL = {
@@ -57,6 +58,9 @@ ROSLIB.DiagnosticsStatus.prototype.isERROR = function() {
   return this.level === ROSLIB.DiagnosticsStatus.LEVEL.ERROR;
 };
 
+/**
+ * create DiagnosticsStatus instances from DiagnosticArray
+ */
 ROSLIB.DiagnosticsStatus.createFromArray = function(msg) {
   var header = msg.header;
   var header_stamp = ROSLIB.Time.fromROSMsg(header);

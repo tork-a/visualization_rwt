@@ -14,8 +14,6 @@ ROSLIB.DiagnosticsHistory = function(spec) {
   if (typeof spec === 'undefined') {
     spec = {};
   }
-  this.buffer = [];
-  this.max_buffer = spec.max_buffer || 1024;
   this.root = new ROSLIB.DiagnosticsDirectory({name: 'root'});
 };
 
@@ -38,12 +36,5 @@ ROSLIB.DiagnosticsHistory.prototype.registerStatus = function(status) {
   // the status should be inserted into
   parent_dir.registerStatus(status);
   return parent_dir;
-};
-
-/**
- * returns the length of the history buffer
- */
-ROSLIB.DiagnosticsHistory.prototype.length = function() {
-  return this.buffer.length;
 };
 

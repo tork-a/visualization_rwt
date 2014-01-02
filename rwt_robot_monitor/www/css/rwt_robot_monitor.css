@@ -1,0 +1,10 @@
+.inner-list-window {
+  overflow: scroll;
+}
+.inner-list-window.short-window {
+  height: 200px;
+}
+.inner-list-window .glyphicon {
+  color: red;
+  margin-right: 5px;
+}
