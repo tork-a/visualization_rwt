@@ -124,6 +124,28 @@ ROSLIB.DiagnosticsDirectory.prototype.fullName = function() {
 };
 
 /**
+ * get the uniq id which is available as html id
+ */
+ROSLIB.DiagnosticsDirectory.prototype.uniqID = function() {
+  var rec = function(target_dir) {
+    if (target_dir.parent === null) { // root
+      return '';
+    }
+    else {
+      var parent_result = rec(target_dir.parent);
+      if (parent_result.length === 0) {
+        return target_dir.name;
+      }
+      else {
+        return parent_result + '-' + target_dir.name;
+      }
+    }
+  };
+  return rec(this).replace(' ', '-');
+};
+
+
+/**
  * get an array of directories which has `level' such as error, warning and ok.
  */
 ROSLIB.DiagnosticsDirectory.prototype.getDirectories = function(level) {
@@ -187,5 +209,20 @@ ROSLIB.DiagnosticsDirectory.prototype.findByName = function(name) {
       }
     }
     return null;
+  }
+};
+
+/**
+ * return html to show icon suitable for error status of the directory
+ */
+ROSLIB.DiagnosticsDirectory.prototype.getIconHTML = function() {
+  if (this.status.level === ROSLIB.DiagnosticsStatus.LEVEL.OK) {
+    return '<span class="glyphicon-ok glyphicon"></span>';
+  }
+  else if (this.status.level === ROSLIB.DiagnosticsStatus.LEVEL.WARN) {
+    return '<span class="glyphicon-exclamation-sign glyphicon"></span>';
+  }
+  else if (this.status.level === ROSLIB.DiagnosticsStatus.LEVEL.ERROR) {
+    return '<span class="glyphicon-minus-sign glyphicon"></span>';
   }
 };

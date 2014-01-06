@@ -124,6 +124,28 @@ ROSLIB.DiagnosticsDirectory.prototype.fullName = function() {
 };
 
 /**
+ * get the uniq id which is available as html id
+ */
+ROSLIB.DiagnosticsDirectory.prototype.uniqID = function() {
+  var rec = function(target_dir) {
+    if (target_dir.parent === null) { // root
+      return '';
+    }
+    else {
+      var parent_result = rec(target_dir.parent);
+      if (parent_result.length === 0) {
+        return target_dir.name;
+      }
+      else {
+        return parent_result + '-' + target_dir.name;
+      }
+    }
+  };
+  return rec(this).replace(' ', '-');
+};
+
+
+/**
  * get an array of directories which has `level' such as error, warning and ok.
  */
 ROSLIB.DiagnosticsDirectory.prototype.getDirectories = function(level) {
@@ -187,6 +209,21 @@ ROSLIB.DiagnosticsDirectory.prototype.findByName = function(name) {
       }
     }
     return null;
+  }
+};
+
+/**
+ * return html to show icon suitable for error status of the directory
+ */
+ROSLIB.DiagnosticsDirectory.prototype.getIconHTML = function() {
+  if (this.status.level === ROSLIB.DiagnosticsStatus.LEVEL.OK) {
+    return '<span class="glyphicon-ok glyphicon"></span>';
+  }
+  else if (this.status.level === ROSLIB.DiagnosticsStatus.LEVEL.WARN) {
+    return '<span class="glyphicon-exclamation-sign glyphicon"></span>';
+  }
+  else if (this.status.level === ROSLIB.DiagnosticsStatus.LEVEL.ERROR) {
+    return '<span class="glyphicon-minus-sign glyphicon"></span>';
   }
 };
 
@@ -402,6 +439,7 @@ ROSLIB.RWTRobotMonitor.prototype.updateLastTimeString = function() {
 ROSLIB.RWTRobotMonitor.prototype.updateView = function() {
   this.updateErrorList();
   this.updateWarnList();
+  this.updateAllList();
   this.registerBrowserCallback();
 };
 
@@ -423,7 +461,8 @@ ROSLIB.RWTRobotMonitor.prototype.updateList = function(list_id, level, icon) {
   });
 
   _.forEach(directories, function(dir) {
-    var html_pre = '<li class="list-group-item" data-name="' + dir.fullName() + '"><span class="glyphicon ' + icon + '"></span>';
+    var html_pre = '<li class="list-group-item" data-name="'
+      + dir.fullName() + '"><span class="glyphicon ' + icon + '"></span>';
     var html_suf = '</li>';
     $('#' + list_id).append(html_pre
                             + dir.fullName() + ':' + dir.status.message
@@ -432,19 +471,57 @@ ROSLIB.RWTRobotMonitor.prototype.updateList = function(list_id, level, icon) {
 };
 
 /**
- * update warn list
+ * update all list view
+ */
+ROSLIB.RWTRobotMonitor.prototype.updateAllList = function() {
+  $('#all-list li').remove();
+  // return jquery object
+  var rec = function(directory) {
+    var $html = $('<li class="list-group-item inner">'
+                  + '<a data-toggle="collapse" data-parent="#all-list" href="#' + directory.uniqID() + '">' + directory.getIconHTML() + directory.name + '</a>'
+                  +'</li>');
+    if (directory.children.length === 0) {
+      return $html;
+    }
+    else {
+      var div_root = $('<ul class="list-group-item-content collapse" id="' + directory.uniqID() + '"></ul>');
+      for (var i = 0; i < directory.children.length; i++) {
+        var the_child = directory.children[i];
+        var the_result = rec(the_child);
+        div_root.append(the_result);
+        //htmls.push(the_result);
+        // var ul_html = $('<div class="list-group-item-content collapse" id="' + directory.uniqID() + '"><ul class="list-group"></ul></div>').append(the_result);
+        // $html.append(ul_html);
+      }
+      $html.append(div_root);
+      return $html;
+    }
+  };
+
+  //var $html = rec(this.history.root);
+  for (var i = 0; i < this.history.root.children.length; i++) {
+    var $html = rec(this.history.root.children[i]);
+    $('#all-list').append($html);
+  }
+};
+
+/**
+ * update warn list view
  */
 ROSLIB.RWTRobotMonitor.prototype.updateWarnList = function() {
   this.updateList('warn-list', ROSLIB.DiagnosticsStatus.LEVEL.WARN, 'glyphicon-exclamation-sign');
 };
 
 /**
- * update error list
+ * update error list view
  */
 ROSLIB.RWTRobotMonitor.prototype.updateErrorList = function() {
   this.updateList('error-list', ROSLIB.DiagnosticsStatus.LEVEL.ERROR, 'glyphicon-minus-sign');
 };
 
+/**
+ * registering callbacks for clicking the view lists
+ */
 ROSLIB.RWTRobotMonitor.prototype.registerBrowserCallback = function() {
   var root = this.history.root;
   $('.list-group-item').dblclick(function() {

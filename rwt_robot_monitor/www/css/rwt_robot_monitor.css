@@ -4,9 +4,24 @@
 .inner-list-window.short-window {
   height: 200px;
 }
+.inner-list-window.long-window {
+  height: 400px;
+  border: 1px solid #ddd;
+}
 .inner-list-window .glyphicon {
   color: red;
   margin-right: 5px;
+}
+.inner-list-window .glyphicon.glyphicon-ok {
+  color: green;
+}
+.inner-list-window #all-list li.inner {
+  padding-bottom: 0px;
+  border: none;
+}
+.inner-list-window #all-list ul {
+  padding-bottom: 0px;
+  margin-bottom: 0px;
 }
 #modal .modal-body {
   padding-top: 5px;
