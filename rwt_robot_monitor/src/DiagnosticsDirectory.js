@@ -141,7 +141,7 @@ ROSLIB.DiagnosticsDirectory.prototype.uniqID = function() {
       }
     }
   };
-  return rec(this).replace(' ', '-');
+  return rec(this).replace(' ', '-').replace('(', '').replace(')', '');
 };
 
 
@@ -224,5 +224,17 @@ ROSLIB.DiagnosticsDirectory.prototype.getIconHTML = function() {
   }
   else if (this.status.level === ROSLIB.DiagnosticsStatus.LEVEL.ERROR) {
     return '<span class="glyphicon-minus-sign glyphicon"></span>';
+  }
+};
+
+/**
+ * return html of icon to show this directory has child
+ */
+ROSLIB.DiagnosticsDirectory.prototype.getCollapseIconHTML = function() {
+  if (this.children.length !== 0) {
+    return '<span class="glyphicon-chevron-right glyphicon"></span>';
+  }
+  else {
+    return '';
   }
 };

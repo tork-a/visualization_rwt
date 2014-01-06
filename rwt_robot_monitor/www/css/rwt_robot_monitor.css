@@ -15,6 +15,10 @@
 .inner-list-window .glyphicon.glyphicon-ok {
   color: green;
 }
+.inner-list-window .glyphicon.glyphicon-chevron-right,
+.inner-list-window .glyphicon.glyphicon-chevron-down {
+  color: #969696;
+}
 .inner-list-window #all-list li.inner {
   padding-bottom: 0px;
   border: none;

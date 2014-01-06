@@ -141,7 +141,7 @@ ROSLIB.DiagnosticsDirectory.prototype.uniqID = function() {
       }
     }
   };
-  return rec(this).replace(' ', '-');
+  return rec(this).replace(' ', '-').replace('(', '').replace(')', '');
 };
 
 
@@ -224,6 +224,18 @@ ROSLIB.DiagnosticsDirectory.prototype.getIconHTML = function() {
   }
   else if (this.status.level === ROSLIB.DiagnosticsStatus.LEVEL.ERROR) {
     return '<span class="glyphicon-minus-sign glyphicon"></span>';
+  }
+};
+
+/**
+ * return html of icon to show this directory has child
+ */
+ROSLIB.DiagnosticsDirectory.prototype.getCollapseIconHTML = function() {
+  if (this.children.length !== 0) {
+    return '<span class="glyphicon-chevron-right glyphicon"></span>';
+  }
+  else {
+    return '';
   }
 };
 
@@ -478,7 +490,9 @@ ROSLIB.RWTRobotMonitor.prototype.updateAllList = function() {
   // return jquery object
   var rec = function(directory) {
     var $html = $('<li class="list-group-item inner">'
-                  + '<a data-toggle="collapse" data-parent="#all-list" href="#' + directory.uniqID() + '">' + directory.getIconHTML() + directory.name + '</a>'
+                  + '<a data-toggle="collapse" data-parent="#all-list" href="#' + directory.uniqID() + '">'
+                  + directory.getCollapseIconHTML()
+                  + directory.getIconHTML() + directory.name + '</a>'
                   +'</li>');
     if (directory.children.length === 0) {
       return $html;
@@ -489,16 +503,12 @@ ROSLIB.RWTRobotMonitor.prototype.updateAllList = function() {
         var the_child = directory.children[i];
         var the_result = rec(the_child);
         div_root.append(the_result);
-        //htmls.push(the_result);
-        // var ul_html = $('<div class="list-group-item-content collapse" id="' + directory.uniqID() + '"><ul class="list-group"></ul></div>').append(the_result);
-        // $html.append(ul_html);
       }
       $html.append(div_root);
       return $html;
     }
   };
 
-  //var $html = rec(this.history.root);
   for (var i = 0; i < this.history.root.children.length; i++) {
     var $html = rec(this.history.root.children[i]);
     $('#all-list').append($html);
