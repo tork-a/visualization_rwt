@@ -486,10 +486,15 @@ ROSLIB.RWTRobotMonitor.prototype.updateList = function(list_id, level, icon) {
  * update all list view
  */
 ROSLIB.RWTRobotMonitor.prototype.updateAllList = function() {
+  // check opened list first
+  var open_ids = [];
+  $('#all-list .in, #all-list .collapsing').each(function() {
+    open_ids.push($(this).attr('id'));
+  });
   $('#all-list li').remove();
   // return jquery object
   var rec = function(directory) {
-    var $html = $('<li class="list-group-item inner">'
+    var $html = $('<li class="list-group-item inner" data-name="' + directory.fullName() + '">'
                   + '<a data-toggle="collapse" data-parent="#all-list" href="#' + directory.uniqID() + '">'
                   + directory.getCollapseIconHTML()
                   + directory.getIconHTML() + directory.name + '</a>'
@@ -498,7 +503,15 @@ ROSLIB.RWTRobotMonitor.prototype.updateAllList = function() {
       return $html;
     }
     else {
-      var div_root = $('<ul class="list-group-item-content collapse" id="' + directory.uniqID() + '"></ul>');
+      var div_root = $('<ul class="list-group-item-content collapse no-transition" id="' + directory.uniqID() + '"></ul>');
+      for (var j = 0; j < open_ids.length; j++) {
+        if (open_ids[j].toString() === directory.uniqID().toString()) {
+          //div_root.find('.collapse').addClass('in');
+          div_root.addClass('in');
+          break;
+        }
+      }
+      //if (directory.uniqID().toString() === )
       for (var i = 0; i < directory.children.length; i++) {
         var the_child = directory.children[i];
         var the_result = rec(the_child);
@@ -535,6 +548,9 @@ ROSLIB.RWTRobotMonitor.prototype.updateErrorList = function() {
 ROSLIB.RWTRobotMonitor.prototype.registerBrowserCallback = function() {
   var root = this.history.root;
   $('.list-group-item').dblclick(function() {
+    if ($(this).find('.in').length !== 0) {
+      return;                   // skip
+    }
     var html = '<div class="modal fade" id="modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">'
       + '<div class="modal-dialog">'
       + '<div class="modal-content">'
@@ -551,6 +567,7 @@ ROSLIB.RWTRobotMonitor.prototype.registerBrowserCallback = function() {
       + '</div><!-- /.modal-dialog -->'
       +' </div><!-- /.modal -->';
     var the_directory = root.findByName($(this).attr('data-name'));
+    console.log(the_directory.fullName() + ' is clicked');
     var $html = $(html);
     var $first_body_html = $('<dl></dl>');
     var first_dict = {
