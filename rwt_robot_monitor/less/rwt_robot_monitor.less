@@ -1,0 +1,58 @@
+// rwt_robot_monitor.less
+.inner-list-window {
+    overflow: scroll;
+    &.short-window {
+        height: 200px;
+    }
+    &.long-window {
+        height: 400px;
+        border: 1px solid #ddd;
+    }
+    .glyphicon {
+        color: red;
+        margin-right: 5px;
+        &.glyphicon-ok {
+            color: green;
+        }
+        &.glyphicon-chevron-right, &.glyphicon-chevron-down {
+            color: rgb(150, 150, 150);
+        }
+    }
+    
+    #all-list {
+        li.inner {
+            padding-bottom: 0px;
+            border: none;
+        }
+        ul {
+            padding-bottom: 0px;
+            margin-bottom: 0px;
+        }
+    }
+}
+
+#modal {
+    .modal-body {
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    dl {
+        margin-top: 0px;
+        dt {
+            float: left;
+            clear: both;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        dd {
+        }
+    }
+}
+
+.no-transition {
+    -webkit-transition: height 0;
+    -moz-transition: height 0;
+    -ms-transition: height 0;
+    -o-transition: height 0;
+    transition: height 0;
+}
