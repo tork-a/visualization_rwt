@@ -141,7 +141,29 @@ ROSLIB.DiagnosticsDirectory.prototype.uniqID = function() {
       }
     }
   };
-  return rec(this).replace(' ', '-').replace('(', '').replace(')', '');
+  return rec(this).replace(' ', '-').replace('(', '').replace(')', '').replace('\t', '-');
+};
+
+
+/**
+ * get an array of all the directories
+ */
+ROSLIB.DiagnosticsDirectory.prototype.getAllDirectories = function() {
+  var rec = function(target_dir) {
+    if (target_dir.children.length === 0) {
+      return [target_dir];
+    }
+    else {
+      var result = [];
+      for (var i = 0; i < target_dir.children.length; i++) {
+        var child_result = rec(target_dir.children[i]);
+        result = result.concat(child_result);
+      }
+      result.push(target_dir);
+      return result;
+    }
+  };
+  return rec(this);
 };
 
 
@@ -237,4 +259,12 @@ ROSLIB.DiagnosticsDirectory.prototype.getCollapseIconHTML = function() {
   else {
     return '';
   }
+};
+
+
+/**
+ * return true if the directory has any children
+ */
+ROSLIB.DiagnosticsDirectory.prototype.hasChildren = function() {
+  return this.children.length !== 0;
 };
