@@ -4,6 +4,7 @@ $(function() {
   });
   var robot_monitor = new ROSLIB.RWTDiagnosticsPlotter({
     ros: ros,
-    name_select_id: 'name-select'
+    name_select_id: 'name-select',
+    plot_field_select_id: 'plot-field-select'
   });
 });

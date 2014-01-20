@@ -14,6 +14,7 @@ ROSLIB.RWTDiagnosticsPlotter = function(spec) {
   var diagnostics_agg_topic = spec.diagnostics_agg_topic || '/diagnostics_agg';
   self.registerNameSelectCallback();
   self.registerPlotFieldSelectCallback();
+  self.registerAddCallback();
   self.diagnostics_agg_subscriber = new ROSLIB.Topic({
     ros: ros,
     name: diagnostics_agg_topic,
@@ -27,14 +28,20 @@ ROSLIB.RWTDiagnosticsPlotter = function(spec) {
   
 };
 
-ROSLIB.RWTDiagnosticsPlotter.prototype.registerPlotFieldSelectCallback = function(msg) {
+ROSLIB.RWTDiagnosticsPlotter.prototype.registerAddCallback = function() {
+  var self =this;
+
+};
+
+
+ROSLIB.RWTDiagnosticsPlotter.prototype.registerPlotFieldSelectCallback = function() {
   var self = this;
   $('#' + self.plot_field_select_id).bind('change', function() {
     console.log($(this).val());
   });
 };
 
-ROSLIB.RWTDiagnosticsPlotter.prototype.registerNameSelectCallback = function(msg) {
+ROSLIB.RWTDiagnosticsPlotter.prototype.registerNameSelectCallback = function() {
   var self = this;
   $('#' + self.name_select_id).bind('change', function() {
     var name = $(this).attr('value');
