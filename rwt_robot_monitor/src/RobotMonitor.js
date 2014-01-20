@@ -191,7 +191,6 @@ ROSLIB.RWTRobotMonitor.prototype.registerBrowserCallback = function() {
       + '</div><!-- /.modal-dialog -->'
       +' </div><!-- /.modal -->';
     var the_directory = root.findByName($(this).attr('data-name'));
-    console.log(the_directory.fullName() + ' is clicked');
     var $html = $(html);
     var $first_body_html = $('<dl></dl>');
     var first_dict = {
