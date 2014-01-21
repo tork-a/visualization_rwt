@@ -514,7 +514,8 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.registerNameSelectCallback = function() {
                           + '</div>'
                           + '<div class="modal-body">'
                           + '<p><span class="label label-warning">'
-                          + name + '</span> does not have values which can be plotted</p>'
+                          + name
+                          + '</span> does not have values which can be plotted</p>'
                           + '</div>'
                           + '<div class="modal-footer">'
                           + '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'
