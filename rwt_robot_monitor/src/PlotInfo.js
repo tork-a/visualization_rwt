@@ -11,6 +11,11 @@ ROSLIB.DiagnosticsPlotInfo = function(spec) {
   self.clearInfo();
 };
 
+ROSLIB.DiagnosticsPlotInfo.prototype.getDirectories = function() {
+  var self = this;
+  return self.plotting_directories;
+};
+
 ROSLIB.DiagnosticsPlotInfo.prototype.clearInfo = function() {
   var self = this;
   self.plotting_fields = [];
@@ -21,7 +26,6 @@ ROSLIB.DiagnosticsPlotInfo.prototype.registerDirectories = function(directories)
   var self = this;
   self.plotting_directories = directories;
 };
-
 
 ROSLIB.DiagnosticsPlotInfo.prototype.registerField = function(field) {
   var self = this;

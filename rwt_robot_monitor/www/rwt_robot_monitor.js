@@ -429,6 +429,11 @@ ROSLIB.DiagnosticsPlotInfo = function(spec) {
   self.clearInfo();
 };
 
+ROSLIB.DiagnosticsPlotInfo.prototype.getDirectories = function() {
+  var self = this;
+  return self.plotting_directories;
+};
+
 ROSLIB.DiagnosticsPlotInfo.prototype.clearInfo = function() {
   var self = this;
   self.plotting_fields = [];
@@ -439,7 +444,6 @@ ROSLIB.DiagnosticsPlotInfo.prototype.registerDirectories = function(directories)
   var self = this;
   self.plotting_directories = directories;
 };
-
 
 ROSLIB.DiagnosticsPlotInfo.prototype.registerField = function(field) {
   var self = this;
@@ -472,6 +476,40 @@ ROSLIB.DiagnosticsPlotInfo.prototype.plottable = function() {
           self.plotting_directories.length !== 0);
 };
 
+// PlotWindow.js
+
+/**
+ * @fileOverview a file to define DiagnosticsPlotWindow class.
+ * @author Ryohei Ueda
+ */
+
+ROSLIB.DiagnosticsPlotWindow = function(spec) {
+  var self = this;
+  self.directory = spec.directory;
+};
+
+ROSLIB.DiagnosticsPlotWindow.prototype.initialize = function(spec) {
+  var self = this;
+  self.index = spec.index;
+
+  // creating html
+  self.$html = $('<div class="rwt-diagnostics-plot-window col-xs-4"></div>');
+  self.$html.data('index', self.index);
+  
+};
+
+ROSLIB.DiagnosticsPlotWindow.prototype.getHTMLObject = function() {
+  var self = this;
+  return self.$html;
+};
+
+ROSLIB.DiagnosticsPlotWindow.prototype.update = function() {
+};
+
+ROSLIB.DiagnosticsPlotWindow.prototype.remove = function() {
+};
+
+
 // Plotter.js
 
 /**
@@ -487,6 +525,7 @@ ROSLIB.RWTDiagnosticsPlotter = function(spec) {
   self.name_select_id = spec.name_select_id || 'name-select';
   self.plot_field_select_id = spec.plot_field_select_id || 'plot-field-select';
   self.add_button_id = spec.add_button_id || 'add-button';
+  self.plot_windows_id = spec.plot_windows_id || 'plot-windows-area';
   var diagnostics_agg_topic = spec.diagnostics_agg_topic || '/diagnostics_agg';
   
   self.registerNameSelectCallback();
@@ -503,13 +542,47 @@ ROSLIB.RWTDiagnosticsPlotter = function(spec) {
   });
 };
 
-ROSLIB.RWTDiagnosticsPlotter.prototype.registerPlotInfo = function(info_spec) {
+
+ROSLIB.RWTDiagnosticsPlotter.prototype.preparePlotWindows = function() {
+  var self = this;
+  _.forEach(self.plot_windows, function(win) {
+    win.remove();
+  });
+  self.plot_windows = [];
+  _.map(self.plotting_info.getDirectories(), function(dir) {
+    var new_window = new ROSLIB.DiagnosticsPlotWindow({
+      directory: dir
+    });
+    self.plot_windows.push(new_window);
+  });
+
+  var htmls = [];
+  for (var i = 0; i < self.plot_windows.length; i++) {
+    self.plot_windows[i].initialize({
+      index: i
+    });
+    htmls.push(self.plot_windows[i].getHTMLObject());
+  }
+
+  var $plot_area = $('#' + self.plot_windows_id);
+  var $row = null;
+  for (var j = 0; j < htmls.length; j++) {
+    if (j % 3 === 0) {
+      if ($row) {
+        //$rows.push($row);
+        $plot_area.append($row);
+      }
+      $row = $('<div class="row"></div>');
+    }
+    $row.append(htmls[j]);
+  }
   
 };
 
 ROSLIB.RWTDiagnosticsPlotter.prototype.registerAddCallback = function() {
-  var self =this;
+  var self = this;
   $('#' + self.add_button_id).click(function(e) {
+    self.plotting_info.clearInfo(); // clear it anyway
     var name = $('#' + self.name_select_id).val();
     var directory = self.history.root.findByName(name);
     var directories = [];
@@ -522,6 +595,7 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.registerAddCallback = function() {
     e.preventDefault();
     self.plotting_info.registerDirectories(directories);
     self.plotting_info.registerField($('#' + self.plot_field_select_id).val());
+    self.preparePlotWindows();
     return false;
   });
 };
