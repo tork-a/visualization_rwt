@@ -146,6 +146,18 @@ ROSLIB.DiagnosticsDirectory.prototype.uniqID = function() {
 
 
 /**
+ * get an array of all the directories without root itself
+ */
+ROSLIB.DiagnosticsDirectory.prototype.getAllDirectoriesWithoutRoot = function() {
+  var self = this;
+  var directories = self.getAllDirectories();
+  _.remove(directories, function(dir) {
+    return dir === self;
+  });
+  return directories;
+};
+
+/**
  * get an array of all the directories
  */
 ROSLIB.DiagnosticsDirectory.prototype.getAllDirectories = function() {

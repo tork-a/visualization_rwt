@@ -31,7 +31,7 @@ ROSLIB.RWTPlot.prototype.clearData = function() {
   }
   this.need_to_animate = false;
   if (this.spec) {
-    $(this.content).find('svg').remove();
+    $('#' + this.content.attr('id')).find('svg').remove();
     this.initializePlot(this.content, this.spec);
   }
 };
@@ -39,8 +39,8 @@ ROSLIB.RWTPlot.prototype.clearData = function() {
 ROSLIB.RWTPlot.prototype.initializePlot = function($content, spec) {
   this.spec = spec || {};
   this.content = $content;
-  var width = $($content).width();
-  var height = $($content).height();
+  var width = $content.width();
+  var height = $content.height();
   var margin = spec.margin || {top: 20, right: 20, bottom: 20, left: 40};
   var that = this;
 
@@ -75,7 +75,7 @@ ROSLIB.RWTPlot.prototype.initializePlot = function($content, spec) {
     .range([height - margin.top - margin.bottom, 0]);
   }
   
-  this.svg = d3.select($content).append('svg')
+  this.svg = d3.select('#' + $content.attr('id')).append('svg')
     .attr('class', 'rwt-plot')
     .attr('width', width)
     .attr('height', height)
