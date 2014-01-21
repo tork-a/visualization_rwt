@@ -466,6 +466,12 @@ ROSLIB.DiagnosticsPlotInfo.prototype.plotValues = function() {
   });
 };
 
+ROSLIB.DiagnosticsPlotInfo.prototype.plottable = function() {
+  var self = this;
+  return (self.plotting_fields.length !== 0 &&
+          self.plotting_directories.length !== 0);
+};
+
 // Plotter.js
 
 /**
@@ -669,7 +675,16 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.diagnosticsCallback = function(msg) {
       self.previous_directory_names.push(name);
     });
   }
-  console.log(self.plotting_info.plotValues());
+  if (self.plotting_info.plottable()) {
+    var plot_values = self.plotting_info.plotValues();
+    _.forEach(plot_values, function(field_values) {
+      console.log('field: ' + field_values.field);
+      for (var dir_name in field_values.values) {
+        console.log ('  ' + dir_name + ': ' + field_values.values[dir_name]);
+      }
+    });
+  }
+  
 };
 
 // RobotMonitor.js

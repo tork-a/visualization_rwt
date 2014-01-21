@@ -47,3 +47,9 @@ ROSLIB.DiagnosticsPlotInfo.prototype.plotValues = function() {
     };
   });
 };
+
+ROSLIB.DiagnosticsPlotInfo.prototype.plottable = function() {
+  var self = this;
+  return (self.plotting_fields.length !== 0 &&
+          self.plotting_directories.length !== 0);
+};
