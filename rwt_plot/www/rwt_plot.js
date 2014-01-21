@@ -48,11 +48,13 @@ ROSLIB.RWTPlot.prototype.initializePlot = function($content, spec) {
   var yaxis_min = yaxis_spec.min || 0.0;
   var yaxis_max = yaxis_spec.max || 1.0;
   var yaxis_tick = yaxis_spec.tick || false;
+  
   this.y_autoscale = yaxis_spec.auto_scale || false;
   this.y_min_value = yaxis_min;
   this.y_max_value = yaxis_max;
   this.y_autoscale_margin = yaxis_spec.auto_scale_margin || 0.2;
   this.yaxis_tick = yaxis_tick;
+  
   if (this.use_timestamp) {
     //this.x_scale = d3.scale.linear().domain([0, this.max_data]).range([0, width - margin.left - margin.right]);
     this.x_scale = d3.time.scale().range([0, width - margin.left - margin.right]);
@@ -103,7 +105,7 @@ ROSLIB.RWTPlot.prototype.initializePlot = function($content, spec) {
     .call(this.x);
   this.y = d3.svg.axis().scale(this.y_scale).orient('left');
   if (this.yaxis_tick) {
-    this.y = this.y.ticks(2);
+    this.y = this.y.ticks(this.yaxis_tick);
   }
   this.svg.append('g')
     .attr('class', 'y axis')
@@ -162,8 +164,7 @@ ROSLIB.RWTPlot.prototype.checkYAxisMinMax = function(data) {
     if (this.yaxis_tick) {
       axis = axis.ticks(this.yaxis_tick);
     }
-    this.svg.select('.y.axis')
-      .call(axis);
+    this.svg.select('.y.axis').call(axis);
   }
 };
 
@@ -289,6 +290,7 @@ ROSLIB.RWTPlot.prototype.addTimestampedData = function(stamp, data) {
         plot_data.push(new_data);
       }
     }
+
     if (need_to_animate) {
       var translation = oldest_stamp.substract(before_chop_oldest_time).toSec();
       this.paths[i]
