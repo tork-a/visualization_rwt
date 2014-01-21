@@ -531,7 +531,7 @@ ROSLIB.DiagnosticsPlotWindow.prototype.initialize = function(spec) {
   // creating html
   self.$html = $('<div class="rwt-diagnostics-plot-window col-xs-2"></div>');
   self.$html.data('index', self.index);
-  // self.$html.append('<div class="background"><p>' + self.directory.status.name +'</p></div>');
+  self.$html.append('<div class="background"><p>' + self.directory.status.name +'</p></div>');
   self.$html.append('<div class="plot-window-inner" id="rwt-plot-window-' + self.index + '"></div>');
   self.$html.append('<button class="close-button-layer close" type="button">&times;</button>');
   self.$html.find('.close').click(function() {

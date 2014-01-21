@@ -58,9 +58,10 @@
 }
 .rwt-diagnostics-plot-window .background {
   position: absolute;
-  top: 0;
+  top: 20px;
   left: 0;
   width: 100%;
+  padding-left: 45px;
   color: #969696;
   z-index: -1;
 }
@@ -68,7 +69,6 @@
   width: 100%;
   margin: 0;
   padding: 0;
-  text-align: center;
 }
 .rwt-diagnostics-plot-window .close-button-layer {
   position: absolute;
