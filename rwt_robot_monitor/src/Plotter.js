@@ -11,7 +11,9 @@ ROSLIB.RWTDiagnosticsPlotter = function(spec) {
   self.history = new ROSLIB.DiagnosticsHistory(spec);
   self.name_select_id = spec.name_select_id || 'name-select';
   self.plot_field_select_id = spec.plot_field_select_id || 'plot-field-select';
+  self.add_button_id = spec.add_button_id || 'add-button';
   var diagnostics_agg_topic = spec.diagnostics_agg_topic || '/diagnostics_agg';
+  
   self.registerNameSelectCallback();
   self.registerPlotFieldSelectCallback();
   self.registerAddCallback();
@@ -24,13 +26,15 @@ ROSLIB.RWTDiagnosticsPlotter = function(spec) {
   self.diagnostics_agg_subscriber.subscribe(function(msg) {
     self.diagnosticsCallback(msg);
   });
-  
-  
 };
 
 ROSLIB.RWTDiagnosticsPlotter.prototype.registerAddCallback = function() {
   var self =this;
-
+  $('#' + self.add_button_id).click(function(e) {
+    console.log('clicked');
+    e.preventDefault();
+    return false;
+  });
 };
 
 
@@ -49,6 +53,7 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.registerNameSelectCallback = function() {
     var directory = self.history.root.findByName(name);
     var candidate_keys = [];
     $('#' + self.plot_field_select_id + ' option').remove();
+    var invoke_error_message = false;
     if (directory.hasChildren()) {
       // get the children
       var children = directory.getAllDirectories();
@@ -72,9 +77,12 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.registerNameSelectCallback = function() {
         $option.val(key);
         $('#' + self.plot_field_select_id).append($option);
       });
+      if (uniq_keys.length === 0) {
+        invoke_error_message = true;
+      }
     }
     else {
-      
+      var counter = 0;
       for (var key in directory.status.values) {
         var $option = $('<option>' + key + '</option>');
         $option.val(key);
@@ -83,11 +91,40 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.registerNameSelectCallback = function() {
         
         if (!isNaN(number_value)) {
           $('#' + self.plot_field_select_id).append($option);
+          counter = counter + 1;
         }
       }
+      if (counter === 0) {
+        invoke_error_message = true;
+      }
     }
-    
+    if (invoke_error_message) {
+      var $modal_html = $('<div class="modal fade" id="rwt-robot-plotter-warn-message">'
+                          + '<div class="modal-dialog">'
+                          + '<div class="modal-content">'
+                          + '<div class="modal-header">'
+                          + '<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>'
+                          + '<h4 class="modal-title">Error</h4>'
+                          + '</div>'
+                          + '<div class="modal-body">'
+                          + '<p><span class="label label-warning">'
+                          + name + '</span> does not have values which can be plotted</p>'
+                          + '</div>'
+                          + '<div class="modal-footer">'
+                          + '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>'
+                          + '</div>'
+                          + '</div>'
+                          + '</div>'
+                          + '</div>');
+      $('body').append($modal_html);
+      // registering function to remove the html
+      $modal_html.on('hidden.bs.modal', function() {
+        $('#rwt-robot-plotter-warn-message').remove();
+      });
+      $('#rwt-robot-plotter-warn-message').modal();
+    }
   });
+  
 };
 
 ROSLIB.RWTDiagnosticsPlotter.prototype.diagnosticsCallback = function(msg) {
