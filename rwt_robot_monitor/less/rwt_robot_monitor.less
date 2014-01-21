@@ -62,11 +62,35 @@
 }
 .rwt-diagnostics-plot-window {
     //border: 1px solid rgb(150, 150, 150);
-    height: 100px;
+    @window-height: 100px;
+    .plot-window-inner {
+        height: @window-height;
+    }
+    position: relative;
+    .background {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        p {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        color: rgb(150, 150, 150);
+        z-index: -1;
+    }
+    .close-button-layer {
+        position: absolute;
+        top: 0;
+        right: 10px;
+        z-index: 10;
+    }
 }
 
 svg.rwt-plot {
-    font: 10px sans-serif;
+    font: 8px sans-serif;
     .line {
         fill: none;
         stroke-width: 1.5px;

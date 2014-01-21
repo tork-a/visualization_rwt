@@ -97,7 +97,6 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.registerAddCallback = function() {
 ROSLIB.RWTDiagnosticsPlotter.prototype.registerPlotFieldSelectCallback = function() {
   var self = this;
   $('#' + self.plot_field_select_id).bind('change', function() {
-    console.log($(this).val());
   });
 };
 
@@ -245,14 +244,11 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.diagnosticsCallback = function(msg) {
   if (self.plotting_info.plottable()) {
     var plot_values = self.plotting_info.plotValues();
     _.forEach(plot_values, function(field_values) {
-      console.log('field: ' + field_values.field);
       for (var dir_name in field_values.values) {
         var val = field_values.values[dir_name];
         if (val && !isNaN(val)) {
-          console.log(val);
           self.plot_windows_by_name[dir_name].update(val);
         }
-        //console.log ('  ' + dir_name + ': ' + field_values.values[dir_name]);
       }
     });
   }

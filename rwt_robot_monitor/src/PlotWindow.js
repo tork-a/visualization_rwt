@@ -12,8 +12,7 @@ ROSLIB.DiagnosticsPlotWindow = function(spec) {
 
 ROSLIB.DiagnosticsPlotWindow.prototype.initializePlotter = function() {
   var self = this;
-  
-  self.plotter.initializePlot(self.$html, {
+  self.plotter.initializePlot(self.$html.find('.plot-window-inner'), {
     margin: {
       left: 20,
       top: 2,
@@ -40,8 +39,14 @@ ROSLIB.DiagnosticsPlotWindow.prototype.initialize = function(spec) {
   });
   
   // creating html
-  self.$html = $('<div class="rwt-diagnostics-plot-window col-xs-2" id="rwt-plot-window-' + self.index + '"></div>');
+  self.$html = $('<div class="rwt-diagnostics-plot-window col-xs-2"></div>');
   self.$html.data('index', self.index);
+  // self.$html.append('<div class="background"><p>' + self.directory.status.name +'</p></div>');
+  self.$html.append('<div class="plot-window-inner" id="rwt-plot-window-' + self.index + '"></div>');
+  self.$html.append('<button class="close-button-layer close" type="button">&times;</button>');
+  self.$html.find('.close').click(function() {
+    self.remove();
+  });
 };
 
 ROSLIB.DiagnosticsPlotWindow.prototype.getHTMLObject = function() {
@@ -56,6 +61,7 @@ ROSLIB.DiagnosticsPlotWindow.prototype.update = function(data) {
 };
 
 ROSLIB.DiagnosticsPlotWindow.prototype.remove = function() {
-  
+  var self = this;
+  self.$html.remove();
 };
 
