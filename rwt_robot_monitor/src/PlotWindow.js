@@ -10,6 +10,11 @@ ROSLIB.DiagnosticsPlotWindow = function(spec) {
   self.directory = spec.directory;
 };
 
+ROSLIB.DiagnosticsPlotWindow.prototype.getDirectory = function() {
+  var self = this;
+  return self.directory;
+};
+
 ROSLIB.DiagnosticsPlotWindow.prototype.initializePlotter = function() {
   var self = this;
   self.plotter.initializePlot(self.$html.find('.plot-window-inner'), {
@@ -63,5 +68,6 @@ ROSLIB.DiagnosticsPlotWindow.prototype.update = function(data) {
 ROSLIB.DiagnosticsPlotWindow.prototype.remove = function() {
   var self = this;
   self.$html.remove();
+  self.$html = null;
 };
 

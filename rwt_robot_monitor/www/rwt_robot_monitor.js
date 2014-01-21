@@ -495,6 +495,11 @@ ROSLIB.DiagnosticsPlotWindow = function(spec) {
   self.directory = spec.directory;
 };
 
+ROSLIB.DiagnosticsPlotWindow.prototype.getDirectory = function() {
+  var self = this;
+  return self.directory;
+};
+
 ROSLIB.DiagnosticsPlotWindow.prototype.initializePlotter = function() {
   var self = this;
   self.plotter.initializePlot(self.$html.find('.plot-window-inner'), {
@@ -548,6 +553,7 @@ ROSLIB.DiagnosticsPlotWindow.prototype.update = function(data) {
 ROSLIB.DiagnosticsPlotWindow.prototype.remove = function() {
   var self = this;
   self.$html.remove();
+  self.$html = null;
 };
 
 
@@ -599,7 +605,20 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.preparePlotWindows = function() {
     self.plot_windows.push(new_window);
     self.plot_windows_by_name[dir.fullName()] = new_window;
   });
+  self.rearrangePlotWindows();
+};
 
+ROSLIB.RWTDiagnosticsPlotter.prototype.rearrangePlotWindows = function() {
+  var self = this;
+  // first of all, find the removed window
+  var removed_windows = _.remove(self.plot_windows, function(win) {
+    return win.getHTMLObject() === null;
+  });
+  _.forEach(removed_windows, function(win) {
+    delete self.plot_windows_by_name[win.getDirectory().fullName()];
+  });
+
+  // rearrange
   var $plot_area = $('#' + self.plot_windows_id);
   $plot_area.html('');
   var $row = null;
@@ -618,11 +637,12 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.preparePlotWindows = function() {
   if (self.plot_windows.length % 6 !== 0) {
     $plot_area.append($row);
   }
-
   for (var i = 0; i < self.plot_windows.length; i++) {
     self.plot_windows[i].initializePlotter();
   }
-  
+  $plot_area.find('.close').click(function() {
+    self.rearrangePlotWindows();
+  });
 };
 
 ROSLIB.RWTDiagnosticsPlotter.prototype.registerAddCallback = function() {
@@ -800,7 +820,9 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.diagnosticsCallback = function(msg) {
       for (var dir_name in field_values.values) {
         var val = field_values.values[dir_name];
         if (val && !isNaN(val)) {
-          self.plot_windows_by_name[dir_name].update(val);
+          if (self.plot_windows_by_name.hasOwnProperty(dir_name)) {
+            self.plot_windows_by_name[dir_name].update(val);
+          }
         }
       }
     });
