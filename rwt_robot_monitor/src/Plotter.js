@@ -6,7 +6,7 @@
  */
 ROSLIB.RWTDiagnosticsPlotter = function(spec) {
   var self = this;
-  self.plotting_infos = new ROSLIB.RWTDiagnosticsPlotInfo();
+  self.plotting_info = new ROSLIB.DiagnosticsPlotInfo();
   self.previous_directory_names = [];
   var ros = spec.ros;
   self.history = new ROSLIB.DiagnosticsHistory(spec);
@@ -36,8 +36,18 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.registerPlotInfo = function(info_spec) {
 ROSLIB.RWTDiagnosticsPlotter.prototype.registerAddCallback = function() {
   var self =this;
   $('#' + self.add_button_id).click(function(e) {
+    var name = $('#' + self.name_select_id).val();
+    var directory = self.history.root.findByName(name);
+    var directories = [];
+    if (directory.hasChildren()) {
+      directories = directory.getAllDirectoriesWithoutRoot();
+    }
+    else {
+      directories = [directory];
+    }
     e.preventDefault();
-
+    self.plotting_info.registerDirectories(directories);
+    self.plotting_info.registerField($('#' + self.plot_field_select_id).val());
     return false;
   });
 };
@@ -191,5 +201,5 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.diagnosticsCallback = function(msg) {
       self.previous_directory_names.push(name);
     });
   }
-  
+  console.log(self.plotting_info.plotValues());
 };
