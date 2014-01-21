@@ -13,7 +13,14 @@ ROSLIB.DiagnosticsPlotInfo = function(spec) {
 
 ROSLIB.DiagnosticsPlotInfo.prototype.getDirectories = function() {
   var self = this;
-  return self.plotting_directories;
+  return _.filter(self.plotting_directories, function(dir) {
+    if (dir.status.values.hasOwnProperty(self.plotting_fields[0])) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  });
 };
 
 ROSLIB.DiagnosticsPlotInfo.prototype.clearInfo = function() {

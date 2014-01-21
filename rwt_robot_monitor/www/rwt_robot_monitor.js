@@ -431,7 +431,14 @@ ROSLIB.DiagnosticsPlotInfo = function(spec) {
 
 ROSLIB.DiagnosticsPlotInfo.prototype.getDirectories = function() {
   var self = this;
-  return self.plotting_directories;
+  return _.filter(self.plotting_directories, function(dir) {
+    if (dir.status.values.hasOwnProperty(self.plotting_fields[0])) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  });
 };
 
 ROSLIB.DiagnosticsPlotInfo.prototype.clearInfo = function() {
@@ -579,6 +586,7 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.preparePlotWindows = function() {
   self.plot_windows = [];
   self.plot_windows_by_name = {};
   _.map(self.plotting_info.getDirectories(), function(dir) {
+    
     var new_window = new ROSLIB.DiagnosticsPlotWindow({
       directory: dir
     });
@@ -600,6 +608,9 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.preparePlotWindows = function() {
       index: j
     });
     $row.append(self.plot_windows[j].getHTMLObject());
+  }
+  if (self.plot_windows.length % 6 !== 0) {
+    $plot_area.append($row);
   }
 
   for (var i = 0; i < self.plot_windows.length; i++) {
@@ -784,12 +795,9 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.diagnosticsCallback = function(msg) {
       console.log('field: ' + field_values.field);
       for (var dir_name in field_values.values) {
         var val = field_values.values[dir_name];
-        console.log(val);
         if (val && !isNaN(val)) {
+          console.log(val);
           self.plot_windows_by_name[dir_name].update(val);
-        }
-        else {
-          console.log(dir_name + ' is NaN');
         }
         //console.log ('  ' + dir_name + ': ' + field_values.values[dir_name]);
       }
