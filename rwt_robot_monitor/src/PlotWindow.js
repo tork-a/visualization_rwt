@@ -63,6 +63,15 @@ ROSLIB.DiagnosticsPlotWindow.prototype.update = function(data) {
   var self = this;
   var now = ROSLIB.Time.now();
   self.plotter.addData(now, [Number(data)]);
+  if (self.directory.status.isOK()) {
+    self.plotter.setColor(d3.rgb('#5cb85c'));
+  }
+  else if (self.directory.status.isWARN()) {
+    self.plotter.setColor(d3.rgb('#f0ad4e'));
+  }
+  else if (self.directory.status.isERROR()) {
+    self.plotter.setColor(d3.rgb('#d9534f'));
+  }
 };
 
 ROSLIB.DiagnosticsPlotWindow.prototype.remove = function() {

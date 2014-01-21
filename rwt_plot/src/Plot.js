@@ -43,7 +43,7 @@ ROSLIB.RWTPlot.prototype.initializePlot = function($content, spec) {
   var height = $content.height();
   var margin = spec.margin || {top: 20, right: 20, bottom: 20, left: 40};
   var that = this;
-
+  var color = spec.color || false;
   var yaxis_spec = spec.yaxis || {};
   var yaxis_min = yaxis_spec.min || 0.0;
   var yaxis_max = yaxis_spec.max || 1.0;
@@ -54,6 +54,7 @@ ROSLIB.RWTPlot.prototype.initializePlot = function($content, spec) {
   this.y_max_value = yaxis_max;
   this.y_autoscale_margin = yaxis_spec.auto_scale_margin || 0.2;
   this.yaxis_tick = yaxis_tick;
+  this.specified_color = color;
   
   if (this.use_timestamp) {
     //this.x_scale = d3.scale.linear().domain([0, this.max_data]).range([0, width - margin.left - margin.right]);
@@ -125,6 +126,13 @@ ROSLIB.RWTPlot.prototype.initializePlot = function($content, spec) {
   this.paths = [];
 };
 
+ROSLIB.RWTPlot.prototype.setColor = function(color) {
+  this.specified_color = color;
+  for (var i = 0; i < this.paths.length; i++) {
+    this.paths[i].style('stroke', function(d) { return color; });
+  }
+};
+
 ROSLIB.RWTPlot.prototype.allocatePath = function(num) {
   var that = this;
   this.color.domain(_.range(num)); // update the domain of the color
@@ -133,7 +141,7 @@ ROSLIB.RWTPlot.prototype.allocatePath = function(num) {
     .append('path')
     .datum([])
     .attr('class', 'line line' + num)
-    .style('stroke', function(d) { return that.color(num - 1); })
+    .style('stroke', function(d) { return that.specified_color || that.color(num - 1); })
     .attr('d', this.line);
 };
 
