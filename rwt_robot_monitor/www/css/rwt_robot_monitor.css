@@ -51,10 +51,33 @@
   margin-top: 20px;
 }
 .rwt-diagnostics-plot-window {
+  position: relative;
+}
+.rwt-diagnostics-plot-window .plot-window-inner {
   height: 100px;
 }
+.rwt-diagnostics-plot-window .background {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  width: 100%;
+  padding-left: 45px;
+  color: #969696;
+  z-index: -1;
+}
+.rwt-diagnostics-plot-window .background p {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+.rwt-diagnostics-plot-window .close-button-layer {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  z-index: 10;
+}
 svg.rwt-plot {
-  font: 10px sans-serif;
+  font: 8px sans-serif;
 }
 svg.rwt-plot .line {
   fill: none;
