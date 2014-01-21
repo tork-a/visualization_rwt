@@ -404,6 +404,19 @@ ROSLIB.DiagnosticsStatus.prototype.levelString = function() {
   }
 };
 
+// PlotInfo.js
+
+/**
+ * @fileOverview a file to define RWTDiagnosticsPlotInfo class.
+ * @author Ryohei Ueda
+ */
+
+ROSLIB.RWTDiagnosticsPlotInfo = function(spec) {
+  var self = this;
+
+  
+};
+
 // Plotter.js
 
 /**
@@ -412,6 +425,7 @@ ROSLIB.DiagnosticsStatus.prototype.levelString = function() {
  */
 ROSLIB.RWTDiagnosticsPlotter = function(spec) {
   var self = this;
+  self.plotting_infos = new ROSLIB.RWTDiagnosticsPlotInfo();
   self.previous_directory_names = [];
   var ros = spec.ros;
   self.history = new ROSLIB.DiagnosticsHistory(spec);
@@ -434,11 +448,15 @@ ROSLIB.RWTDiagnosticsPlotter = function(spec) {
   });
 };
 
+ROSLIB.RWTDiagnosticsPlotter.prototype.registerPlotInfo = function(info_spec) {
+  
+};
+
 ROSLIB.RWTDiagnosticsPlotter.prototype.registerAddCallback = function() {
   var self =this;
   $('#' + self.add_button_id).click(function(e) {
-    console.log('clicked');
     e.preventDefault();
+
     return false;
   });
 };
