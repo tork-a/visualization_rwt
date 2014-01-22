@@ -423,6 +423,11 @@ ROSLIB.DiagnosticsStatus.prototype.levelString = function() {
  * @author Ryohei Ueda
  */
 
+/**
+ * DiagnosticsPlotInfo is a class to manager plotting information
+ * including PlotWindow and so on.
+ * You need to create DiagnosticsPlotInfo for each plotting fields.
+ */
 ROSLIB.DiagnosticsPlotInfo = function(spec) {
   var self = this;
 
@@ -432,7 +437,7 @@ ROSLIB.DiagnosticsPlotInfo = function(spec) {
 ROSLIB.DiagnosticsPlotInfo.prototype.getDirectories = function() {
   var self = this;
   return _.filter(self.plotting_directories, function(dir) {
-    if (dir.status.values.hasOwnProperty(self.plotting_fields[0])) {
+    if (dir.status.values.hasOwnProperty(self.plotting_field)) {
       return true;
     }
     else {
@@ -443,8 +448,9 @@ ROSLIB.DiagnosticsPlotInfo.prototype.getDirectories = function() {
 
 ROSLIB.DiagnosticsPlotInfo.prototype.clearInfo = function() {
   var self = this;
-  self.plotting_fields = [];
+  self.plotting_field = null;
   self.plotting_directories = [];
+  self.plot_windows_by_name = {};
 };
 
 ROSLIB.DiagnosticsPlotInfo.prototype.registerDirectories = function(directories) {
@@ -454,33 +460,97 @@ ROSLIB.DiagnosticsPlotInfo.prototype.registerDirectories = function(directories)
 
 ROSLIB.DiagnosticsPlotInfo.prototype.registerField = function(field) {
   var self = this;
-  self.plotting_fields = _.uniq(self.plotting_fields.concat(field));
-  return self.plotting_fields;
+  self.plotting_field = field;
+  return self.plotting_field;
 };
 
 ROSLIB.DiagnosticsPlotInfo.prototype.plotValues = function() {
   var self = this;
-  return _.map(self.plotting_fields, function(field) {
-    var values = {};
-    _.forEach(self.plotting_directories, function(dir) {
-      if (dir.status.values.hasOwnProperty(field)) {
-        values[dir.fullName()] = dir.status.values[field];
-      }
-      else {
-        values[dir.fullName()] = null;
-      }
-    });
-    return {
-      field: field,
-      values: values
-    };
+  var field = self.plotting_field;
+  var values = {};
+  _.forEach(self.plotting_directories, function(dir) {
+    if (dir.status.values.hasOwnProperty(field)) {
+      values[dir.fullName()] = dir.status.values[field];
+    }
+    else {
+      values[dir.fullName()] = null;
+    }
   });
+  return {
+    field: field,
+    values: values
+  };
 };
 
 ROSLIB.DiagnosticsPlotInfo.prototype.plottable = function() {
   var self = this;
-  return (self.plotting_fields.length !== 0 &&
+  return (self.plotting_fields !== null &&
           self.plotting_directories.length !== 0);
+};
+
+ROSLIB.DiagnosticsPlotInfo.prototype.preparePlotWindows = function(plot_windows_id) {
+  var self = this;
+  _.forEach(self.plot_windows_by_name, function(win) {
+    win.remove();
+  });
+  self.plot_windows_by_name = {};
+  _.forEach(self.getDirectories(), function(dir) {
+    var new_window = new ROSLIB.DiagnosticsPlotWindow({
+      directory: dir
+    });
+    self.plot_windows_by_name[dir.fullName()] = new_window;
+  });
+  self.rearrangePlotWindows(plot_windows_id);
+};
+
+ROSLIB.DiagnosticsPlotInfo.prototype.rearrangePlotWindows = function(plot_windows_id) {
+    var self = this;
+  // first of all, find the removed window
+  var removed_windows = _.remove(_.values(self.plot_windows_by_name), function(win) {
+    return win.getHTMLObject() === null;
+  });
+  _.forEach(removed_windows, function(win) {
+    delete self.plot_windows_by_name[win.getDirectory().fullName()];
+  });
+
+  var $plot_area = $('#' + plot_windows_id);
+  $plot_area.html('');
+  var $row = null;
+  var plot_windows = _.values(self.plot_windows_by_name);
+  for (var j = 0; j < plot_windows.length; j++) {
+    if (j % 6 === 0) {
+      if ($row) {
+        $plot_area.append($row);
+      }
+      $row = $('<div class="row"></div>');
+    }
+    plot_windows[j].initialize({
+      index: j
+    });
+    $row.append(plot_windows[j].getHTMLObject());
+  }
+  if (plot_windows.length % 6 !== 0 || plot_windows.length === 6) {
+    $plot_area.append($row);
+  }
+  for (var i = 0; i < plot_windows.length; i++) {
+    plot_windows[i].initializePlotter();
+  }
+  $plot_area.find('.close').click(function() {
+    self.rearrangePlotWindows(plot_windows_id);
+  });
+};
+
+ROSLIB.DiagnosticsPlotInfo.prototype.plot = function() {
+  var self = this;
+  var field_values = self.plotValues();
+  for (var dir_name in field_values.values) {
+    var val = field_values.values[dir_name];
+    if (val && !isNaN(val)) {
+      if (self.plot_windows_by_name.hasOwnProperty(dir_name)) {
+        self.plot_windows_by_name[dir_name].update(val);
+      }
+    }
+  }
 };
 
 // PlotWindow.js
@@ -599,61 +669,6 @@ ROSLIB.RWTDiagnosticsPlotter = function(spec) {
 };
 
 
-ROSLIB.RWTDiagnosticsPlotter.prototype.preparePlotWindows = function() {
-  var self = this;
-  _.forEach(self.plot_windows, function(win) {
-    win.remove();
-  });
-  self.plot_windows = [];
-  self.plot_windows_by_name = {};
-  _.map(self.plotting_info.getDirectories(), function(dir) {
-    
-    var new_window = new ROSLIB.DiagnosticsPlotWindow({
-      directory: dir
-    });
-    self.plot_windows.push(new_window);
-    self.plot_windows_by_name[dir.fullName()] = new_window;
-  });
-  self.rearrangePlotWindows();
-};
-
-ROSLIB.RWTDiagnosticsPlotter.prototype.rearrangePlotWindows = function() {
-  var self = this;
-  // first of all, find the removed window
-  var removed_windows = _.remove(self.plot_windows, function(win) {
-    return win.getHTMLObject() === null;
-  });
-  _.forEach(removed_windows, function(win) {
-    delete self.plot_windows_by_name[win.getDirectory().fullName()];
-  });
-
-  // rearrange
-  var $plot_area = $('#' + self.plot_windows_id);
-  $plot_area.html('');
-  var $row = null;
-  for (var j = 0; j < self.plot_windows.length; j++) {
-    if (j % 6 === 0) {
-      if ($row) {
-        $plot_area.append($row);
-      }
-      $row = $('<div class="row"></div>');
-    }
-    self.plot_windows[j].initialize({
-      index: j
-    });
-    $row.append(self.plot_windows[j].getHTMLObject());
-  }
-  if (self.plot_windows.length % 6 !== 0) {
-    $plot_area.append($row);
-  }
-  for (var i = 0; i < self.plot_windows.length; i++) {
-    self.plot_windows[i].initializePlotter();
-  }
-  $plot_area.find('.close').click(function() {
-    self.rearrangePlotWindows();
-  });
-};
-
 ROSLIB.RWTDiagnosticsPlotter.prototype.registerAddCallback = function() {
   var self = this;
   $('#' + self.add_button_id).click(function(e) {
@@ -667,10 +682,11 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.registerAddCallback = function() {
     else {
       directories = [directory];
     }
-    e.preventDefault();
+    
     self.plotting_info.registerDirectories(directories);
     self.plotting_info.registerField($('#' + self.plot_field_select_id).val());
-    self.preparePlotWindows();
+    self.plotting_info.preparePlotWindows(self.plot_windows_id);
+    e.preventDefault();
     return false;
   });
 };
@@ -766,7 +782,6 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.registerNameSelectCallback = function() {
 };
 
 ROSLIB.RWTDiagnosticsPlotter.prototype.diagnosticsCallback = function(msg) {
-  
   var diagnostics_statuses
     = ROSLIB.DiagnosticsStatus.createFromArray(msg);
   var self = this;
@@ -775,11 +790,7 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.diagnosticsCallback = function(msg) {
   });
 
   // sort the history
-  var directories = self.history.root.getAllDirectories();
-  // remove the root
-  _.remove(directories, function(dir) {
-    return dir.parent === null;
-  });
+  var directories = self.history.root.getAllDirectoriesWithoutRoot();
   // sort self directories
   directories = _.sortBy(directories, function(dir) {
     return dir.fullName();
@@ -804,6 +815,11 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.diagnosticsCallback = function(msg) {
   }
   
   if (need_to_update_options) {
+    var has_field_before = true;
+    if ($('#' + self.plot_field_select_id + ' option').length === 0) {
+      has_field_before = false;
+    }
+
     $('#' + self.name_select_id + ' option').remove();
     self.previous_directory_names = [];
     _.forEach(directories, function(dir) {
@@ -822,21 +838,16 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.diagnosticsCallback = function(msg) {
       $('#name-select').append($option);
       self.previous_directory_names.push(name);
     });
+    
+    if (!has_field_before) {
+      // force to update field options
+      $('#' + self.name_select_id).trigger('change');
+    }
   }
+
   if (self.plotting_info.plottable()) {
-    var plot_values = self.plotting_info.plotValues();
-    _.forEach(plot_values, function(field_values) {
-      for (var dir_name in field_values.values) {
-        var val = field_values.values[dir_name];
-        if (val && !isNaN(val)) {
-          if (self.plot_windows_by_name.hasOwnProperty(dir_name)) {
-            self.plot_windows_by_name[dir_name].update(val);
-          }
-        }
-      }
-    });
+    self.plotting_info.plot();
   }
-  
 };
 
 // RobotMonitor.js
