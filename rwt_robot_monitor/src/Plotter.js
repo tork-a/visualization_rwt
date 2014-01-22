@@ -47,7 +47,7 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.registerAddCallback = function() {
     
     self.plotting_info.registerDirectories(directories);
     self.plotting_info.registerField($('#' + self.plot_field_select_id).val());
-    self.plotting_info.preparePlotWindows(self.plot_windows_id);
+    self.plotting_info.preparePlotWindows(name, self.plot_windows_id);
     e.preventDefault();
     return false;
   });

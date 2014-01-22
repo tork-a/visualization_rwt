@@ -89,3 +89,6 @@ svg.rwt-plot .axis line {
   stroke: #000;
   shape-rendering: crispEdges;
 }
+.rwt-plot-info-container .windows-inner {
+  margin-top: 10px;
+}
