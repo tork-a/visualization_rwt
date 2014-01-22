@@ -31,61 +31,6 @@ ROSLIB.RWTDiagnosticsPlotter = function(spec) {
 };
 
 
-ROSLIB.RWTDiagnosticsPlotter.prototype.preparePlotWindows = function() {
-  var self = this;
-  _.forEach(self.plot_windows, function(win) {
-    win.remove();
-  });
-  self.plot_windows = [];
-  self.plot_windows_by_name = {};
-  _.forEach(self.plotting_info.getDirectories(), function(dir) {
-    var new_window = new ROSLIB.DiagnosticsPlotWindow({
-      directory: dir
-    });
-    self.plot_windows.push(new_window);
-    self.plot_windows_by_name[dir.fullName()] = new_window;
-  });
-  self.rearrangePlotWindows();
-};
-
-ROSLIB.RWTDiagnosticsPlotter.prototype.rearrangePlotWindows = function() {
-  var self = this;
-  // first of all, find the removed window
-  var removed_windows = _.remove(self.plot_windows, function(win) {
-    return win.getHTMLObject() === null;
-  });
-  _.forEach(removed_windows, function(win) {
-    delete self.plot_windows_by_name[win.getDirectory().fullName()];
-  });
-
-  // rearrange
-  var $plot_area = $('#' + self.plot_windows_id);
-  $plot_area.html('');
-  var $row = null;
-  for (var j = 0; j < self.plot_windows.length; j++) {
-    if (j % 6 === 0) {
-      if ($row) {
-        $plot_area.append($row);
-      }
-      $row = $('<div class="row"></div>');
-    }
-    self.plot_windows[j].initialize({
-      index: j
-    });
-    $row.append(self.plot_windows[j].getHTMLObject());
-  }
-  if (self.plot_windows.length % 6 !== 0 ||
-      self.plot_windows.length === 6) {
-    $plot_area.append($row);
-  }
-  for (var i = 0; i < self.plot_windows.length; i++) {
-    self.plot_windows[i].initializePlotter();
-  }
-  $plot_area.find('.close').click(function() {
-    self.rearrangePlotWindows();
-  });
-};
-
 ROSLIB.RWTDiagnosticsPlotter.prototype.registerAddCallback = function() {
   var self = this;
   $('#' + self.add_button_id).click(function(e) {
@@ -102,7 +47,7 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.registerAddCallback = function() {
     
     self.plotting_info.registerDirectories(directories);
     self.plotting_info.registerField($('#' + self.plot_field_select_id).val());
-    self.preparePlotWindows();
+    self.plotting_info.preparePlotWindows(self.plot_windows_id);
     e.preventDefault();
     return false;
   });
@@ -263,14 +208,6 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.diagnosticsCallback = function(msg) {
   }
 
   if (self.plotting_info.plottable()) {
-    var field_values = self.plotting_info.plotValues();
-    for (var dir_name in field_values.values) {
-      var val = field_values.values[dir_name];
-      if (val && !isNaN(val)) {
-        if (self.plot_windows_by_name.hasOwnProperty(dir_name)) {
-          self.plot_windows_by_name[dir_name].update(val);
-        }
-      }
-    }
+    self.plotting_info.plot();
   }
 };
