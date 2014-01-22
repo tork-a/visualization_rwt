@@ -701,7 +701,7 @@ ROSLIB.DiagnosticsPlotWindow.prototype.remove = function() {
  */
 ROSLIB.RWTDiagnosticsPlotter = function(spec) {
   var self = this;
-  self.plotting_info = new ROSLIB.DiagnosticsPlotInfo();
+  self.plotting_infos = [];
   self.previous_directory_names = [];
   var ros = spec.ros;
   self.history = new ROSLIB.DiagnosticsHistory(spec);
@@ -729,7 +729,9 @@ ROSLIB.RWTDiagnosticsPlotter = function(spec) {
 ROSLIB.RWTDiagnosticsPlotter.prototype.registerAddCallback = function() {
   var self = this;
   $('#' + self.add_button_id).click(function(e) {
-    self.plotting_info.clearInfo(); // clear it anyway
+    var plotting_info = new ROSLIB.DiagnosticsPlotInfo();
+    self.plotting_infos.push(plotting_info);
+    plotting_info.clearInfo(); // clear it anyway
     var name = $('#' + self.name_select_id).val();
     var directory = self.history.root.findByName(name);
     var directories = [];
@@ -740,9 +742,9 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.registerAddCallback = function() {
       directories = [directory];
     }
     
-    self.plotting_info.registerDirectories(directories);
-    self.plotting_info.registerField($('#' + self.plot_field_select_id).val());
-    self.plotting_info.preparePlotWindows(name, self.plot_windows_id);
+    plotting_info.registerDirectories(directories);
+    plotting_info.registerField($('#' + self.plot_field_select_id).val());
+    plotting_info.preparePlotWindows(name, self.plot_windows_id);
     e.preventDefault();
     return false;
   });
@@ -901,10 +903,11 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.diagnosticsCallback = function(msg) {
       $('#' + self.name_select_id).trigger('change');
     }
   }
-
-  if (self.plotting_info.plottable()) {
-    self.plotting_info.plot();
-  }
+  _.forEach(self.plotting_infos, function(plotting_info) {
+    if (plotting_info.plottable()) {
+      plotting_info.plot();
+    }
+  });
 };
 
 // RobotMonitor.js
