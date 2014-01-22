@@ -66,8 +66,25 @@ ROSLIB.DiagnosticsPlotInfo.prototype.plotValues = function() {
 
 ROSLIB.DiagnosticsPlotInfo.prototype.plottable = function() {
   var self = this;
-  return (self.plotting_fields !== null &&
+  return (self.plotting_field !== null &&
           self.plotting_directories.length !== 0);
+};
+
+ROSLIB.DiagnosticsPlotInfo.prototype.plotFieldID = function() {
+  var self = this;
+  // generate random id if not set
+  while (!self.plot_field_id) {
+    var text = "";
+    var possible = "abcdefghijklmnopqrstuvwxyz";
+    for( var i=0; i < 10; i++ ) {
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    if ($('#' + text).length === 0) {
+      self.plot_field_id = text;
+      break;
+    }
+  }
+  return self.plot_field_id;
 };
 
 ROSLIB.DiagnosticsPlotInfo.prototype.preparePlotWindows = function(plot_windows_id) {
@@ -82,6 +99,9 @@ ROSLIB.DiagnosticsPlotInfo.prototype.preparePlotWindows = function(plot_windows_
     });
     self.plot_windows_by_name[dir.fullName()] = new_window;
   });
+  // adding root html
+  self.$root_html = $('<div class="rwt-plot-info-container" id="' + self.plotFieldID() + '"></div>');
+  $('#' + plot_windows_id).append(self.$root_html);
   self.rearrangePlotWindows(plot_windows_id);
 };
 
@@ -95,7 +115,7 @@ ROSLIB.DiagnosticsPlotInfo.prototype.rearrangePlotWindows = function(plot_window
     delete self.plot_windows_by_name[win.getDirectory().fullName()];
   });
 
-  var $plot_area = $('#' + plot_windows_id);
+  var $plot_area = self.$root_html;
   $plot_area.html('');
   var $row = null;
   var plot_windows = _.values(self.plot_windows_by_name);
@@ -134,3 +154,4 @@ ROSLIB.DiagnosticsPlotInfo.prototype.plot = function() {
     }
   }
 };
+
