@@ -606,8 +606,7 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.preparePlotWindows = function() {
   });
   self.plot_windows = [];
   self.plot_windows_by_name = {};
-  _.map(self.plotting_info.getDirectories(), function(dir) {
-    
+  _.forEach(self.plotting_info.getDirectories(), function(dir) {
     var new_window = new ROSLIB.DiagnosticsPlotWindow({
       directory: dir
     });
@@ -643,7 +642,8 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.rearrangePlotWindows = function() {
     });
     $row.append(self.plot_windows[j].getHTMLObject());
   }
-  if (self.plot_windows.length % 6 !== 0) {
+  if (self.plot_windows.length % 6 !== 0 ||
+      self.plot_windows.length === 6) {
     $plot_area.append($row);
   }
   for (var i = 0; i < self.plot_windows.length; i++) {
@@ -667,10 +667,11 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.registerAddCallback = function() {
     else {
       directories = [directory];
     }
-    e.preventDefault();
+    
     self.plotting_info.registerDirectories(directories);
     self.plotting_info.registerField($('#' + self.plot_field_select_id).val());
     self.preparePlotWindows();
+    e.preventDefault();
     return false;
   });
 };
@@ -766,7 +767,6 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.registerNameSelectCallback = function() {
 };
 
 ROSLIB.RWTDiagnosticsPlotter.prototype.diagnosticsCallback = function(msg) {
-  
   var diagnostics_statuses
     = ROSLIB.DiagnosticsStatus.createFromArray(msg);
   var self = this;
@@ -775,11 +775,7 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.diagnosticsCallback = function(msg) {
   });
 
   // sort the history
-  var directories = self.history.root.getAllDirectories();
-  // remove the root
-  _.remove(directories, function(dir) {
-    return dir.parent === null;
-  });
+  var directories = self.history.root.getAllDirectoriesWithoutRoot();
   // sort self directories
   directories = _.sortBy(directories, function(dir) {
     return dir.fullName();
@@ -804,6 +800,11 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.diagnosticsCallback = function(msg) {
   }
   
   if (need_to_update_options) {
+    var has_field_before = true;
+    if ($('#' + self.plot_field_select_id + ' option').length === 0) {
+      has_field_before = false;
+    }
+
     $('#' + self.name_select_id + ' option').remove();
     self.previous_directory_names = [];
     _.forEach(directories, function(dir) {
@@ -822,7 +823,13 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.diagnosticsCallback = function(msg) {
       $('#name-select').append($option);
       self.previous_directory_names.push(name);
     });
+    
+    if (!has_field_before) {
+      // force to update field options
+      $('#' + self.name_select_id).trigger('change');
+    }
   }
+
   if (self.plotting_info.plottable()) {
     var plot_values = self.plotting_info.plotValues();
     _.forEach(plot_values, function(field_values) {
