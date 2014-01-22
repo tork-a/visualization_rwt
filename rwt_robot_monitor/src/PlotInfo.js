@@ -66,12 +66,30 @@ ROSLIB.DiagnosticsPlotInfo.prototype.plotValues = function() {
 
 ROSLIB.DiagnosticsPlotInfo.prototype.plottable = function() {
   var self = this;
-  return (self.plotting_fields !== null &&
+  return (self.plotting_field !== null &&
           self.plotting_directories.length !== 0);
 };
 
-ROSLIB.DiagnosticsPlotInfo.prototype.preparePlotWindows = function(plot_windows_id) {
+ROSLIB.DiagnosticsPlotInfo.prototype.plotFieldID = function() {
   var self = this;
+  // generate random id if not set
+  while (!self.plot_field_id) {
+    var text = '';
+    var possible = 'abcdefghijklmnopqrstuvwxyz';
+    for( var i=0; i < 10; i++ ) {
+      text += possible.charAt(Math.floor(Math.random() * possible.length));
+    }
+    if ($('#' + text).length === 0) {
+      self.plot_field_id = text;
+      break;
+    }
+  }
+  return self.plot_field_id;
+};
+
+ROSLIB.DiagnosticsPlotInfo.prototype.preparePlotWindows = function(name, plot_windows_id) {
+  var self = this;
+  self.name = name;
   _.forEach(self.plot_windows_by_name, function(win) {
     win.remove();
   });
@@ -81,6 +99,37 @@ ROSLIB.DiagnosticsPlotInfo.prototype.preparePlotWindows = function(plot_windows_
       directory: dir
     });
     self.plot_windows_by_name[dir.fullName()] = new_window;
+  });
+  // adding root html
+  self.$root_html = $('<div class="rwt-plot-info-container" id="' + self.plotFieldID() + '">'
+                      + '<div class="plot-info container">'
+                      +   '<form>'
+                      +     '<div class="row">'
+                      +       '<div class="col-xs-6">'
+                      +          '<select class="form-control" disabled>'
+                      +             '<option>' + name + '</option>'
+                      +          '</select>'
+                      +       '</div>'
+                      +       '<div class=" col-xs-5">'
+                      +          '<select class="form-control" disabled>'
+                      +             '<option>'
+                      +                self.plotting_field
+                      +             '</option>'
+                      +          '</select>'
+                      +       '</div>'
+                      +       '<div class=" col-xs-1">'
+                      +       '<button class="btn btn-danger remove-info-button">remove</button>'
+                      +       '</div>'
+                      +     '</div>'
+                      +   '</form>'
+                      + '</div>'
+                      + '<div class="windows-inner"></div>'
+                      + '</div>');
+  $('#' + plot_windows_id).prepend(self.$root_html);
+  self.$root_html.find('.remove-info-button').click(function(e) {
+    e.preventDefault();
+    self.remove();
+    return false;
   });
   self.rearrangePlotWindows(plot_windows_id);
 };
@@ -95,7 +144,7 @@ ROSLIB.DiagnosticsPlotInfo.prototype.rearrangePlotWindows = function(plot_window
     delete self.plot_windows_by_name[win.getDirectory().fullName()];
   });
 
-  var $plot_area = $('#' + plot_windows_id);
+  var $plot_area = self.$root_html.find('.windows-inner');
   $plot_area.html('');
   var $row = null;
   var plot_windows = _.values(self.plot_windows_by_name);
@@ -133,4 +182,12 @@ ROSLIB.DiagnosticsPlotInfo.prototype.plot = function() {
       }
     }
   }
+};
+
+ROSLIB.DiagnosticsPlotInfo.prototype.remove = function() {
+  var self = this;
+  _.forEach(self.plot_windows_by_name, function(win) {
+    win.remove();
+  });
+  $('#' + self.plotFieldID()).remove();
 };
