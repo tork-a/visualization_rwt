@@ -423,6 +423,11 @@ ROSLIB.DiagnosticsStatus.prototype.levelString = function() {
  * @author Ryohei Ueda
  */
 
+/**
+ * DiagnosticsPlotInfo is a class to manager plotting information
+ * including PlotWindow and so on.
+ * You need to create DiagnosticsPlotInfo for each plotting fields.
+ */
 ROSLIB.DiagnosticsPlotInfo = function(spec) {
   var self = this;
 
@@ -432,7 +437,7 @@ ROSLIB.DiagnosticsPlotInfo = function(spec) {
 ROSLIB.DiagnosticsPlotInfo.prototype.getDirectories = function() {
   var self = this;
   return _.filter(self.plotting_directories, function(dir) {
-    if (dir.status.values.hasOwnProperty(self.plotting_fields[0])) {
+    if (dir.status.values.hasOwnProperty(self.plotting_field)) {
       return true;
     }
     else {
@@ -443,7 +448,7 @@ ROSLIB.DiagnosticsPlotInfo.prototype.getDirectories = function() {
 
 ROSLIB.DiagnosticsPlotInfo.prototype.clearInfo = function() {
   var self = this;
-  self.plotting_fields = [];
+  self.plotting_field = null;
   self.plotting_directories = [];
 };
 
@@ -454,32 +459,31 @@ ROSLIB.DiagnosticsPlotInfo.prototype.registerDirectories = function(directories)
 
 ROSLIB.DiagnosticsPlotInfo.prototype.registerField = function(field) {
   var self = this;
-  self.plotting_fields = _.uniq(self.plotting_fields.concat(field));
-  return self.plotting_fields;
+  self.plotting_field = field;
+  return self.plotting_field;
 };
 
 ROSLIB.DiagnosticsPlotInfo.prototype.plotValues = function() {
   var self = this;
-  return _.map(self.plotting_fields, function(field) {
-    var values = {};
-    _.forEach(self.plotting_directories, function(dir) {
-      if (dir.status.values.hasOwnProperty(field)) {
-        values[dir.fullName()] = dir.status.values[field];
-      }
-      else {
-        values[dir.fullName()] = null;
-      }
-    });
-    return {
-      field: field,
-      values: values
-    };
+  var field = self.plotting_field;
+  var values = {};
+  _.forEach(self.plotting_directories, function(dir) {
+    if (dir.status.values.hasOwnProperty(field)) {
+      values[dir.fullName()] = dir.status.values[field];
+    }
+    else {
+      values[dir.fullName()] = null;
+    }
   });
+  return {
+    field: field,
+    values: values
+  };
 };
 
 ROSLIB.DiagnosticsPlotInfo.prototype.plottable = function() {
   var self = this;
-  return (self.plotting_fields.length !== 0 &&
+  return (self.plotting_fields !== null &&
           self.plotting_directories.length !== 0);
 };
 
@@ -831,19 +835,16 @@ ROSLIB.RWTDiagnosticsPlotter.prototype.diagnosticsCallback = function(msg) {
   }
 
   if (self.plotting_info.plottable()) {
-    var plot_values = self.plotting_info.plotValues();
-    _.forEach(plot_values, function(field_values) {
-      for (var dir_name in field_values.values) {
-        var val = field_values.values[dir_name];
-        if (val && !isNaN(val)) {
-          if (self.plot_windows_by_name.hasOwnProperty(dir_name)) {
-            self.plot_windows_by_name[dir_name].update(val);
-          }
+    var field_values = self.plotting_info.plotValues();
+    for (var dir_name in field_values.values) {
+      var val = field_values.values[dir_name];
+      if (val && !isNaN(val)) {
+        if (self.plot_windows_by_name.hasOwnProperty(dir_name)) {
+          self.plot_windows_by_name[dir_name].update(val);
         }
       }
-    });
+    }
   }
-  
 };
 
 // RobotMonitor.js
