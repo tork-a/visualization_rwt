@@ -60,6 +60,10 @@ $(function() {
       width: div_width,
       height: 480 * div_width / 640.0
     });
+    $("#canvas-area canvas").css({ "position":"absolute",
+                                   "left": "0px",
+                                   "top": "0px",
+                                   "z-index": "1"});
     return false;
   });
 
@@ -105,10 +109,69 @@ $(function() {
           $("#topic-area").before(html);
           $button.removeClass("btn-danger")
             .addClass("btn-success")
-            .html("record");  
+            .html("record");
         });
       }
     }
   });
-  
+
+  var overlay_canvas = null;
+  var overlay_context = null;
+  var pencilmodep = false;
+  $("#pencil-button").click(function (){
+    if (pencilmodep){
+      if (overlay_canvas) overlay_canvas = null;
+      $("#canvas-area #overlay-canvas").remove();
+      pencilmodep = false;
+    } else {
+      overlay_canvas = document.createElement('canvas');
+      overlay_canvas.width = mjpeg_canvas.width;
+      overlay_canvas.height = mjpeg_canvas.height;
+      $("#canvas-area #overlay-canvas").css({ "z-index": "2",
+                                              "position": "absolute",
+                                              "left": "0px",
+                                              "top": "0px"});
+      $("#canvas-area #overlay-canvas").append(overlay_canvas);
+      overlay_context = overlay_canvas.getContext('2d');
+      pencilmodep = true;
+    }
+  });
+
+  $.fn.drawTouch = function(){
+    var start = function(e) {
+      var touchEvent = e.originalEvent.changedTouches[0];
+      overlay_context.beginPath();
+      overlay_context.moveTo(touchEvent.pageX, touchEvent.pageY);
+      };
+    var move = function(e) {
+      var touchEvent = e.originalEvent.changedTouches[0];
+      e.preventDefault();
+      overlay_context.lineTo(touchEvent.pageX, touchEvent.pageY);
+      overlay_context.stroke();
+    };
+    $(this).touchstart(start);
+    $(this).touchmove(move);
+  };
+
+  $.fn.drawMouse = function() {
+    var clickp = false;
+    var start = function(e) {
+      clickp = true;
+      overlay_context.beginPath();
+      overlay_context.moveTo(e.pageX, e.pageY);
+    };
+    var move = function(e) {
+      if(clickp){
+        overlay_context.lineTo(e.pageX, e.pageY);
+        overlay_context.stroke();
+      }
+    };
+    var stop = function(e) {
+      clickp = false;
+    };
+    $(this).mousedown(start);
+    $(this).mousemove(move);
+    $(this).mouseup(stop);
+  };
+
 });
