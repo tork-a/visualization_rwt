@@ -7,7 +7,7 @@ $(function() {
     var tabletVoice = new ROSLIB.Topic({
         ros: ros,
         name: topic,
-        messageType: 'jsk_gui_msgs/VoiceMessage'
+        messageType: 'speech_recognition_msgs/SpeechRecognitionCandidates.msg'
     });
 
     var showMenuString = function (lang){
@@ -24,56 +24,56 @@ $(function() {
         $('#topic-alt-button').text(_('change'));
     };
 
-    var VoiceRecognition = window.webkitSpeechRecognition
+    var SpeechRecognition = window.webkitSpeechRecognition
         || window.mozSpeechRecognition
         || window.oSpeechRecognition
         || window.msSpeechRecognition
         || window.SpeechRecognition;
 
-    if (!VoiceRecognition) $('body').html('<h1>This Browser is not supported.</h1>');
+    if (!SpeechRecognition) $('body').html('<h1>This Browser is not supported.</h1>');
 
-    var voice_recog = new VoiceRecognition();
+    var speech_recog = new SpeechRecognition();
 
-    voice_recog.lang = 'ja-JP';
-    voice_recog.continuous = false;
-    voice_recog.interimResults = false;
-    voice_recog.maxAlternatives = 5;
+    speech_recog.lang = 'ja-JP';
+    speech_recog.continuous = false;
+    speech_recog.interimResults = false;
+    speech_recog.maxAlternatives = 5;
 
-    voice_recog.onsoundstart = function(){
+    speech_recog.onsoundstart = function(){
         console.log('recog start.');
         $('#status').text(_('soundstart'));
     };
 
-    voice_recog.onspeechstart = function() {
+    speech_recog.onspeechstart = function() {
         console.log('onspeechstart');
         $('#status').text(_('speechstart'));
     };
 
-    voice_recog.onspeechend = function() {
+    speech_recog.onspeechend = function() {
         console.log('onspeechend');
         $('#status').text(_('speechend'));
     };
-    voice_recog.onnomatch = function(){
+    speech_recog.onnomatch = function(){
         console.log('recog nomatch.');
         $('#status').text(_('nomatch'));
     };
 
-    voice_recog.onerror = function(e){
+    speech_recog.onerror = function(e){
         console.log('recog error.: ' + e.error);
         $('#status').text(_('error') + ': ' + e.error);
     };
 
-    voice_recog.onsoundend = function(){
+    speech_recog.onsoundend = function(){
         console.log('recog soundend.');
         $('#status').text(_('soundend'));
     };
 
-    voice_recog.onaudioend = function (){
+    speech_recog.onaudioend = function (){
         console.log('recog audioend.');
-        if (voice_recog.continuous){
-            voice_recog.stop();
+        if (speech_recog.continuous){
+            speech_recog.stop();
             setTimeout(function(){
-                voice_recog.start();
+                speech_recog.start();
             }, 200);
         }
     };
@@ -83,7 +83,7 @@ $(function() {
     };
 
     isPublishDetail = false;
-    voice_recog.onresult = function(e){
+    speech_recog.onresult = function(e){
         var recentResults = e.results[e.results.length-1];
         var texts = [];
         var table = '<table class="table table-striped table-bordered table-condenced">'
@@ -113,9 +113,9 @@ $(function() {
             tabletVoice.publish(msg);
         }
 
-        if (!voice_recog.continuous){
+        if (!speech_recog.continuous){
             console.log('speak off');
-            voice_recog.stop();
+            speech_recog.stop();
             isSpeaking = false;
             $('#speak').text(_('speak'));
         }
@@ -125,46 +125,46 @@ $(function() {
     $('#speak').on('click', function (){
         if (!isSpeaking) {
             console.log('speak on');
-            voice_recog.start();
+            speech_recog.start();
             isSpeaking = true;
             $('#speak').text(_('stop'));
         } else {
             console.log('speak off');
-            voice_recog.stop();
+            speech_recog.stop();
             isSpeaking = false;
             $('#speak').text(_('speak'));
         }
     });
     $('#once').on('click', function(){
-        if (voice_recog.continuous){
+        if (speech_recog.continuous){
             $('#speak').text(_('speak')).removeAttr('disabled');
             $('#once').addClass('btn-primary');
             $('#continuous').removeClass('btn-primary');
-            voice_recog.abort();
-            voice_recog.continuous = false;
+            speech_recog.abort();
+            speech_recog.continuous = false;
         }
     });
     $('#continuous').on('click', function (){
-        if (!voice_recog.continuous){
+        if (!speech_recog.continuous){
             $('#speak').text(_('speak')).attr('disabled', 'disabled');
             $('#continuous').addClass('btn-primary');
             $('#once').removeClass('btn-primary');
-            voice_recog.abort();
-            voice_recog.continuous = true;
-            voice_recog.start();
+            speech_recog.abort();
+            speech_recog.continuous = true;
+            speech_recog.start();
         }
     });
     $('#detail').click( function (){
         if (this.checked){
             console.log('detail enabled');
-            voice_recog.abort();
-            voice_recog.interimResults = true;
-            voice_recog.start();
+            speech_recog.abort();
+            speech_recog.interimResults = true;
+            speech_recog.start();
         } else {
             console.log('detail disabled');
-            voice_recog.abort();
-            voice_recog.interimResults = false;
-            voice_recog.start();
+            speech_recog.abort();
+            speech_recog.interimResults = false;
+            speech_recog.start();
         }
     });
 
@@ -182,8 +182,8 @@ $(function() {
         var lang = $(this).attr('value');
         console.log('lang selected: ' + lang);
         showMenuString(lang);
-        voice_recog.lang = lang;
-        voice_recog.start();
+        speech_recog.lang = lang;
+        speech_recog.start();
     });
 
     $('#clear-result').click(function (){
@@ -198,15 +198,15 @@ $(function() {
             tabletVoice = new ROSLIB.Topic({
                 ros: ros,
                 name: topic,
-                messageType: 'jsk_gui_msgs/VoiceMessage'
+                messageType: 'speech_recognition_msgs/SpeechRecognitionCandidates.msg'
             });
         }
         var alt = parseInt($('#alternative').val());
         if (alt) {
             console.log('alternative: ' + alt);
-            voice_recog.maxAlternatives = alt;
+            speech_recog.maxAlternatives = alt;
         }
-        voice_recog.stop();
+        speech_recog.stop();
     });
 
     showMenuString();
