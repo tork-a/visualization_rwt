@@ -1,0 +1,15 @@
+<package>
+  <description brief="rwt_robot_monitor">
+
+     rwt_robot_monitor
+
+  </description>
+  <author>jskuser</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/rwt_robot_monitor</url>
+  <depend package="roslibjs" />
+  <depend package="diagnostics_msgs" />
+</package>
+
+

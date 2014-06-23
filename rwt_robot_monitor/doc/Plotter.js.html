@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: Plotter.js</title>
+    
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+    
+    <h1 class="page-title">Source: Plotter.js</h1>
+    
+    
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source"><code>// Plotter.js
+
+/**
+ * @fileOverview a file to define RWTDiagnosticsPlotter class.
+ * @author Ryohei Ueda
+ */
+ROSLIB.RWTDiagnosticsPlotter = function(spec) {
+  var self = this;
+  self.plotting_infos = [];
+  self.previous_directory_names = [];
+  var ros = spec.ros;
+  self.history = new ROSLIB.DiagnosticsHistory(spec);
+  self.name_select_id = spec.name_select_id || 'name-select';
+  self.plot_field_select_id = spec.plot_field_select_id || 'plot-field-select';
+  self.add_button_id = spec.add_button_id || 'add-button';
+  self.plot_windows_id = spec.plot_windows_id || 'plot-windows-area';
+  var diagnostics_agg_topic = spec.diagnostics_agg_topic || '/diagnostics_agg';
+  
+  self.registerNameSelectCallback();
+  self.registerPlotFieldSelectCallback();
+  self.registerAddCallback();
+  self.diagnostics_agg_subscriber = new ROSLIB.Topic({
+    ros: ros,
+    name: diagnostics_agg_topic,
+    messageType: 'diagnostic_msgs/DiagnosticArray'
+  });
+  
+  self.diagnostics_agg_subscriber.subscribe(function(msg) {
+    self.diagnosticsCallback(msg);
+  });
+};
+
+
+ROSLIB.RWTDiagnosticsPlotter.prototype.registerAddCallback = function() {
+  var self = this;
+  $('#' + self.add_button_id).click(function(e) {
+    var plotting_info = new ROSLIB.DiagnosticsPlotInfo();
+    self.plotting_infos.push(plotting_info);
+    plotting_info.clearInfo(); // clear it anyway
+    var name = $('#' + self.name_select_id).val();
+    var directory = self.history.root.findByName(name);
+    var directories = [];
+    if (directory.hasChildren()) {
+      directories = directory.getAllDirectoriesWithoutRoot();
+    }
+    else {
+      directories = [directory];
+    }
+    
+    plotting_info.registerDirectories(directories);
+    plotting_info.registerField($('#' + self.plot_field_select_id).val());
+    plotting_info.preparePlotWindows(name, self.plot_windows_id);
+    e.preventDefault();
+    return false;
+  });
+};
+
+
+ROSLIB.RWTDiagnosticsPlotter.prototype.registerPlotFieldSelectCallback = function() {
+  var self = this;
+  $('#' + self.plot_field_select_id).bind('change', function() {
+  });
+};
+
+ROSLIB.RWTDiagnosticsPlotter.prototype.registerNameSelectCallback = function() {
+  var self = this;
+  $('#' + self.name_select_id).bind('change', function() {
+    var name = $(this).attr('value');
+    // get the directory
+    var directory = self.history.root.findByName(name);
+    var candidate_keys = [];
+    $('#' + self.plot_field_select_id + ' option').remove();
+    var invoke_error_message = false;
+    if (directory.hasChildren()) {
+      // get the children
+      var children = directory.getAllDirectories();
+      _.remove(children, function(dir) {
+        return dir === directory;
+      });
+      var uniq_keys = _(children).map(function(dir) {
+        var keys = [];
+        for (var key in dir.status.values) {
+          if (dir.status.values.hasOwnProperty(key)) {
+            var value = dir.status.values[key];
+            if (!isNaN(Number(value))) {
+              keys.push(key);
+            }
+          }
+        }
+        return keys;
+      }).flatten().uniq().value();
+      uniq_keys.forEach(function(key) {
+        var $option = $('&lt;option>' + key + '&lt;/option>');
+        $option.val(key);
+        $('#' + self.plot_field_select_id).append($option);
+      });
+      if (uniq_keys.length === 0) {
+        invoke_error_message = true;
+      }
+    }
+    else {
+      var counter = 0;
+      for (var key in directory.status.values) {
+        var $option = $('&lt;option>' + key + '&lt;/option>');
+        $option.val(key);
+        var value = directory.status.values[key];
+        var number_value = Number(value);
+        
+        if (!isNaN(number_value)) {
+          $('#' + self.plot_field_select_id).append($option);
+          counter = counter + 1;
+        }
+      }
+      if (counter === 0) {
+        invoke_error_message = true;
+      }
+    }
+    if (invoke_error_message) {
+      var $modal_html = $('&lt;div class="modal fade" id="rwt-robot-plotter-warn-message">'
+                          + '&lt;div class="modal-dialog">'
+                          + '&lt;div class="modal-content">'
+                          + '&lt;div class="modal-header">'
+                          + '&lt;button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;&lt;/button>'
+                          + '&lt;h4 class="modal-title">Error&lt;/h4>'
+                          + '&lt;/div>'
+                          + '&lt;div class="modal-body">'
+                          + '&lt;p>&lt;span class="label label-warning">'
+                          + name
+                          + '&lt;/span> does not have values which can be plotted&lt;/p>'
+                          + '&lt;/div>'
+                          + '&lt;div class="modal-footer">'
+                          + '&lt;button type="button" class="btn btn-default" data-dismiss="modal">Close&lt;/button>'
+                          + '&lt;/div>'
+                          + '&lt;/div>'
+                          + '&lt;/div>'
+                          + '&lt;/div>');
+      $('body').append($modal_html);
+      // registering function to remove the html
+      $modal_html.on('hidden.bs.modal', function() {
+        $('#rwt-robot-plotter-warn-message').remove();
+      });
+      $('#rwt-robot-plotter-warn-message').modal();
+    }
+  });
+  
+};
+
+ROSLIB.RWTDiagnosticsPlotter.prototype.diagnosticsCallback = function(msg) {
+  var diagnostics_statuses
+    = ROSLIB.DiagnosticsStatus.createFromArray(msg);
+  var self = this;
+  _.forEach(diagnostics_statuses, function(status) {
+    self.history.registerStatus(status);
+  });
+
+  // sort the history
+  var directories = self.history.root.getAllDirectoriesWithoutRoot();
+  // sort self directories
+  directories = _.sortBy(directories, function(dir) {
+    return dir.fullName();
+  });
+  //var name_options = [];
+  
+  var need_to_update_options = false;
+  if (self.previous_directory_names.length === 0) {
+    need_to_update_options = true;
+  }
+  else if (self.previous_directory_names.length !== directories.length) {
+    need_to_update_options = true;
+  }
+  else {
+    for (var i = 0; i &lt; self.previous_directory_names.length; i++) {
+      if (self.previous_directory_names[i].toString() !==
+          directories[i].fullName().toString()) {
+        need_to_update_options = true;
+        break;
+      }
+    }
+  }
+  
+  if (need_to_update_options) {
+    var has_field_before = true;
+    if ($('#' + self.plot_field_select_id + ' option').length === 0) {
+      has_field_before = false;
+    }
+
+    $('#' + self.name_select_id + ' option').remove();
+    self.previous_directory_names = [];
+    _.forEach(directories, function(dir) {
+      var name = dir.fullName();
+      //name_options.push('&lt;option>' + dir.fullName() + '&lt;/option>');
+      var $option = null;
+      if (dir.hasChildren()) {
+        var children = dir.getAllDirectories();
+        $option = $('&lt;option>' + name + '/* (' + (children.length - 1) +')&lt;/option>');
+        
+      }
+      else {
+        $option = $('&lt;option>' + name + '&lt;/option>');
+      }
+      $option.attr('value', dir.fullName());
+      $('#name-select').append($option);
+      self.previous_directory_names.push(name);
+    });
+    
+    if (!has_field_before) {
+      // force to update field options
+      $('#' + self.name_select_id).trigger('change');
+    }
+  }
+  _.forEach(self.plotting_infos, function(plotting_info) {
+    if (plotting_info.plottable()) {
+      plotting_info.plot();
+    }
+  });
+};
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Index</a></h2><h3>Classes</h3><ul><li><a href="DiagnosticsDirectory.html">DiagnosticsDirectory</a></li><li><a href="DiagnosticsHistory.html">DiagnosticsHistory</a></li><li><a href="DiagnosticsStatus.html">DiagnosticsStatus</a></li><li><a href="RWTRobotMonitor.html">RWTRobotMonitor</a></li></ul>
+</nav>
+
+<br clear="both">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.2.2</a> on Thu Jan 23 2014 03:55:54 GMT+0900 (JST)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

@@ -6,7 +6,7 @@ $(function() {
     timestamp: true
   });
   
-  plot.initializePlot("#plot-area", {
+  plot.initializePlot($("#plot-area"), {
     yaxis: {
       auto_scale: true,
       auto_scale_margin: 0.2,

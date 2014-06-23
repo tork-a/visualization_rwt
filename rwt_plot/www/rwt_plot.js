@@ -31,7 +31,7 @@ ROSLIB.RWTPlot.prototype.clearData = function() {
   }
   this.need_to_animate = false;
   if (this.spec) {
-    $(this.content).find('svg').remove();
+    $('#' + this.content.attr('id')).find('svg').remove();
     this.initializePlot(this.content, this.spec);
   }
 };
@@ -39,19 +39,22 @@ ROSLIB.RWTPlot.prototype.clearData = function() {
 ROSLIB.RWTPlot.prototype.initializePlot = function($content, spec) {
   this.spec = spec || {};
   this.content = $content;
-  var width = $($content).width();
-  var height = $($content).height();
+  var width = $content.width();
+  var height = $content.height();
   var margin = spec.margin || {top: 20, right: 20, bottom: 20, left: 40};
   var that = this;
-
+  var color = spec.color || false;
   var yaxis_spec = spec.yaxis || {};
   var yaxis_min = yaxis_spec.min || 0.0;
   var yaxis_max = yaxis_spec.max || 1.0;
-
+  var yaxis_tick = yaxis_spec.tick || false;
+  
   this.y_autoscale = yaxis_spec.auto_scale || false;
   this.y_min_value = yaxis_min;
   this.y_max_value = yaxis_max;
   this.y_autoscale_margin = yaxis_spec.auto_scale_margin || 0.2;
+  this.yaxis_tick = yaxis_tick;
+  this.specified_color = color;
   
   if (this.use_timestamp) {
     //this.x_scale = d3.scale.linear().domain([0, this.max_data]).range([0, width - margin.left - margin.right]);
@@ -75,7 +78,7 @@ ROSLIB.RWTPlot.prototype.initializePlot = function($content, spec) {
     .range([height - margin.top - margin.bottom, 0]);
   }
   
-  this.svg = d3.select($content).append('svg')
+  this.svg = d3.select('#' + $content.attr('id')).append('svg')
     .attr('class', 'rwt-plot')
     .attr('width', width)
     .attr('height', height)
@@ -102,6 +105,9 @@ ROSLIB.RWTPlot.prototype.initializePlot = function($content, spec) {
     .attr('transform', 'translate(0,' + this.y_scale(0) + ')')
     .call(this.x);
   this.y = d3.svg.axis().scale(this.y_scale).orient('left');
+  if (this.yaxis_tick) {
+    this.y = this.y.ticks(this.yaxis_tick);
+  }
   this.svg.append('g')
     .attr('class', 'y axis')
     .call(this.y);
@@ -120,6 +126,13 @@ ROSLIB.RWTPlot.prototype.initializePlot = function($content, spec) {
   this.paths = [];
 };
 
+ROSLIB.RWTPlot.prototype.setColor = function(color) {
+  this.specified_color = color;
+  for (var i = 0; i < this.paths.length; i++) {
+    this.paths[i].style('stroke', function(d) { return color; });
+  }
+};
+
 ROSLIB.RWTPlot.prototype.allocatePath = function(num) {
   var that = this;
   this.color.domain(_.range(num)); // update the domain of the color
@@ -128,7 +141,7 @@ ROSLIB.RWTPlot.prototype.allocatePath = function(num) {
     .append('path')
     .datum([])
     .attr('class', 'line line' + num)
-    .style('stroke', function(d) { return that.color(num - 1); })
+    .style('stroke', function(d) { return that.specified_color || that.color(num - 1); })
     .attr('d', this.line);
 };
 
@@ -155,8 +168,11 @@ ROSLIB.RWTPlot.prototype.checkYAxisMinMax = function(data) {
   if (need_to_update) {
     this.y_scale.domain(this.axisMinMaxWithMargin(this.y_min_value, this.y_max_value,
                                             this.y_autoscale_margin));
-    this.svg.select('.y.axis')
-      .call(d3.svg.axis().scale(this.y_scale).orient('left'));
+    var axis = d3.svg.axis().scale(this.y_scale).orient('left');
+    if (this.yaxis_tick) {
+      axis = axis.ticks(this.yaxis_tick);
+    }
+    this.svg.select('.y.axis').call(axis);
   }
 };
 

@@ -1,0 +1,112 @@
+// rwt_robot_monitor.less
+.inner-list-window {
+    overflow: scroll;
+    &.short-window {
+        height: 200px;
+    }
+    &.long-window {
+        height: 400px;
+        border: 1px solid #ddd;
+    }
+    .glyphicon {
+        color: red;
+        margin-right: 5px;
+        &.glyphicon-ok {
+            color: green;
+        }
+        &.glyphicon-chevron-right, &.glyphicon-chevron-down {
+            color: rgb(150, 150, 150);
+        }
+    }
+    
+    #all-list {
+        li.inner {
+            padding-bottom: 0px;
+            border: none;
+        }
+        ul {
+            padding-bottom: 0px;
+            margin-bottom: 0px;
+        }
+    }
+}
+
+#modal {
+    .modal-body {
+        padding-top: 5px;
+        padding-bottom: 5px;
+    }
+    dl {
+        margin-top: 0px;
+        dt {
+            float: left;
+            clear: both;
+            font-weight: bold;
+            margin-right: 5px;
+        }
+        dd {
+        }
+    }
+}
+
+.no-transition {
+    -webkit-transition: height 0;
+    -moz-transition: height 0;
+    -ms-transition: height 0;
+    -o-transition: height 0;
+    transition: height 0;
+}
+
+#plot-windows-area {
+    margin-top: 20px;
+}
+.rwt-diagnostics-plot-window {
+    //border: 1px solid rgb(150, 150, 150);
+    @window-height: 100px;
+    .plot-window-inner {
+        height: @window-height;
+    }
+    position: relative;
+    .background {
+        position: absolute;
+        top: 20px;
+        left: 0;
+        width: 100%;
+        padding-left: 45px;
+        p {
+            width: 100%;
+            margin: 0;
+            padding: 0;
+        }
+        color: rgb(150, 150, 150);
+        z-index: -1;
+    }
+    .close-button-layer {
+        position: absolute;
+        top: 0;
+        right: 10px;
+        z-index: 10;
+    }
+}
+
+svg.rwt-plot {
+    font: 8px sans-serif;
+    .line {
+        fill: none;
+        stroke-width: 1.5px;
+    }
+
+    .axis path,
+    .axis line {
+        fill: none;
+        stroke: #000;
+        shape-rendering: crispEdges;
+    }
+}
+
+.rwt-plot-info-container {
+    margin-bottom: 10px;
+    .windows-inner {
+        margin-top: 10px;
+    }
+}

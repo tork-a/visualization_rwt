@@ -1,0 +1,97 @@
+.inner-list-window {
+  overflow: scroll;
+}
+.inner-list-window.short-window {
+  height: 200px;
+}
+.inner-list-window.long-window {
+  height: 400px;
+  border: 1px solid #ddd;
+}
+.inner-list-window .glyphicon {
+  color: red;
+  margin-right: 5px;
+}
+.inner-list-window .glyphicon.glyphicon-ok {
+  color: green;
+}
+.inner-list-window .glyphicon.glyphicon-chevron-right,
+.inner-list-window .glyphicon.glyphicon-chevron-down {
+  color: #969696;
+}
+.inner-list-window #all-list li.inner {
+  padding-bottom: 0px;
+  border: none;
+}
+.inner-list-window #all-list ul {
+  padding-bottom: 0px;
+  margin-bottom: 0px;
+}
+#modal .modal-body {
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+#modal dl {
+  margin-top: 0px;
+}
+#modal dl dt {
+  float: left;
+  clear: both;
+  font-weight: bold;
+  margin-right: 5px;
+}
+.no-transition {
+  -webkit-transition: height 0;
+  -moz-transition: height 0;
+  -ms-transition: height 0;
+  -o-transition: height 0;
+  transition: height 0;
+}
+#plot-windows-area {
+  margin-top: 20px;
+}
+.rwt-diagnostics-plot-window {
+  position: relative;
+}
+.rwt-diagnostics-plot-window .plot-window-inner {
+  height: 100px;
+}
+.rwt-diagnostics-plot-window .background {
+  position: absolute;
+  top: 20px;
+  left: 0;
+  width: 100%;
+  padding-left: 45px;
+  color: #969696;
+  z-index: -1;
+}
+.rwt-diagnostics-plot-window .background p {
+  width: 100%;
+  margin: 0;
+  padding: 0;
+}
+.rwt-diagnostics-plot-window .close-button-layer {
+  position: absolute;
+  top: 0;
+  right: 10px;
+  z-index: 10;
+}
+svg.rwt-plot {
+  font: 8px sans-serif;
+}
+svg.rwt-plot .line {
+  fill: none;
+  stroke-width: 1.5px;
+}
+svg.rwt-plot .axis path,
+svg.rwt-plot .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+.rwt-plot-info-container {
+  margin-bottom: 10px;
+}
+.rwt-plot-info-container .windows-inner {
+  margin-top: 10px;
+}
