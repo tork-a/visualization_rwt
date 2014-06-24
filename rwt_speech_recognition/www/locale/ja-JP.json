@@ -1,0 +1,21 @@
+{
+    'continuous':    '連続',
+    'once': '一回',
+    'speak': '開始',
+    'stop': '停止',
+    'language': '言語',
+    'detail': '途中結果の表示',
+    'publishdetail': '途中結果のパブリッシュ',
+    'clear': '履歴の削除',
+    'status': '状態',
+    'result': '結果',
+    'soundstart': '認識中',
+    'speechstart': 'スピーチ開始',
+    'nomatch': '一致なし',
+    'error': 'エラー',
+    'soundend': '待機',
+    'number': '番号',
+    'word': '認識された文章',
+    'confidence': '一致度',
+    'change': '変更'
+}

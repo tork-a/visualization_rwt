@@ -1,0 +1,21 @@
+{
+    'continuous': 'Непрерывный',
+    'once': 'Один раз',
+    'speak': 'Разговор',
+    'stop': 'Выкл.',
+    'language': 'Язык',
+    'detail': 'Показать подробность',
+    'publishdetail': 'Publish Detail',
+    'clear': 'Чистить',
+    'status': 'Статус',
+    'result': 'Результат',
+    'soundstart': 'Жду разговор...',
+    'nomatch': 'Ничего найденно.',
+    'error': 'Идет ошибку.',
+    'soundend': 'Жду комманду...',
+    'number': '№',
+    'word': 'Слово',
+    'confidence': 'Конфиденция',
+    'change': 'Изменить'
+}
+

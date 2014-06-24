@@ -1,0 +1,18 @@
+<package>
+  <description brief="rwt_speech_recognition">
+
+     rwt_speech_recognition
+
+  </description>
+  <author>Furushchev</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/rwt_speech_recognition</url>
+  <depend package="speech_recognition_msgs"/>
+  <depend package="roswww"/>
+  <depend package="rosbridge_server"/>
+  <depend package="rwt_utils_3rdparty"/>
+
+</package>
+
+
