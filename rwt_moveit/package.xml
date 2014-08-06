@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+<package>
+  <name>rwt_moveit</name>
+  <version>0.0.0</version>
+  <description>The rwt_moveit package</description>
+  <maintainer email="murase@jsk.imi.i.u-tokyo.ac.jp">Kazuto Murase</maintainer>
+  <author email="murase@jsk.imi.i.u-tokyo.ac.jp">Kazuto Murase</author>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>message_generation</build_depend>
+  <build_depend>interactive_marker_proxy</build_depend>
+  <build_depend>orocos_kdl</build_depend>
+  <build_depend>kdl_parser</build_depend>
+  <build_depend>moveit_msgs</build_depend>
+  <build_depend>robot_state_publisher</build_depend>
+  <build_depend>ros3djs</build_depend>
+  <build_depend>rosbridge_server</build_depend>
+  <build_depend>roslibjs</build_depend>
+  <build_depend>rospy</build_depend>
+  <build_depend>roswww</build_depend>
+  <build_depend>rwt_utils_3rdparty</build_depend>
+  <build_depend>sensor_msgs</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>tf</build_depend>
+  <build_depend>tf2_web_republisher</build_depend>
+  <build_depend>visualization_msgs</build_depend>
+  <run_depend>message_runtime</run_depend>
+  <run_depend>interactive_marker_proxy</run_depend>
+  <run_depend>orocos_kdl</run_depend>
+  <run_depend>kdl_parser</run_depend>
+  <run_depend>moveit_msgs</run_depend>
+  <run_depend>robot_state_publisher</run_depend>
+  <run_depend>ros3djs</run_depend>
+  <run_depend>rosbridge_server</run_depend>
+  <run_depend>roslibjs</run_depend>
+  <run_depend>rospy</run_depend>
+  <run_depend>roswww</run_depend>
+  <run_depend>rwt_utils_3rdparty</run_depend>
+  <run_depend>sensor_msgs</run_depend>
+  <run_depend>std_msgs</run_depend>
+  <run_depend>tf</run_depend>
+  <run_depend>tf2_web_republisher</run_depend>
+  <run_depend>visualization_msgs</run_depend>
+
+  <export>
+  </export>
+</package>
