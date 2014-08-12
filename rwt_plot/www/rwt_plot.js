@@ -128,8 +128,9 @@ ROSLIB.RWTPlot.prototype.initializePlot = function($content, spec) {
 
 ROSLIB.RWTPlot.prototype.setColor = function(color) {
   this.specified_color = color;
+  var ret_func = function(_){return color;};
   for (var i = 0; i < this.paths.length; i++) {
-    this.paths[i].style('stroke', function(d) { return color; });
+    this.paths[i].style('stroke', ret_func);
   }
 };
 
