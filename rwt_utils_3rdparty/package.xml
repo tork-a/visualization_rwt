@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<package>
+  <name>rwt_utils_3rdparty</name>
+  <version>0.0.0</version>
+  <description>The rwt_utils_3rdparty package</description>
+
+  <maintainer email="garaemon@gmail.com">Ryohei Ueda</maintainer>
+  <license>BSD</license>
+  <author email="garaemon@gmail.com">Ryohei Ueda</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <export>
+  </export>
+</package>

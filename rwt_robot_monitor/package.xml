@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<package>
+  <name>rwt_robot_monitor</name>
+  <version>0.0.0</version>
+  <description>The rwt_robot_monitor package</description>
+
+  <maintainer email="garaemon@gmail.com">Ryohei Ueda</maintainer>
+  <author email="garaemon@gmail.com">Ryohei Ueda</author>
+
+  <license>BSD</license>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>diagnostic_msgs</build_depend>
+  <build_depend>rosbridge_server</build_depend>
+  <build_depend>roslibjs</build_depend>
+  <build_depend>roslibjs_experimental</build_depend>
+  <build_depend>rwt_plot</build_depend>
+  <build_depend>rwt_utils_3rdparty</build_depend>
+  <build_depend>roswww</build_depend>
+  <run_depend>diagnostic_msgs</run_depend>
+  <run_depend>rosbridge_server</run_depend>
+  <run_depend>roslibjs</run_depend>
+  <run_depend>roslibjs_experimental</run_depend>
+  <run_depend>rwt_plot</run_depend>
+  <run_depend>rwt_utils_3rdparty</run_depend>
+  <run_depend>roswww</run_depend>
+
+  <export>
+  </export>
+</package>
