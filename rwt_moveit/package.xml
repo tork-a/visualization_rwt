@@ -2,18 +2,19 @@
 <package>
   <name>rwt_moveit</name>
   <version>0.0.0</version>
-  <description>The rwt_moveit package</description>
+  <description>This package provides a web user interface of <a href = "http://moveit.ros.org/">MoveIt!</a> on top of visualizer in <a href = "http://wiki.ros.org/ros3djs">ros3djs</a>.</description>
+  <maintainer email="iiysaito@opensource-robotics.tokyo.jp">Isaac I.Y. Saito</maintainer>
   <maintainer email="murase@jsk.imi.i.u-tokyo.ac.jp">Kazuto Murase</maintainer>
   <author email="murase@jsk.imi.i.u-tokyo.ac.jp">Kazuto Murase</author>
 
   <license>BSD</license>
 
   <buildtool_depend>catkin</buildtool_depend>
-  <build_depend>message_generation</build_depend>
   <build_depend>interactive_marker_proxy</build_depend>
-  <build_depend>orocos_kdl</build_depend>
   <build_depend>kdl_parser</build_depend>
+  <build_depend>message_generation</build_depend>
   <build_depend>moveit_msgs</build_depend>
+  <build_depend>orocos_kdl</build_depend>
   <build_depend>robot_state_publisher</build_depend>
   <build_depend>ros3djs</build_depend>
   <build_depend>rosbridge_server</build_depend>
@@ -26,11 +27,11 @@
   <build_depend>tf</build_depend>
   <build_depend>tf2_web_republisher</build_depend>
   <build_depend>visualization_msgs</build_depend>
-  <run_depend>message_runtime</run_depend>
   <run_depend>interactive_marker_proxy</run_depend>
-  <run_depend>orocos_kdl</run_depend>
   <run_depend>kdl_parser</run_depend>
+  <run_depend>message_runtime</run_depend>
   <run_depend>moveit_msgs</run_depend>
+  <run_depend>orocos_kdl</run_depend>
   <run_depend>robot_state_publisher</run_depend>
   <run_depend>ros3djs</run_depend>
   <run_depend>rosbridge_server</run_depend>
@@ -44,6 +45,5 @@
   <run_depend>tf2_web_republisher</run_depend>
   <run_depend>visualization_msgs</run_depend>
 
-  <export>
-  </export>
+  <export />
 </package>
