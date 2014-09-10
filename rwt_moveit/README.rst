@@ -61,7 +61,7 @@ Now let's run `rwt_moveit` with a robot package, for instance an industrial vert
 ::
 
   term-1$ roslaunch %ROBOT%_moveit_config demo_simulation.launch
-  term-1$ roslaunch vs060_moveit_config demo_simulation.launch    (example with vs060)
+  term-1$ roslaunch vs060_moveit_config demo_simulation_noenvironment.launch    (example with vs060)
 
 3. On another terminal, run rwt_moveit process. Switch the `launch` file accordingly depending on whether you run the real robot or simulation.
 
