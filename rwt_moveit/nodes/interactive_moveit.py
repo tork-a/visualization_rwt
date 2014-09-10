@@ -10,12 +10,12 @@ from std_msgs.msg import String
 from std_msgs.msg import Float32
 from std_msgs.msg import MultiArrayDimension
 from sensor_msgs.msg import JointState
-from interactive_markers.interactive_marker_server import (
+from visualization_msgs.msg import (
     Marker,
     InteractiveMarker,
-    InteractiveMarkerServer,
     InteractiveMarkerControl,
     InteractiveMarkerFeedback)
+from interactive_markers.interactive_marker_server import InteractiveMarkerServer
 server = None
 
 
