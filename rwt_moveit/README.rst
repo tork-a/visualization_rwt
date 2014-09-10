@@ -36,14 +36,23 @@ At the time of writing (Aug 2014) source install is the only way of getting the 
   $ rosdep install --from-paths src --ignore-src --rosdistro %YOUR_ROS_DISTRO% -y
   $ rosdep install --from-paths src --ignore-src --rosdistro hydro -y     (example)
 
+4. (This is just a temporary fix and should be removed in the very near future) Build web stuff:
+
+::
+
+  $ roscd rwt_moveit && make
+
 By now the package should be ready to serve for the robot packages.
 
-At this point, the robot package you’re using needs to be built. Taking `vs060` here as an example,
+At this point, the robot package you’re using needs to be built. From here we take `vs060` as an example, which is already built and distributed as `DEB` package on Ubuntu so that you don't need to build on your own.
 
 Setting
 --------
 
-1. Enable WebGL on your Chrome browser.
+1. Make sure `WebGL` is enabaled on your Chrome browser. See `chrome://flags/` and `WebGL: Hardware accelerated`.
+2. On Chrome's flags page (type in URL bar `chrome://flags/`), enable the followings:
+
+ * `Enable experimental canvas features`
 
 Run, serve for a robot package
 ================================
