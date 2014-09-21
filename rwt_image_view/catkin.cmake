@@ -17,6 +17,8 @@ add_service_files(
   RosbagRecordRequest.srv
 )
 
+generate_messages()
+
 catkin_package(
   CATKIN_DEPENDS mjpeg_server mjpegcanvas roslibjs rospy rwt_utils_3rdparty std_srvs roswww message_runtime
 )
