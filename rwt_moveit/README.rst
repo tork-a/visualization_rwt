@@ -42,6 +42,13 @@ At the time of writing (Aug 2014) source install is the only way of getting the 
 
   $ roscd rwt_moveit && make
 
+ 4-1. For `vs060` robot, as of Sep 22 2014, you might have to do the following BEFORE the commands above (solution discussed `here <https://github.com/tork-a/visualization_rwt/issues/43>`_):
+
+ ::
+
+   $ sudo mkdir `rospack find vs060`/www
+   $ sudo ln -s -T `rospack find vs060`/model `rospack find vs060`/www/model
+
 By now the package should be ready to serve for the robot packages.
 
 At this point, the robot package you’re using needs to be built. From here we take `vs060` as an example, which is already built and distributed as `DEB` package on Ubuntu so that you don't need to build on your own.
