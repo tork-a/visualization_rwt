@@ -112,7 +112,12 @@ function init() {
 
     // Create the main viewer.
     var width = parseInt($("#main-content").css("width"));
-    var height = document.height;
+    var height = Math.max(
+        $(document).height(),
+        $(window).height(),
+        /* For opera: */
+        document.documentElement.clientHeight
+    );
 
     var viewer = new ROS3D.Viewer({
         divID : 'urdf',
