@@ -16,6 +16,8 @@ var start_im_client;
 var goal_im_client;
 var tfClient;
 
+var marker_obstacle; // trial
+
 function init() {
     // Connect to ROS.
     var url = 'ws://' + location.hostname + ':9090';
@@ -192,6 +194,15 @@ function init() {
             camera : viewer.camera,
             rootObject : viewer.selectableObjects
         });
+        marker_obstacle = new ROS3D.MarkerClient({
+          ros : real_ros,
+          tfClient : tfClient,
+          topic : '/obst/marker',
+          camera : viewer.camera,
+          //rootObject : viewer.selectableObjects
+          rootObject : viewer.scene
+    });
+
     });
 
     link_group_param.get(function(value) {
