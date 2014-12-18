@@ -86,6 +86,7 @@ $(function() {
     speech_recog.onresult = function(e){
         var recentResults = e.results[e.results.length-1];
         var texts = [];
+        var confidences = [];
         var table = '<table class="table table-striped table-bordered table-condenced">'
         table += addRow3(_('number'), _('word'), _('confidence'));
         console.log(e);
@@ -97,8 +98,12 @@ $(function() {
                 table += addRow3(i+1, word, conf);
             if (isPublishDetail) {
                 texts.push(word);
+                confidences.push(conf);
             } else {
-                if (recentResults.isFinal) texts.push(word);
+                if (recentResults.isFinal) {
+                    texts.push(word);
+                    confidences.push(conf);
+                }
             }
         }
 
@@ -107,7 +112,8 @@ $(function() {
 
         if (texts.length > 0){
             var msg = new ROSLIB.Message({
-                texts: texts
+                transcript: texts,
+                confidence: confidences
             });
             console.log('published: ' + JSON.stringify(msg));
             tabletVoice.publish(msg);
