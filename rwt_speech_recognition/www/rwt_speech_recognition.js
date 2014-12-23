@@ -7,7 +7,7 @@ $(function() {
     var tabletVoice = new ROSLIB.Topic({
         ros: ros,
         name: topic,
-        messageType: 'speech_recognition_msgs/SpeechRecognitionCandidates.msg'
+        messageType: 'speech_recognition_msgs/SpeechRecognitionCandidates'
     });
 
     var showMenuString = function (lang){
