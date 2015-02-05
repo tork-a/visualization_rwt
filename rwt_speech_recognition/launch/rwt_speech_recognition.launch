@@ -1,7 +1,9 @@
 <launch>
   <arg name="launch_roswww" default="true" />
   <group if="$(arg launch_roswww)">
-    <node pkg="roswww" type="webserver.py" name="roswww"></node>
+    <include file="$(find roswww)/launch/roswww.launch">
+      <arg name="port" value="8000" />
+    </include>
   </group>
   <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch">
     <arg name="port" value="8888" />
