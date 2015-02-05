@@ -1,6 +1,10 @@
 <launch>
-  <node pkg="roswww" type="webserver.py" name="roswww">
-  </node>
+  <arg name="launch_roswww" default="true" />
+  <include file="$(find roswww)/launch/roswww.launch"
+           if="$(arg launch_roswww)">
+    <arg name="port" value="8000" />
+  </include>
+
   <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" >
     <arg name="port" value="8888" />
   </include>
