@@ -1,11 +1,13 @@
 <?xml version="1.0"?>
 <package>
   <name>rwt_moveit</name>
-  <version>0.0.0</version>
+  <version>0.0.1</version>
   <description>This package provides a web user interface of <a href = "http://moveit.ros.org/">MoveIt!</a> on top of visualizer in <a href = "http://wiki.ros.org/ros3djs">ros3djs</a>.</description>
   <maintainer email="iiysaito@opensource-robotics.tokyo.jp">Isaac I.Y. Saito</maintainer>
-  <maintainer email="murase@jsk.imi.i.u-tokyo.ac.jp">Kazuto Murase</maintainer>
   <author email="murase@jsk.imi.i.u-tokyo.ac.jp">Kazuto Murase</author>
+  <url type="website">http://wiki.ros.org/rwt_moveit</url>
+  <url type="bugtracker">https://github.com/tork-a/visualization_rwt/issues</url>
+  <url type="repository">https://github.com/tork-a/visualization_rwt</url>
 
   <license>BSD</license>
 

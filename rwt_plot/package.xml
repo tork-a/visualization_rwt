@@ -1,10 +1,14 @@
 <package>
   <name>rwt_plot</name>
-  <version>1.0.0</version>
+  <version>0.0.1</version>
   <description>rwt_plot</description>
   <maintainer email="ueda@jsk.imi.i.u-tokyo.ac.jp">Ryohei Ueda</maintainer>
+  <maintainer email="iiysaito@opensource-robotics.tokyo.jp">Isaac IY Saito</maintainer>
   <author email="ueda@jsk.imi.i.u-tokyo.ac.jp">Ryohei Ueda</author>
   <license>BSD</license>
+  <url type="website">http://wiki.ros.org/rwt_plot</url>
+  <url type="bugtracker">https://github.com/tork-a/visualization_rwt/issues</url>
+  <url type="repository">https://github.com/tork-a/visualization_rwt</url>
 
   <buildtool_depend>catkin</buildtool_depend>
 

@@ -1,10 +1,11 @@
 <?xml version="1.0"?>
 <package>
   <name>rwt_utils_3rdparty</name>
-  <version>0.0.0</version>
+  <version>0.0.1</version>
   <description>The rwt_utils_3rdparty package</description>
 
   <maintainer email="garaemon@gmail.com">Ryohei Ueda</maintainer>
+  <maintainer email="iiysaito@opensource-robotics.tokyo.jp">Isaac IY Saito</maintainer>
   <license>BSD</license>
   <author email="garaemon@gmail.com">Ryohei Ueda</author>
 

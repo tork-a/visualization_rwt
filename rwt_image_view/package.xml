@@ -1,13 +1,17 @@
 <?xml version="1.0"?>
 <package>
   <name>rwt_image_view</name>
-  <version>0.0.0</version>
+  <version>0.0.1</version>
   <description>The rwt_image_view package</description>
 
   <maintainer email="garaemon@gmail.com">Ryohei Ueda</maintainer>
+  <maintainer email="iiysaito@opensource-robotics.tokyo.jp">Isaac IY Saito</maintainer>
   <license>BSD</license>
   <author email="garaemon@gmail.com">Ryohei Ueda</author>
   <author email="furushchev@jsk.imi.i.u-tokyo.ac.jp">Yuki Furuta</author>
+  <url type="website">http://wiki.ros.org/rwt_image_view</url>
+  <url type="bugtracker">https://github.com/tork-a/visualization_rwt/issues</url>
+  <url type="repository">https://github.com/tork-a/visualization_rwt</url>
 
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>mjpeg_server</build_depend>
