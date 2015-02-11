@@ -1,11 +1,15 @@
 <?xml version="1.0"?>
 <package>
   <name>rwt_robot_monitor</name>
-  <version>0.0.0</version>
+  <version>0.0.1</version>
   <description>The rwt_robot_monitor package</description>
 
   <maintainer email="garaemon@gmail.com">Ryohei Ueda</maintainer>
+  <maintainer email="iiysaito@opensource-robotics.tokyo.jp">Isaac IY Saito</maintainer>
   <author email="garaemon@gmail.com">Ryohei Ueda</author>
+  <url type="website">http://wiki.ros.org/rwt_robot_monitor</url>
+  <url type="bugtracker">https://github.com/tork-a/visualization_rwt/issues</url>
+  <url type="repository">https://github.com/tork-a/visualization_rwt</url>
 
   <license>BSD</license>
 
