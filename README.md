@@ -5,19 +5,17 @@ visualization packages using rwt
 
 INSTALL
 -------
-Please install [rwt_ros](https://github.com/tork-a/rwt_ros) first
+Please install [rwt_ros](https://github.com/tork-a/rwt_ros) first.
 ```sh
-rosws set --git rwt_ros https://github.com/tork-a/rwt_ros.git
-rosws update rwt_ros
+wstool set --git rwt_ros https://github.com/tork-a/rwt_ros.git
+wstool update rwt_ros
 ```
 
 
 ```sh
-sudo aptitude install ros-groovy-rosbridge-suite #rosbridge is required
-rosws set --git roswww https://github.com/jihoonl/roswww.git # roswww is also required
-rosws update roswww
-rosws set --git visualization_rwt https://github.com/tork-a/visualization_rwt.git
-rosws update visualization_rwt
+sudo aptitude install ros-$ROS_DISTRO-rosbridge-suite ros-$ROS_DISTRO-roswww
+wstool set --git visualization_rwt https://github.com/tork-a/visualization_rwt.git
+wstool update visualization_rwt
 ```
 
 PROJECTS
