@@ -4,6 +4,7 @@
   <arg name="roswww_port" default="8000" />
   <arg name="use_roswww" default="true" />
 
+  <param name="fixed_frame" value="$(arg fixed_frame)" />
   <param name="sim_mode" value="$(arg is_sim)" />
   <param name="use_gui" type="bool" value="true" />
 

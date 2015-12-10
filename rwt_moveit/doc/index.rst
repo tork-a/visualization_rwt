@@ -23,26 +23,20 @@ At the time of writing (Aug 2014) source install is the only way of getting the 
   $ git clone https://github.com/tork-a/rwt_ros.git
   $ git clone https://github.com/tork-a/visualization_rwt
 
-2. Get a temporary forked package (this should be worked out with the upstream repository).
-
-::
-
-  $ git clone https://github.com/KazutoMurase/ros3djs.git
-
-3. Install dependencies of downloaded source.:
+2. Install dependencies of downloaded source.:
 
 ::
 
   $ rosdep install --from-paths src --ignore-src --rosdistro %YOUR_ROS_DISTRO% -y
-  $ rosdep install --from-paths src --ignore-src --rosdistro hydro -y     (example)
+  $ rosdep install --from-paths src --ignore-src --rosdistro indigo -y     (example)
 
-4. (This is just a temporary fix and should be removed in the very near future) Build web stuff:
+3. (This is just a temporary fix and should be removed in the very near future) Build web stuff:
 
 ::
 
   $ roscd rwt_moveit && make
 
- 4-1. For `vs060` robot, as of Sep 22 2014, you might have to do the following BEFORE the commands above (solution discussed `here <https://github.com/tork-a/visualization_rwt/issues/43>`_):
+ 3-1. For `vs060` robot, as of Sep 22 2014, you might have to do the following BEFORE the commands above (solution discussed `here <https://github.com/tork-a/visualization_rwt/issues/43>`_):
 
  ::
 
@@ -51,7 +45,7 @@ At the time of writing (Aug 2014) source install is the only way of getting the 
 
 By now the package should be ready to serve for the robot packages.
 
-At this point, the robot package you’re using needs to be built. From here we take `vs060` as an example, which is already built and distributed as `DEB` package on Ubuntu so that you don't need to build on your own.
+At this point, the robot package you're using needs to be built. From here we take `vs060` as an example, which is already built and distributed as `DEB` package on Ubuntu so that you don't need to build on your own.
 
 Setting
 --------
