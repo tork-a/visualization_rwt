@@ -1,35 +1,15 @@
 <launch>
-  <arg name="launch_roswww" default="true" />
-  <include file="$(find roswww)/launch/roswww.launch"
-           if="$(arg launch_roswww)">
-    <arg name="port" value="8000" />
-  </include>
-
+  <!-- This simple launch should be kept to serve as backward compatibility. -->
+  
   <arg name="fixed_frame" default="/BASE" />
-  <param name="sim_mode" value="false" />
-  <param name="fixed_frame" value="$(arg fixed_frame)" />
-  <node pkg="tf" type="static_transform_publisher" name="connect_start" args="0 0 0 0 0 0 $(arg fixed_frame) /start$(arg fixed_frame) 100" />
-  <node pkg="tf" type="static_transform_publisher" name="connect_goal" args="0 0 0 0 0 0 $(arg fixed_frame) /goal$(arg fixed_frame) 100" />
-  <node  name="start_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" >
-    <remap from="joint_states" to="start_joint_states" />
-    <param name="tf_prefix" type="string" value="start" />
-  </node>
-  <node  name="goal_state_publisher" pkg="robot_state_publisher" type="robot_state_publisher" >
-    <remap from="joint_states" to="goal_joint_states" />
-    <param name="tf_prefix" type="string" value="goal" />
-  </node>
-  <param name="use_gui" type="bool" value="true" />
-  <node name="virtual_joint_state_publisher" pkg="rwt_moveit" type="virtual_joint_state_publisher" />
-  <node name="tf2_web_republisher" pkg="tf2_web_republisher" type="tf2_web_republisher" />
-  <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" />
-  <node name="moveit_publisher" pkg="rwt_moveit" type="moveit_publisher.py" args="_sim_mode:=false" />
-  <node name="start_interactive_moveit" pkg="rwt_moveit" type="interactive_moveit.py">
-    <param name="prefix" type="string" value="start" />
-  </node>
-  <node name="goal_interactive_moveit" pkg="rwt_moveit" type="interactive_moveit.py">
-    <param name="prefix" type="string" value="goal" />
-  </node>
-  <node name="start_marker_proxy" pkg="interactive_marker_proxy" type="proxy" args="topic_ns:=/start/marker target_frame:=$(arg fixed_frame)" />
-  <node name="goal_marker_proxy" pkg="interactive_marker_proxy" type="proxy" args="topic_ns:=/goal/marker target_frame:=$(arg fixed_frame)" />
-  <node name="link_group" pkg="rwt_moveit" type="link_group_publisher" clear_params="true" />
+  <arg name="is_sim" default="false" />
+  <arg name="roswww_port" default="8000" />
+  <arg name="use_roswww" default="true" />
+
+  <include file="$(find rwt_moveit)/launch/run.launch">
+    <arg name="fixed_frame" value="$(arg fixed_frame)" />
+    <arg name="is_sim" value="$(arg is_sim)" />
+    <arg name="roswww_port" value="$(arg roswww_port)" />
+    <arg name="use_roswww" value="$(arg use_roswww)" />
+  </include>
 </launch>

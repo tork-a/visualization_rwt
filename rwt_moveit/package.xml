@@ -47,5 +47,7 @@
   <run_depend>tf2_web_republisher</run_depend>
   <run_depend>visualization_msgs</run_depend>
 
-  <export />
+  <export>
+    <rosdoc config="rosdoc.yaml"/> 
+  </export>
 </package>

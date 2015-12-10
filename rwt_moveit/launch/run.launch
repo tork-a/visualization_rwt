@@ -1,0 +1,53 @@
+<launch>
+  <arg name="fixed_frame" default="/BASE" />
+  <arg name="is_sim" default="false" />
+  <arg name="roswww_port" default="8000" />
+  <arg name="use_roswww" default="true" />
+
+  <param name="fixed_frame" value="$(arg fixed_frame)" />
+  <param name="sim_mode" value="$(arg is_sim)" />
+  <param name="use_gui" type="bool" value="true" />
+
+  <!-- Spawn a local web server -->
+  <include if="$(arg use_roswww)"
+           file="$(find roswww)/launch/roswww.launch">
+    <arg name="port" value="$(arg roswww_port)" />
+  </include>
+  <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" />
+
+  <!-- tf and tf2 publishers -->
+  <node pkg="tf" type="static_transform_publisher" name="connect_start" args="0 0 0 0 0 0 $(arg fixed_frame) /start$(arg fixed_frame) 100" />
+  <node pkg="tf" type="static_transform_publisher" name="connect_goal" args="0 0 0 0 0 0 $(arg fixed_frame) /goal$(arg fixed_frame) 100" />
+  <node pkg="tf2_web_republisher" type="tf2_web_republisher" name="tf2_web_republisher" />
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="start_state_publisher">
+    <remap from="joint_states" to="start_joint_states" />
+    <param name="tf_prefix" type="string" value="start" />
+  </node>
+  <node pkg="robot_state_publisher" type="robot_state_publisher" name="goal_state_publisher">
+    <remap from="joint_states" to="goal_joint_states" />
+    <param name="tf_prefix" type="string" value="goal" />
+  </node>
+  
+  <!-- Some visualization -->
+  <node pkg="interactive_marker_proxy" type="proxy" 
+        name="start_marker_proxy" args="topic_ns:=/start/marker target_frame:=$(arg fixed_frame)" />
+  <node pkg="interactive_marker_proxy" type="proxy" 
+        name="goal_marker_proxy" args="topic_ns:=/goal/marker target_frame:=$(arg fixed_frame)" />
+
+  <!-- rwt_moveit nodes -->
+  <node pkg="rwt_moveit" type="interactive_moveit.py" name="start_interactive_moveit">
+    <param name="prefix" type="string" value="start" />
+  </node>
+  <node pkg="rwt_moveit" type="interactive_moveit.py" name="goal_interactive_moveit">
+    <param name="prefix" type="string" value="goal" />
+  </node>
+  <node pkg="rwt_moveit" type="link_group_publisher" clear_params="true" name="link_group" />
+  <node pkg="rwt_moveit" type="moveit_publisher.py" args="_sim_mode:=$(arg is_sim)" name="moveit_publisher" />
+  <node pkg="rwt_moveit" type="virtual_joint_state_publisher" name="virtual_joint_state_publisher" />
+
+  <group unless="$(arg is_sim)">
+    <node pkg="robot_state_publisher" type="robot_state_publisher" name="robot_state_publisher" />
+    <node pkg="rwt_moveit" type="joint_state_publisher" name="joint_state_publisher" />
+  </group>
+
+</launch>
