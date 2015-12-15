@@ -21,5 +21,5 @@ wstool update visualization_rwt
 PROJECTS
 --------
 
-* [rwt_plot](https://github.com/tork-a/visualization_rwt/blob/master/rwt_plot/README.md)
-* [rwt_speech_recognition](https://github.com/tork-a/visualization_rwt/blob/master/rwt_speech_recognition/README.md)
+* [rwt_plot](rwt_plot/README.md)
+* [rwt_speech_recognition](rwt_speech_recognition/README.md)
