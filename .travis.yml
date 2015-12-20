@@ -1,13 +1,20 @@
+env:
+  global:
+    - CI_DIR=.ci_config
+  matrix:
+    - ROS_DISTRO=indigo
+    - ROS_DISTRO=jade
+sudo: required
+dist: trusty
+# Force travis to use its minimal image with default Python settings
 language: node_js
 node_js:
   - "0.10"
-
+  - "0.12"
+  - "4"
+#notifications:
+#  Whoever receives success and/or failure via email
 before_script:
-  - npm install -g grunt-cli
-  - cd rwt_plot/utils
-  - npm install .
-
+  - source $CI_DIR/travis_before_script.sh
 script:
-  - grunt build
-
-
+  - source $CI_DIR/travis_script.sh
