@@ -1,0 +1,30 @@
+- git:
+    local-name: RobotWebTools/robot_web_tools
+    uri: https://github.com/RobotWebTools/robot_web_tools.git
+- git:
+    local-name: RobotWebTools/robotwebtools.github.io
+    uri: https://github.com/RobotWebTools/robotwebtools.github.io.git
+- git:
+    local-name: RobotWebTools/ros2djs
+    uri: https://github.com/RobotWebTools/ros2djs.git
+- git:
+    local-name: RobotWebTools/ros3djs
+    uri: https://github.com/RobotWebTools/ros3djs.git
+- git:
+    local-name: RobotWebTools/rosbridge_suite
+    uri: https://github.com/RobotWebTools/rosbridge_suite.git
+- git:
+    local-name: RobotWebTools/roslibjs
+    uri: https://github.com/RobotWebTools/roslibjs.git
+- git:
+    local-name: WPI-RAIL/mjpegcanvasjs
+    uri: https://github.com/WPI-RAIL/mjpegcanvasjs.git
+- git:
+    local-name: WPI-RAIL/nav2djs
+    uri: https://github.com/WPI-RAIL/nav2djs.git
+- git:
+    local-name: tork-a/rwt_ros
+    uri: https://github.com/tork-a/rwt_ros.git
+- git:
+    local-name: tork-a/visualization_rwt
+    uri: https://github.com/tork-a/visualization_rwt.git
