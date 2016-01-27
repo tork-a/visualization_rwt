@@ -17,6 +17,7 @@ cd ~/catkin_ws
 apt-get install python-wstool
 wstool init src
 wstool merge -t src https://raw.githubusercontent.com/tork-a/visualization_rwt/hydro-devel/.rosinstall
+wstool update -t src
 rosdep install --from-paths src --ignore-src --rosdistro indigo -r -y
 catkin_make                (or any build commands available in ROS, e.g. `catkin build`)
 source devel/setup.bash
