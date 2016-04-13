@@ -3,7 +3,6 @@ project(rwt_image_view)
 
 find_package(catkin REQUIRED COMPONENTS
   message_generation
-  mjpeg_server
   rospy
   roswww
   rwt_utils_3rdparty
@@ -18,7 +17,7 @@ add_service_files(
 generate_messages()
 
 catkin_package(
-  CATKIN_DEPENDS mjpeg_server rospy rwt_utils_3rdparty std_srvs roswww message_runtime
+  CATKIN_DEPENDS rospy rwt_utils_3rdparty std_srvs roswww message_runtime
 )
 
 include_directories(
