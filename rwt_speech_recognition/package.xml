@@ -12,12 +12,10 @@
 
   <buildtool_depend>catkin</buildtool_depend>
   <build_depend>rosbridge_server</build_depend>
-  <build_depend>roslibjs</build_depend>
   <build_depend>roswww</build_depend>
   <build_depend>rwt_utils_3rdparty</build_depend>
   <build_depend>speech_recognition_msgs</build_depend>
   <run_depend>rosbridge_server</run_depend>
-  <run_depend>roslibjs</run_depend>
   <run_depend>roswww</run_depend>
   <run_depend>rwt_utils_3rdparty</run_depend>
   <run_depend>speech_recognition_msgs</run_depend>
