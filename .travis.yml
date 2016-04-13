@@ -18,6 +18,35 @@ before_script:
   - sudo rm -fr /opt/python/
   - export CI_SOURCE_PATH=$(pwd)
   - export REPOSITORY_NAME=${PWD##*/}
-  - source $CI_DIR/travis_before_script.sh
+  - sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu trusty main" > /etc/apt/sources.list.d/ros-latest.list'
+  - wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
+  - sudo apt-get update -qq
+  - sudo apt-get install -qq -y python-catkin-pkg python-catkin-tools python-rosdep python-wstool 
+  - sudo apt-get install -qq -y ros-$ROS_DISTRO-ros ros-$ROS_DISTRO-catkin ros-$ROS_DISTRO-common-tutorials ros-$ROS_DISTRO-rospy-tutorials ros-$ROS_DISTRO-actionlib-tutorials
+  - sudo apt-get install -qq -y ros-$ROS_DISTRO-rosbridge-server ros-$ROS_DISTRO-tf2-web-republisher 
+  - source /opt/ros/$ROS_DISTRO/setup.bash
+  # Only update npm in the 0.8 and 0.10 versions to not run into this issue:
+  #   https://github.com/nodejs/node/issues/433
+  - case ${TRAVIS_NODE_VERSION} in 0.8*|0.10*) npm update -g npm ;; esac
+  # Set up Xfvb for Firefox headless testing
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+  # Setup Catkin workspace
+  - mkdir -p ~/catkin_ws/src
+  - cd ~/catkin_ws && catkin init
+  - wstool init src
+  - wstool merge -t src ${CI_SOURCE_PATH}/.rosinstall
+  - wstool update -t src
+  - ln -s $CI_SOURCE_PATH src/${REPOSITORY_NAME}
+  - ls -al src/
+  - wstool info -t src
+  - sudo rosdep init || sudo rosdep init
+  - rosdep update
+  - rosdep install --from-paths src --ignore-src --rosdistro $ROS_DISTRO -r -y
 script:
-  - source $CI_DIR/travis_npm.sh
+  - catkin build
+  - source devel/setup.bash
+  - npm install -g grunt-cli
+  - cd src/visualization_rwt/rwt_plot/utils
+  - npm install .
+  - grunt build
