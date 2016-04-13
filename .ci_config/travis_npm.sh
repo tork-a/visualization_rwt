@@ -33,8 +33,14 @@
 ##  - "0.10"
 
 ##before_script:
-cd ${TRAVIS_REPO_SLUG}
+set -x
+cd ~/catkin_ws/
 npm install -g grunt-cli
+ls -al
+ls -al src
+ls -al src/visualization_rwt/
+ls -al src/visualization_rwt/rwt_plot/
+ls -al src/visualization_rwt/rwt_plot/utils
 cd src/visualization_rwt/rwt_plot/utils
 npm install .
 

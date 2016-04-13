@@ -15,6 +15,9 @@ node_js:
 #notifications:
 #  Whoever receives success and/or failure via email
 before_script:
+  - sudo rm -fr /opt/python/
+  - export CI_SOURCE_PATH=$(pwd)
+  - export REPOSITORY_NAME=${PWD##*/}
   - source $CI_DIR/travis_before_script.sh
 script:
-  - source $CI_DIR/travis_script.sh
+  - source $CI_DIR/travis_npm.sh

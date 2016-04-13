@@ -48,9 +48,17 @@ export DISPLAY=:99.0
 sh -e /etc/init.d/xvfb start
 
 # Setup Catkin workspace
-cd ${TRAVIS_BUILD_DIR} && mkdir src && cd src && catkin_init_workspace && cd ${TRAVIS_BUILD_DIR}
+mkdir -p ~/catkin_ws/src
+cd ~/catkin_ws && catkin init
 wstool init src
-wstool merge -t src https://raw.githubusercontent.com/tork-a/visualization_rwt/hydro-devel/.rosinstall
+wstool merge -t src ${CI_SOURCE_PATH}/.rosinstall
+wstool update -t src
+ln -s $CI_SOURCE_PATH src/${REPOSITORY_NAME}
+ls -al src/
+wstool info -t src
+sudo rosdep init || sudo rosdep init
+rosdep update
 rosdep install --from-paths src --ignore-src --rosdistro indigo -r -y
 catkin build
 source devel/setup.bash
+cd ${CI_SOURCE_PATH}
