@@ -124,6 +124,7 @@ $(function() {
             speech_recog.stop();
             isSpeaking = false;
             $('#speak').text(_('speak'));
+            $('#speak').addClass('btn-default');
         }
     };
 
@@ -155,6 +156,7 @@ $(function() {
             $('#speak').text(_('speak')).attr('disabled', 'disabled');
             $('#continuous').addClass('btn-primary');
             $('#once').removeClass('btn-primary');
+            $('#once').addClass('btn-default');
             speech_recog.abort();
             speech_recog.continuous = true;
             speech_recog.start();
