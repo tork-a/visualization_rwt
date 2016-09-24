@@ -11,12 +11,21 @@ $(function() {
     });
 
     var showMenuString = function (lang){
+        console.log('lang selected: ' + lang);
+        lang_name = $('#lang-selector li:eq(0)').text();
+        for(var i = 0; i < $('#lang-selector li').length; i++) {
+            if ( $('#lang-selector li:eq('+i+')').data('value') == lang ) {
+                lang_name = $('#lang-selector li:eq('+i+')').text();
+            }
+        }
         setLanguage(lang);
         $('#continuous').text(_('continuous'));
         $('#once').text(_('once'));
         $('#speak').text(_('speak'));
         $('#language').text(_('language'));
         $('#detail-label').text(_('detail'));
+        $('#lang-label').text(_('language'));
+        $('#lang').text(lang_name);
         $('#status-label').text(_('status'));
         $('#clear-result').text(_('clear'));
         $('#result-label').text(_('result'));
