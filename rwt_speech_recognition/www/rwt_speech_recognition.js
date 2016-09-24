@@ -185,8 +185,8 @@ $(function() {
     });
 
     $('#lang-selector li').click(function (){
-        var lang = $(this).attr('value');
-        console.log('lang selected: ' + lang);
+        var lang = $(this).data('value');
+        console.log('lang selected: ' + $(this).text() + ' ' + lang);
         showMenuString(lang);
         speech_recog.lang = lang;
         speech_recog.start();
