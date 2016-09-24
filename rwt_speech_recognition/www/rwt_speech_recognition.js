@@ -50,17 +50,17 @@ $(function() {
 
     speech_recog.onsoundstart = function(){
         console.log('recog start.');
-        $('#status').text(_('soundstart'));
+        $('#status').text(_('sound start'));
     };
 
     speech_recog.onspeechstart = function() {
         console.log('onspeechstart');
-        $('#status').text(_('speechstart'));
+        $('#status').text(_('speech start'));
     };
 
     speech_recog.onspeechend = function() {
         console.log('onspeechend');
-        $('#status').text(_('speechend'));
+        $('#status').text(_('speech end'));
     };
     speech_recog.onnomatch = function(){
         console.log('recog nomatch.');
@@ -143,11 +143,13 @@ $(function() {
             console.log('speak on');
             speech_recog.start();
             isSpeaking = true;
+            $('#status').text(_('start recognition'));
             $('#speak').text(_('stop'));
         } else {
             console.log('speak off');
             speech_recog.stop();
             isSpeaking = false;
+            $('#status').text(_('stop recognition'));
             $('#speak').text(_('speak'));
         }
     });
