@@ -2,8 +2,8 @@
 Changelog for package visualization_rwt
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.3 (2016-10-01)
+------------------
 * rwt_robot_monitor depends on roslibjs_experimental whcih is not releaed yet
 * Contributors: Tokyo Opensource Robotics Developer 534
 
