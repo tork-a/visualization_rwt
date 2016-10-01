@@ -2,8 +2,8 @@
 Changelog for package rwt_moveit
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.2 (2016-10-01)
+------------------
 * reomve depends to the packages released from CDN
 * [rwt_moveit] Document how to run.
 * Launch file optimized. Now basically user can start all nodes by run.launch

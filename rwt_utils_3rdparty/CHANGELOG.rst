@@ -2,8 +2,8 @@
 Changelog for package rwt_utils_3rdparty
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.2 (2016-10-01)
+------------------
 * remove old rosbuild files
 * Add maintainer. Consistent pkg versions. Sort out manifest format.
 * catkinize visualization_rwt packages
