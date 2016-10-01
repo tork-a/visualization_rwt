@@ -19,7 +19,8 @@
   <run_depend>rwt_image_view</run_depend>
   <run_depend>rwt_moveit</run_depend>
   <run_depend>rwt_plot</run_depend>
-  <run_depend>rwt_robot_monitor</run_depend>
+  <!-- rwt_robot_monitor depends on roslibjs_experimental whcih is not releaed yet -->
+  <!-- <run_depend>rwt_robot_monitor</run_depend> -->
   <run_depend>rwt_speech_recognition</run_depend>
   <run_depend>rwt_utils_3rdparty</run_depend>
 
