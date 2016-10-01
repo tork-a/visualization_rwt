@@ -11,12 +11,21 @@ $(function() {
     });
 
     var showMenuString = function (lang){
+        console.log('lang selected: ' + lang);
+        lang_name = $('#lang-selector li:eq(0)').text();
+        for(var i = 0; i < $('#lang-selector li').length; i++) {
+            if ( $('#lang-selector li:eq('+i+')').data('value') == lang ) {
+                lang_name = $('#lang-selector li:eq('+i+')').text();
+            }
+        }
         setLanguage(lang);
         $('#continuous').text(_('continuous'));
         $('#once').text(_('once'));
         $('#speak').text(_('speak'));
         $('#language').text(_('language'));
         $('#detail-label').text(_('detail'));
+        $('#lang-label').text(_('language'));
+        $('#lang').text(lang_name);
         $('#status-label').text(_('status'));
         $('#clear-result').text(_('clear'));
         $('#result-label').text(_('result'));
@@ -41,17 +50,17 @@ $(function() {
 
     speech_recog.onsoundstart = function(){
         console.log('recog start.');
-        $('#status').text(_('soundstart'));
+        $('#status').text(_('sound start'));
     };
 
     speech_recog.onspeechstart = function() {
         console.log('onspeechstart');
-        $('#status').text(_('speechstart'));
+        $('#status').text(_('speech start'));
     };
 
     speech_recog.onspeechend = function() {
         console.log('onspeechend');
-        $('#status').text(_('speechend'));
+        $('#status').text(_('speech end'));
     };
     speech_recog.onnomatch = function(){
         console.log('recog nomatch.');
@@ -124,6 +133,7 @@ $(function() {
             speech_recog.stop();
             isSpeaking = false;
             $('#speak').text(_('speak'));
+            $('#speak').addClass('btn-default');
         }
     };
 
@@ -133,11 +143,13 @@ $(function() {
             console.log('speak on');
             speech_recog.start();
             isSpeaking = true;
+            $('#status').text(_('start recognition'));
             $('#speak').text(_('stop'));
         } else {
             console.log('speak off');
             speech_recog.stop();
             isSpeaking = false;
+            $('#status').text(_('stop recognition'));
             $('#speak').text(_('speak'));
         }
     });
@@ -155,6 +167,7 @@ $(function() {
             $('#speak').text(_('speak')).attr('disabled', 'disabled');
             $('#continuous').addClass('btn-primary');
             $('#once').removeClass('btn-primary');
+            $('#once').addClass('btn-default');
             speech_recog.abort();
             speech_recog.continuous = true;
             speech_recog.start();
@@ -185,8 +198,8 @@ $(function() {
     });
 
     $('#lang-selector li').click(function (){
-        var lang = $(this).attr('value');
-        console.log('lang selected: ' + lang);
+        var lang = $(this).data('value');
+        console.log('lang selected: ' + $(this).text() + ' ' + lang);
         showMenuString(lang);
         speech_recog.lang = lang;
         speech_recog.start();

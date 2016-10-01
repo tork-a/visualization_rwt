@@ -22,9 +22,9 @@
             <span class="caret"></span>
           </button>
           <ol class="dropdown-menu" id="lang-selector">
-            <li value="ja-JP">Japanese</li>
-            <li value="en-US">English</li>
-            <li value="ru-RU">Russian</li>
+            <li data-value="ja-JP"><a href="#">Japanese</a></li>
+            <li data-value="en-US"><a href="#">English</a></li>
+            <li data-value="ru-RU"><a href="#">Russian</a></li>
           </ol>
         </div>
       </div>
@@ -42,6 +42,7 @@
       <label class="checkbox inline">
         <input type="checkbox" id="publish-detail"><span id="publish-detail-label"></span>
       </label>
+      <p><span class="bold-label" id="lang-label"></span>: <span id="lang"></span></p>
       <p><span class="bold-label" id="status-label"></span>: <span id="status"></span></p>
       <p><span class="bold-label" id="result-label"></span>: <div id="messages"></div></p>
     </div>
@@ -50,6 +51,6 @@
     <script type="text/javascript" src="http://cdn.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
     <script type="text/javascript" src="/rwt_utils_3rdparty/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/rwt_speech_recognition/i18n.js"></script>
-    <script type="text/javascript" src="rwt_speech_recognition/rwt_speech_recognition.js"></script>
+    <script type="text/javascript" src="/rwt_speech_recognition/rwt_speech_recognition.js"></script>
   </body>
 </html>
