@@ -2,6 +2,9 @@
 Changelog for package rwt_plot
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.0.2 (2016-10-01)
 ------------------
 * remove old rosbuild files

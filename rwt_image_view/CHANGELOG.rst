@@ -2,6 +2,9 @@
 Changelog for package rwt_image_view
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.0.2 (2016-10-01)
 ------------------
 * remove mjpeg_server from find_package

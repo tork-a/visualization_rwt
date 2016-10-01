@@ -2,6 +2,9 @@
 Changelog for package rwt_speech_recognition
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.0.2 (2016-10-01)
 ------------------
 * Fix to work as of 2016/10/1 `#63 <https://github.com/tork-a/visualization_rwt/issues/63>`_
