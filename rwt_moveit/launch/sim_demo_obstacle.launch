@@ -1,0 +1,13 @@
+<launch>
+
+<arg name="fixed_frame" default="/BASE" />
+
+<include file="$(find rwt_moveit)/launch/sim_demo.launch">
+  <arg name="fixed_frame" value="$(arg fixed_frame)" />  
+</include>
+
+<node pkg="interactive_marker_proxy" type="proxy" name="obst_marker_proxy" args="topic_ns:=/obst/marker target_frame:=$(arg fixed_frame)" />
+
+<node pkg="rwt_moveit" type="sample_obstacle_marker.py" name="node_obst_marker" />
+
+</launch>
