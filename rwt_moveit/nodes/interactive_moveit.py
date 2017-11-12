@@ -17,6 +17,10 @@ from visualization_msgs.msg import (
     InteractiveMarkerFeedback)
 from interactive_markers.interactive_marker_server import InteractiveMarkerServer
 server = None
+group_name = 'manipulator'
+joint_states = None
+joint_names = []
+initial_joint_position = []
 
 
 def makeInteractiveMarker(name, description):
