@@ -81,12 +81,14 @@ def joint_position_callback(joints):
         else:
             plan_only = False
 
+        rospy.loginfo("send move_group_goal {}".format(move_group_goal))
         client.send_goal(move_group_goal)
-        client.wait_for_result(rospy.Duration.from_sec(5.0))
+        result = client.wait_for_result(rospy.Duration.from_sec(5.0))
+        rospy.loginfo("move_group_goal result {}".format(result))
 
 
     except rospy.ROSInterruptException, e:
-        print "failed: %s"%e
+        rospy.logerr("failed: %s".format(e))
 
 
 def moveit_callback(msg):
