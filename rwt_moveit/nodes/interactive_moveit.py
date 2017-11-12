@@ -53,7 +53,7 @@ def setColor(red, green, blue, alpha, marker):
 
 
 def callback(req):
-    print req
+    rospy.logwarn(req)
     return GetPositionIKResponse
 
 def initial_callback(msg):
@@ -111,9 +111,9 @@ def feedback(feedback):
 
         request.ik_request.pose_stamped = pose_stamped
         response = service(request)
-        print response
+        rospy.logwarn(response)
         if len(response.solution.joint_state.position) != 0:
-            print "success"
+            rospy.loginfo("GetPositionIK succeeded")
             msg = Float64MultiArray()
             for i,joint_name in enumerate(response.solution.joint_state.name):
                 for j, name in enumerate(joint_names):
