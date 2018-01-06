@@ -1,0 +1,9 @@
+<launch>
+  <arg name="launch_roswww" default="true" />
+  <arg name="port" default="8000" />
+  <group if="$(arg launch_roswww)">
+    <include file="$(find roswww)/launch/roswww.launch">
+      <arg name="port" value="$(arg port)" />
+    </include>
+  </group>
+</launch>

@@ -1,0 +1,103 @@
+<robot class="app-page">
+  <header class="header-bar">
+    <div class="center">
+      <h1 class="title">Select Robot</h1>
+    </div>
+  </header>
+  <div class="content">
+    <ul class="list" id="robot-list">
+      <li class="divider">Robots</li>
+    </ul>
+  </div>
+  <footer>
+    <div class="row">
+      <div class="tablet-6 phone-12 column button-parent">
+        <button class="btn fit-parent" id="add">Add a robot</button>
+      </div>
+      <div class="tablet-6 phone-12 column button-parent">
+        <button class="btn fit-parent" id="clear">Clear</button>
+      </div>
+    </div>
+  </footer>
+</robot>
+
+<script>
+
+ var robots = [];
+ 
+ var render_list = function() {
+   clear_list();
+   var parent = document.querySelector("#robot-list");
+   if (robots.length == 0) {
+     var item = document.createElement("li");
+     item.classList.add("item-expanded", "robot-list-empty");
+     item.innerHTML = "<p>Please add your robot to this list!</p>";
+     parent.appendChild(item);
+   } else {
+     var empty = document.querySelector("#robot-list-empty");
+     if (empty !== null) {
+       empty.parentElement.removeChild(empty);
+     }
+     for (var robot of robots) {
+       var item = document.createElement("li");
+       item.classList.add("item-expanded", "robot-list-item");
+       item.innerHTML = '<div>' +
+                        '  <div class="pull-left">' +
+                        '      <img src="img/robot/' + robot.type + '.png" onerror="this.src=\'img/robot/placeholder.png\'"></img>' +
+                        '  </div>' +
+                        '  <div class="item-content">' +
+                        '    <span class="title">' + robot.name + '</span>' +
+                        '    <span class="body">' + robot.uri + '</span>' +
+                        '  </div>' +
+                        '</div>';
+       item.on('tap', function() {
+         phonon.navigator().changePage("task", this);
+       }.bind(robot.name));
+       parent.appendChild(item);
+     };
+   }
+ };
+
+ var clear_list = function() {
+   var parent = document.querySelector("#robot-list");
+   for (var e of parent.children) {
+     if (!e.classList.contains("divider")) {
+       e.parentElement.removeChild(e);
+     }
+   };
+ };
+
+ page.onCreate = function() {
+   document.querySelector("#add").on("tap", function() {
+     phonon.navigator().changePage("add_robot");
+   });
+
+   document.querySelector("#clear").on("tap", function() {
+     var prompt = phonon.prompt("Are you sure to remove all robots from the list?", "Clear");
+     prompt.on("confirm", function(value) {
+       robots = [];
+       render_list();
+       phonon.notif("Cleared all robots", 3000, false, false);
+     });
+     prompt.on("cancel", function() {
+       phonon.notif("Canceled removing the list", 3000, false, false);
+     });
+   });
+ };
+
+ page.onReady = function() {
+   robots = load_robots();
+   render_list();
+ };
+
+ page.onHashChanged = function(name) {
+   if (name.length > 0) {
+     phonon.notif("Added " + name[0], 3000, false, false);
+   }
+ };
+
+ page.onHidden = function() {
+   save_robots(robots);
+ };
+
+</script>
