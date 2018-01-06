@@ -1,5 +1,5 @@
 <launch>
-  <arg name="app_list" default="$(find local_app_manager)/mock_apps" />
+  <arg name="app_list" default="$(find rwt_app_chooser)/sample/applist" />
   <arg name="port" default="9090" />
 
   <node pkg="app_manager" type="appmaster" name="appmaster"

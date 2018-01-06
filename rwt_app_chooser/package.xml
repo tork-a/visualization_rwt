@@ -14,6 +14,7 @@
   <run_depend>app_manager</run_depend>
   <run_depend>rosbridge_server</run_depend>
   <run_depend>roswww</run_depend>
+  <run_depend>sound_play</run_depend>
 
   <test_depend>phantomjs</test_depend>
   <test_depend>python-selenium-pip</test_depend>
