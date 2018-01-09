@@ -1,9 +1,3 @@
-[submodule "rwt_utils_3rdparty/www/EventEmitter2"]
-	path = rwt_utils_3rdparty/www/EventEmitter2
-	url = https://github.com/asyncly/EventEmitter2
-[submodule "rwt_utils_3rdparty/www/roslibjs"]
-	path = rwt_utils_3rdparty/www/roslibjs
-	url = https://github.com/RobotWebTools/roslibjs
 [submodule "rwt_utils_3rdparty/www/mjpegcanvasjs"]
 	path = rwt_utils_3rdparty/www/mjpegcanvasjs
 	url = https://github.com/rctoris/mjpegcanvasjs
