@@ -13,3 +13,6 @@
 [submodule "rwt_utils_3rdparty/www/d3"]
 	path = rwt_utils_3rdparty/www/d3
 	url = https://github.com/d3/d3
+[submodule "rwt_utils_3rdparty/www/lodash"]
+	path = rwt_utils_3rdparty/www/lodash
+	url = https://github.com/lodash/lodash
