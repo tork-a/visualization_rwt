@@ -1,0 +1,207 @@
+<task class="app-page">
+  <header class="header-bar">
+    <button class="btn icon icon-arrow-back pull-left" data-navigation="robot"></button>
+    <div class="center">
+      <h1 class="title">Select Task</h1>
+    </div>
+  </header>
+  <div class="content">
+    <div class="padded-full">
+      <div class="row text-center" id="app-list">
+        <!-- apps are added here -->
+      </div>
+    </div>
+  </div>
+</task>
+
+<script>
+ var robot_display_name = "robot";
+ var robot_name = "robot";
+ var robot_uri = null;
+ var ros = null;
+ var app_list_sub = null;
+
+ var start_app = function(name, cb) {
+   var srv_name = '/' + robot_name + '/start_app';
+   console.log(srv_name);
+   var srv = new ROSLIB.Service({
+     ros: ros,
+     name: srv_name,
+     serviceType: "app_manager/StartApp"
+   });
+   var req = new ROSLIB.ServiceRequest({name: name});
+   console.log(req);
+   srv.callService(new ROSLIB.ServiceRequest({name: name}), cb);
+ };
+
+ var stop_app = function(name, cb) {
+   var srv_name = '/' + robot_name + '/stop_app';
+   console.log(srv_name);
+   var srv = new ROSLIB.Service({
+     ros: ros,
+     name: srv_name,
+     serviceType: "app_manager/StopApp"
+   });
+   srv.callService(new ROSLIB.ServiceRequest({name: name}), cb);
+ };
+
+ var clear_app_list = function() {
+   var parent = document.querySelector("#app-list");
+   console.log("Clearing " + parent.children.length + " list items");
+   while (parent.firstChild) {
+     parent.removeChild(parent.firstChild);
+   }
+ };
+
+ var render_app_list = function(apps) {
+   clear_app_list();
+   var parent = document.querySelector("#app-list");
+   apps.sort(function(a, b) {
+     return a.display_name <= b.display_name
+   });
+   apps.forEach(function(app, i) {
+     var item = document.createElement("div");
+     item.classList.add("column", "large-1", "tablet-3", "phone-6");
+     if (app.running) {
+       item.classList.add("running");
+       console.log(app);
+     }
+     item.innerHTML = '<img id="icon-' + i + '">' +
+                      '<div class="item-content">' +
+                      '  <span class="Title">' + app.display_name + '</span>' +
+                      '</div>';
+     item.on('tap', function() {
+       var that = this;
+       if (this.running) {
+         var prompt = phonon.prompt("Shutdown " + this.display_name + "?", "Kill application");
+         prompt.on("confirm", function(value) {
+           stop_app(that.name, function(res) {
+             console.log("stop_app", res);
+             if (res.stopped) {
+               phonon.notif("Killed " + that.display_name, 3000, false, false);
+             } else {
+               phonon.notif(res.message + " (" + res.error_code + ")", 3000, false, false);
+             }
+           });
+         });
+       } else {
+         var prompt = phonon.prompt("Launch " + this.display_name + "?", "Launch application");
+         prompt.on("confirm", function(value) {
+           start_app(that.name, function(res) {
+             console.log("start_app", res);
+             if (res.started) {
+               phonon.notif("Launched " + that.display_name, 3000, false, false);
+             } else {
+               phonon.notif(res.message + " (" + res.error_code + ")", 3000, false, false);
+             }
+           });
+         });
+       }
+     }.bind(app));
+     parent.appendChild(item);
+
+     // render icon
+     var img = item.getElementsByTagName("img")[0];
+     if (app.icon.format === "png") {
+       img.src = 'data:image/png;base64,' + app.icon.data;
+     } else if (app.icon.format === "jpeg") {
+       img.src = 'data:image/jpeg;base64,' + app.icon.data;
+     } else {
+       img.src = 'img/task/placeholder.png';
+     }
+   });
+   console.log("added " + apps.length + " apps");
+ };
+
+ var connect_ros = function(next) {
+   if (ros !== null) {
+     ros.close();
+     ros = null;
+   }
+   var robots = load_robots();
+   for (var i = 0; i < robots.length; i++) {
+     var robot = robots[i];
+     if (robot.name === robot_display_name) {
+       robot_uri = robot.uri;
+       break;
+     }
+   }
+
+   if (robot_uri === null) {
+     var prompt = phonon.alert("Robot Uri is not set", "Error");
+     prompt.on("confirm", function() {});
+     phonon.navigator().changePage("robot");
+   }
+
+   ros = new ROSLIB.Ros();
+
+   ros.on("connection", function() {
+     console.log("connected to ros");
+     phonon.notif("Connected to master", 2000, false, false);
+   });
+
+   ros.on("error", function(event) {
+     console.log("error on ros");
+     phonon.notif("Error occured on ROS Interface", 3000, true, false);
+   });
+
+   ros.on("close", function() {
+     console.log("disconnected from ros");
+     phonon.notif("Disonnected from master", 2000, false, false);
+   });
+
+   ros.connect(robot_uri);
+
+   var param = new ROSLIB.Param({
+     ros: ros,
+     name: '/robot/name'
+   });
+   param.get(function(n) {
+     robot_name = n;
+     console.log("robot/name: " + n);
+     next();
+   });
+ };
+
+ page.onReady = function() {
+   connect_ros(function() {
+     var list_name = "/" + robot_name + "/app_list";
+     var app_list_sub = new ROSLIB.Topic({
+       ros: ros,
+       name: list_name,
+       messageType: "app_manager/AppList"
+     });
+     console.log("subscribing: " + list_name);
+
+     app_list_sub.subscribe(function(msg) {
+       console.log("subscribe");
+       var apps = [];
+       msg.available_apps.forEach(function(app) {
+         if (msg.running_apps.find(function(e) {
+           return e.name == app.name;
+         })) {
+           app["running"] = true;
+         } else {
+           app["running"] = false;
+         }
+         apps.push(app);
+       });
+       render_app_list(apps);
+     });
+   });
+ };
+
+ page.onHidden = function() {
+   if (app_list_sub !== null) {
+     app_list_sub.unsubscribe();
+   }
+ };
+   
+
+ page.onHashChanged = function(args) {
+   if (args.length != 1) {
+     return false;
+   }
+   robot_display_name = args[0];
+ };
+</script>

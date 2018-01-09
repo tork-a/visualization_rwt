@@ -1,0 +1,15 @@
+<launch>
+  <arg name="app_list" default="$(find rwt_app_chooser)/sample/applist" />
+  <arg name="port" default="9090" />
+
+  <node pkg="app_manager" type="appmaster" name="appmaster"
+        args="-p 11312" />
+  <node pkg="app_manager" type="app_manager" name="app_manager"
+        args="--applist $(arg app_list)" output="screen">
+    <param name="interface_master" value="http://localhost:11312"/>
+  </node>
+
+  <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch">
+    <arg name="port" value="$(arg port)" />
+  </include>
+</launch>
