@@ -10,7 +10,7 @@ App chooser client for web browsing device
     ```bash
     roscore &
     rosparam set robot/type pr2     # set robot type as rosparam
-    rosparam set robot/type pr1012  # set robot name as rosparam
+    rosparam set robot/name pr1012  # set robot name as rosparam
     roslaunch rwt_app_chooser app_manager.launch
     ```
     
@@ -27,7 +27,7 @@ App chooser client for web browsing device
     ```
     
     This can be run on the robot
-    You can now access to `http://<server ip>:8080/`
+    You can now access to `http://<server ip>:8000/rwt_app_chooser/`
 
 ### Register Your App (Optional)
 
