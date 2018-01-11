@@ -1,15 +1,8 @@
 <launch>
   <arg name="launch_roswww" default="true" />
-  <include file="$(find roswww)/launch/roswww.launch"
-           if="$(arg launch_roswww)">
-    <arg name="port" value="8000" />
-  </include>
+  <include file="$(find rwt_plot)/launch/rwt_plot.launch"
+           if="$(arg launch_roswww)" />
 
-  <node pkg="roswww" type="webserver.py" name="roswww">
-  </node>
-  <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch">
-    <arg name="port" value="8888" />
-  </include>
   <node pkg="rwt_plot" type="random_float.py" name="$(anon random_float)">
   </node>
   <node pkg="rwt_plot" type="random_point.py" name="$(anon random_point)">
