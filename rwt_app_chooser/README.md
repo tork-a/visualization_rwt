@@ -27,7 +27,16 @@ App chooser client for web browsing device
     ```
     
     This can be run on the robot
-    You can now access to `http://<server ip>:8000/rwt_app_chooser/`
+
+3. You can now access to rwt_app_chooser page from http://localhost:8000/rwt_app_chooser/
+
+   You will see following main page, then add "ADD ROBOT" button.
+
+   ![rwt_app_chooser_main.png](images/rwt_app_chooser_main.png "rwt_app_chooser_main.png")
+
+   Then You will see following task launch page
+
+   ![rwt_app_chooser_task.png](images/rwt_app_chooser_task.png "rwt_app_chooser_task.png")
 
 ### Register Your App (Optional)
 
