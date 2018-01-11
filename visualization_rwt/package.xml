@@ -22,6 +22,7 @@
   <!-- rwt_robot_monitor depends on roslibjs_experimental whcih is not releaed yet -->
   <!-- <run_depend>rwt_robot_monitor</run_depend> -->
   <run_depend>rwt_speech_recognition</run_depend>
+  <run_depend>rwt_app_chooser</run_depend>
   <run_depend>rwt_utils_3rdparty</run_depend>
 
   <export>

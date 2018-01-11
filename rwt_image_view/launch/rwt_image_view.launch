@@ -8,12 +8,12 @@
   <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" >
     <arg name="port" value="8888" />
   </include>
-  <!-- <include file="$(find openni_launch)/launch/openni.launch" /> -->
-  <node pkg="mjpeg_server" type="mjpeg_server"
-        name="mjpeg_server"
+  <node pkg="web_video_server" type="web_video_server"
+        name="web_video_server"
         output="screen"
         clear_params="true">
-   <param name="quality" value="100" />
+   <param name="port" value="8080" />
+   <param name="address" value="127.0.0.1" />
   </node>
   <node pkg="rwt_image_view" type="rosbag_record_server.py"
         name="rosbag_record_server"

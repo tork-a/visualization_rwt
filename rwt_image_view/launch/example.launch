@@ -1,19 +1,6 @@
 <launch>
   <arg name="launch_roswww" default="true" />
-  <include file="$(find roswww)/launch/roswww.launch"
-           if="$(arg launch_roswww)">
-    <arg name="port" value="8000" />
-  </include>
-
-  <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch" >
-    <arg name="port" value="8888" />
-  </include>
-  <ainclude file="$(find openni_launch)/launch/openni.launch" />
-  <node pkg="web_video_server" type="web_video_server"
-        name="web_video_server"
-        output="screen"
-        clear_params="true">
-   <param name="port" value="8080" />
-   <param name="address" value="127.0.0.1" />
-  </node>
+  <include file="$(find rwt_image_view)/launch/rwt_image_view.launch"
+           if="$(arg launch_roswww)" />
+  <node pkg="usb_cam" type="usb_cam_node" name="usb_cam_node" />
 </launch>
