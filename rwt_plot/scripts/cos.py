@@ -7,7 +7,7 @@ from std_msgs.msg import Float64
 from random import random
 def main():
     rospy.init_node("cos")
-    pub = rospy.Publisher("/cos", Float64)
+    pub = rospy.Publisher("/cos", Float64, queue_size=1)
     counter = 0
     RESOLUTION = 100
     while not rospy.is_shutdown():

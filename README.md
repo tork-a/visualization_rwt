@@ -3,9 +3,15 @@ visualization_rwt [![Build Status](https://api.travis-ci.org/tork-a/visualizatio
 
 visualization packages based on RobotWebTools
 
-INSTALL
--------
+## INSTALL
 
+### Package Install (Recommended)
+
+```
+apt-get install ros-$ROS_DISTRO-visualization-rwt
+```
+
+### Source Install
 Following is an example with ROS Indigo.
 
 1. Create a [catkin workspace](http://wiki.ros.org/catkin/Tutorials/create_a_workspace) and navigate to its source directory (e.g. `~/catkin_ws/src`).
@@ -14,11 +20,10 @@ Following is an example with ROS Indigo.
 
 ```
 cd ~/catkin_ws
-apt-get install python-wstool
 wstool init src
-wstool merge -t src https://raw.githubusercontent.com/tork-a/visualization_rwt/hydro-devel/.rosinstall
-wstool update -t src
-rosdep install --from-paths src --ignore-src --rosdistro indigo -r -y
+wstool set visualization_rwt --git https://github.com/tork-a/visualization_rwt/
+wstool update
+rosdep install --from-paths src --ignore-src --rosdistro ${ROS_DISTRO} -r -y
 catkin_make                (or any build commands available in ROS, e.g. `catkin build`)
 source devel/setup.bash
 ```
@@ -26,5 +31,8 @@ source devel/setup.bash
 PROJECTS
 --------
 
+* [rwt_app_chooser](rwt_app_choser/README.md)
+* [rwt_image_view](rwt_image_view/README.md)
+* [rwt_moveit](rwt_moveit/README.md)
 * [rwt_plot](rwt_plot/README.md)
 * [rwt_speech_recognition](rwt_speech_recognition/README.md)

@@ -7,7 +7,7 @@ from std_msgs.msg import Float64MultiArray
 from random import random
 def main():
     rospy.init_node("array_sin_cos")
-    pub = rospy.Publisher("/array_sin_cos", Float64MultiArray)
+    pub = rospy.Publisher("/array_sin_cos", Float64MultiArray, queue_size=1)
     counter = 0
     RESOLUTION = 100
     while not rospy.is_shutdown():
