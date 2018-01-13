@@ -1,22 +1,29 @@
 env:
   global:
-    - CI_DIR=.ci_config
+    - PUBLISHED_DIR=public
   matrix:
     - ROS_DISTRO=indigo
     - ROS_DISTRO=jade
+    - ROS_DISTRO=kinetic
 sudo: required
 dist: trusty
 language: node_js
+branches:
+  except:
+    - master
 matrix:
   fast_finish: true
+  allow_failures:
+    - env: ROS_DISTRO=kinetic
 before_script:
   # Force travis to use its minimal image with default Python settings
   - sudo rm -fr /opt/python/
+  - export DEBIAN_FRONTEND=noninteractive
   - export CI_SOURCE_PATH=$(pwd)
   - export REPOSITORY_NAME=${PWD##*/}
   - sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu trusty main" > /etc/apt/sources.list.d/ros-latest.list'
   - wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
-  - sudo apt-get update -qq
+  - sudo apt-get update -qq || echo Ignore error on apt-get update
   - sudo apt-get install -qq -y python-catkin-pkg python-catkin-tools python-rosdep python-wstool
   - sudo apt-get install -qq -y ros-$ROS_DISTRO-ros ros-$ROS_DISTRO-catkin ros-$ROS_DISTRO-common-tutorials ros-$ROS_DISTRO-rospy-tutorials ros-$ROS_DISTRO-actionlib-tutorials
   - sudo apt-get install -qq -y ros-$ROS_DISTRO-rosbridge-server ros-$ROS_DISTRO-tf2-web-republisher
@@ -35,8 +42,21 @@ before_script:
   - wstool info -t src
   - sudo rosdep init || sudo rosdep init
   - rosdep update
-  - rosdep install --from-paths src --ignore-src --rosdistro $ROS_DISTRO -r -y
+  - rosdep install --from-paths src --ignore-src --rosdistro $ROS_DISTRO -r -y -n
 script:
   - catkin build
   - source devel/setup.bash
-  - cd src/visualization_rwt/rwt_plot/utils
+after_success:
+  - chmod +x $CI_SOURCE_PATH/.deploy.sh
+  - $CI_SOURCE_PATH/.deploy.sh
+  - cd $CI_SOURCE_PATH  # This is for deploy section
+deploy:
+  provider: pages
+  skip_cleanup: true
+  github_token: $GH_TOKEN
+  local_dir: $PUBLISHED_DIR
+  target_branch: master
+  keep_history: true
+  on:
+    branch: kinetic-devel  # set to default branch
+    condition: "$ROS_DISTRO = indigo"
