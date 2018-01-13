@@ -202,7 +202,9 @@ $(function() {
         console.log('lang selected: ' + $(this).text() + ' ' + lang);
         showMenuString(lang);
         speech_recog.lang = lang;
-        speech_recog.start();
+        if (!isSpeaking) {
+            speech_recog.start();
+        }
     });
 
     $('#clear-result').click(function (){
