@@ -12,11 +12,15 @@
         var res = false;
         $.ajax({
             async: false,
-            url: 'locale/' + lang + '.json',
+            type: 'get',
+            url: 'js/locale/' + lang + '.json',
             dataType: 'json',
             success: function (json){
                 console.log('get json success');
                 res = true;
+            },
+            error: function(req, status, error) {
+                console.log('error on fetch locale json for ' + lang + ': ' + status + ': ' + error.message);
             }
         });
         return res;
