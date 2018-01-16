@@ -6,7 +6,7 @@ from geometry_msgs.msg import PointStamped
 from random import random
 def main():
     rospy.init_node("random_point")
-    pub = rospy.Publisher("/random_point", PointStamped)
+    pub = rospy.Publisher("/random_point", PointStamped, queue_size=1)
     while not rospy.is_shutdown():
         msg = PointStamped()
         msg.header.stamp = rospy.Time.now()

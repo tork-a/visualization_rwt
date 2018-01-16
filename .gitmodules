@@ -1,0 +1,12 @@
+[submodule "rwt_utils_3rdparty/www/mjpegcanvasjs"]
+	path = rwt_utils_3rdparty/www/mjpegcanvasjs
+	url = https://github.com/rctoris/mjpegcanvasjs
+[submodule "rwt_utils_3rdparty/www/jquery"]
+	path = rwt_utils_3rdparty/www/jquery
+	url = https://github.com/jquery/jquery
+[submodule "rwt_utils_3rdparty/www/d3"]
+	path = rwt_utils_3rdparty/www/d3
+	url = https://github.com/d3/d3
+[submodule "rwt_utils_3rdparty/www/lodash"]
+	path = rwt_utils_3rdparty/www/lodash
+	url = https://github.com/lodash/lodash

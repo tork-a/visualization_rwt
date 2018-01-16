@@ -9,12 +9,6 @@ dist: trusty
 language: node_js
 matrix:
   fast_finish: true
-  allow_failures:
-    - node_js: "0.10"  # builtin nodejs on ubuntu 14.04 is too old
-node_js:
-  - "0.10"   # ubuntu 14.04 builtin
-  - "4"      # ubuntu 16.04 builtin
-  - "stable" # latest stable release
 before_script:
   # Force travis to use its minimal image with default Python settings
   - sudo rm -fr /opt/python/
@@ -23,13 +17,10 @@ before_script:
   - sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu trusty main" > /etc/apt/sources.list.d/ros-latest.list'
   - wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
   - sudo apt-get update -qq
-  - sudo apt-get install -qq -y python-catkin-pkg python-catkin-tools python-rosdep python-wstool 
+  - sudo apt-get install -qq -y python-catkin-pkg python-catkin-tools python-rosdep python-wstool
   - sudo apt-get install -qq -y ros-$ROS_DISTRO-ros ros-$ROS_DISTRO-catkin ros-$ROS_DISTRO-common-tutorials ros-$ROS_DISTRO-rospy-tutorials ros-$ROS_DISTRO-actionlib-tutorials
-  - sudo apt-get install -qq -y ros-$ROS_DISTRO-rosbridge-server ros-$ROS_DISTRO-tf2-web-republisher 
+  - sudo apt-get install -qq -y ros-$ROS_DISTRO-rosbridge-server ros-$ROS_DISTRO-tf2-web-republisher
   - source /opt/ros/$ROS_DISTRO/setup.bash
-  # Only update npm in the 0.8 and 0.10 versions to not run into this issue:
-  #   https://github.com/nodejs/node/issues/433
-  - case ${TRAVIS_NODE_VERSION} in 0.8*|0.10*) npm update -g npm ;; esac
   # Set up Xfvb for Firefox headless testing
   - export DISPLAY=:99.0
   - sh -e /etc/init.d/xvfb start
@@ -48,7 +39,4 @@ before_script:
 script:
   - catkin build
   - source devel/setup.bash
-  - npm install -g grunt-cli
   - cd src/visualization_rwt/rwt_plot/utils
-  - npm install .
-  - grunt build
