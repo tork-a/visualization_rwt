@@ -31,7 +31,7 @@ source devel/setup.bash
 PROJECTS
 --------
 
-* [rwt_app_chooser](rwt_app_choser/README.md)
+* [rwt_app_chooser](rwt_app_chooser/README.md)
 * [rwt_image_view](rwt_image_view/README.md)
 * [rwt_moveit](rwt_moveit/README.md)
 * [rwt_plot](rwt_plot/README.md)
