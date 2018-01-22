@@ -25,5 +25,6 @@ catkin_topological_order | while read line; do
   fi
 done
 ## add index html for gh-pages
+echo "Copied master:READEME.md -> gh-pages:README.md"
 sed 's@(\(.*\)/README.md)@(\1)@' README.md > $DEST_DIR/README.md
 echo "All copy done!"
