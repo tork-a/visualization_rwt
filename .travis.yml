@@ -47,7 +47,6 @@ script:
   - catkin build
   - source devel/setup.bash
 after_success:
-  - chmod +x $CI_SOURCE_PATH/.deploy.sh
   - $CI_SOURCE_PATH/.deploy.sh
   - cd $CI_SOURCE_PATH  # This is for deploy section
 deploy:
@@ -55,8 +54,8 @@ deploy:
   skip_cleanup: true
   github_token: $GH_TOKEN
   local_dir: $PUBLISHED_DIR
-  target_branch: master
-  keep_history: true
+  target_branch: gh-pages
+  keep_history: false
   on:
     branch: kinetic-devel  # set to default branch
     condition: "$ROS_DISTRO = indigo"
