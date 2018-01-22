@@ -24,5 +24,6 @@ catkin_topological_order | while read line; do
     echo "Package $PKGNAME does not have www directory"
   fi
 done
-
+## add index html for gh-pages
+sed 's@(\(.*\)/README.md)@(\1)@' README.md > $DEST_DIR/README.md
 echo "All copy done!"
