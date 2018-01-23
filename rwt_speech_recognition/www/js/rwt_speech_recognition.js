@@ -1,234 +1,279 @@
-$(function() {
-    var ros = new ROSLIB.Ros({
-        url: 'ws://' + location.hostname + ':8888'
-    });
+(function(func) {
+  if (typeof exports == "object") {
+    module.exports = func();
+  } else if (typeof define === "function" && define.amd) {
+    define(func);
+  } else {
+    RWTSpeechRecognition = func();
+  }
+})(function(){
+  'use strict';
 
-    var topic = '/Tablet/voice';
-    var tabletVoice = new ROSLIB.Topic({
-        ros: ros,
-        name: topic,
-        messageType: 'speech_recognition_msgs/SpeechRecognitionCandidates'
-    });
+  var RWTSpeechRecognition = function(language, dialect) {
+    this.languages = [
+      ['Afrikaans',        ['af-ZA']],
+      ['አማርኛ',             ['am-ET']],
+      ['Azərbaycanca',     ['az-AZ']],
+      ['বাংলা',            ['bn-BD', 'বাংলাদেশ'],
+                           ['bn-IN', 'ভারত']],
+      ['Bahasa Indonesia', ['id-ID']],
+      ['Bahasa Melayu',    ['ms-MY']],
+      ['Català',           ['ca-ES']],
+      ['Čeština',          ['cs-CZ']],
+      ['Dansk',            ['da-DK']],
+      ['Deutsch',          ['de-DE']],
+      ['English',          ['en-AU', 'Australia'],
+                           ['en-CA', 'Canada'],
+                           ['en-IN', 'India'],
+                           ['en-KE', 'Kenya'],
+                           ['en-TZ', 'Tanzania'],
+                           ['en-GH', 'Ghana'],
+                           ['en-NZ', 'New Zealand'],
+                           ['en-NG', 'Nigeria'],
+                           ['en-ZA', 'South Africa'],
+                           ['en-PH', 'Philippines'],
+                           ['en-GB', 'United Kingdom'],
+                           ['en-US', 'United States']],
+      ['Español',          ['es-AR', 'Argentina'],
+                           ['es-BO', 'Bolivia'],
+                           ['es-CL', 'Chile'],
+                           ['es-CO', 'Colombia'],
+                           ['es-CR', 'Costa Rica'],
+                           ['es-EC', 'Ecuador'],
+                           ['es-SV', 'El Salvador'],
+                           ['es-ES', 'España'],
+                           ['es-US', 'Estados Unidos'],
+                           ['es-GT', 'Guatemala'],
+                           ['es-HN', 'Honduras'],
+                           ['es-MX', 'México'],
+                           ['es-NI', 'Nicaragua'],
+                           ['es-PA', 'Panamá'],
+                           ['es-PY', 'Paraguay'],
+                           ['es-PE', 'Perú'],
+                           ['es-PR', 'Puerto Rico'],
+                           ['es-DO', 'República Dominicana'],
+                           ['es-UY', 'Uruguay'],
+                           ['es-VE', 'Venezuela']],
+      ['Euskara',          ['eu-ES']],
+      ['Filipino',         ['fil-PH']],
+      ['Français',         ['fr-FR']],
+      ['Basa Jawa',        ['jv-ID']],
+      ['Galego',           ['gl-ES']],
+      ['ગુજરાતી',           ['gu-IN']],
+      ['Hrvatski',         ['hr-HR']],
+      ['IsiZulu',          ['zu-ZA']],
+      ['Íslenska',         ['is-IS']],
+      ['Italiano',         ['it-IT', 'Italia'],
+                           ['it-CH', 'Svizzera']],
+      ['ಕನ್ನಡ',             ['kn-IN']],
+      ['ភាសាខ្មែរ',         ['km-KH']],
+      ['Latviešu',         ['lv-LV']],
+      ['Lietuvių',         ['lt-LT']],
+      ['മലയാളം',           ['ml-IN']],
+      ['मराठी',            ['mr-IN']],
+      ['Magyar',           ['hu-HU']],
+      ['ລາວ',              ['lo-LA']],
+      ['Nederlands',       ['nl-NL']],
+      ['नेपाली भाषा',       ['ne-NP']],
+      ['Norsk bokmål',     ['nb-NO']],
+      ['Polski',           ['pl-PL']],
+      ['Português',        ['pt-BR', 'Brasil'],
+                           ['pt-PT', 'Portugal']],
+      ['Română',           ['ro-RO']],
+      ['සිංහල',             ['si-LK']],
+      ['Slovenščina',      ['sl-SI']],
+      ['Basa Sunda',       ['su-ID']],
+      ['Slovenčina',       ['sk-SK']],
+      ['Suomi',            ['fi-FI']],
+      ['Svenska',          ['sv-SE']],
+      ['Kiswahili',        ['sw-TZ', 'Tanzania'],
+                           ['sw-KE', 'Kenya']],
+      ['ქართული',          ['ka-GE']],
+      ['Հայերեն',          ['hy-AM']],
+      ['தமிழ்',             ['ta-IN', 'இந்தியா'],
+                           ['ta-SG', 'சிங்கப்பூர்'],
+                           ['ta-LK', 'இலங்கை'],
+                           ['ta-MY', 'மலேசியா']],
+      ['తెలుగు',            ['te-IN']],
+      ['Tiếng Việt',       ['vi-VN']],
+      ['Türkçe',           ['tr-TR']],
+      ['اُردُو',             ['ur-PK', 'پاکستان'],
+                           ['ur-IN', 'بھارت']],
+      ['Ελληνικά',         ['el-GR']],
+      ['български',        ['bg-BG']],
+      ['Pусский',          ['ru-RU']],
+      ['Српски',           ['sr-RS']],
+      ['Українська',       ['uk-UA']],
+      ['한국어',           ['ko-KR']],
+      ['中文',             ['cmn-Hans-CN', '普通话 (中国大陆)'],
+                           ['cmn-Hans-HK', '普通话 (香港)'],
+                           ['cmn-Hant-TW', '中文 (台灣)'],
+                           ['yue-Hant-HK', '粵語 (香港)']],
+      ['日本語',           ['ja-JP']],
+      ['हिन्दी',            ['hi-IN']],
+      ['ภาษาไทย',          ['th-TH']]
+    ];
 
-    var showMenuString = function (lang){
-        console.log('lang selected: ' + lang);
-        lang_name = $('#lang-selector li:eq(0)').text();
-        for(var i = 0; i < $('#lang-selector li').length; i++) {
-            if ( $('#lang-selector li:eq('+i+')').data('value') == lang ) {
-                lang_name = $('#lang-selector li:eq('+i+')').text();
-            }
-        }
-        setLanguage(lang);
-        $('#continuous').text(_('continuous'));
-        $('#once').text(_('once'));
-        $('#speak').text(_('speak'));
-        $('#language').text(_('language'));
-        $('#detail-label').text(_('detail'));
-        $('#lang-label').text(_('language'));
-        $('#lang').text(lang_name);
-        $('#status-label').text(_('status'));
-        $('#clear-result').text(_('clear'));
-        $('#result-label').text(_('result'));
-        $('#publish-detail-label').text(_('publishdetail'));
-        $('#topic-alt-button').text(_('change'));
+    this.continuous = false;
+    this.recognizing = false;
+    this.stopping = false;
+    this.ignore_on_end = false;
+    this.hooks = {};
+    this.sr = null;
+    
+    this.sel_lang = document.getElementById(language);
+    this.sel_dial = document.getElementById(dialect);
+    for (var i = 0; i < this.languages.length; i++) {
+      this.sel_lang.options.add(new Option(this.languages[i][0], i));
+    }
+    
+    // default lang
+    this.sel_lang.selectedIndex = 10; // English
+    this.updateDialect();
+    this.sel_dial.selectedIndex = 11; // US
+    // callbacks
+    this.sel_lang.onchange = this.updateDialect.bind(this);
+    var that = this;
+    this.sel_dial.onchange = function() {
+      if (that.recognizing) {
+        that.restart();
+      }
     };
+  };
 
-    var SpeechRecognition = window.webkitSpeechRecognition
+  RWTSpeechRecognition.prototype.getRecognizer = function() {
+    return window.webkitSpeechRecognition
         || window.mozSpeechRecognition
         || window.oSpeechRecognition
         || window.msSpeechRecognition
         || window.SpeechRecognition;
+  };
 
-    if (!SpeechRecognition) $('body').html('<h1>This Browser is not supported.</h1>');
+  RWTSpeechRecognition.prototype.isSupported = function() {
+    return !(!this.getRecognizer());
+  };
 
-    var speech_recog = new SpeechRecognition();
+  RWTSpeechRecognition.prototype.updateDialect = function(e) {
+    for (var i = this.sel_dial.options.length - 1; i >= 0; i--) {
+      this.sel_dial.remove(i);
+    }
+    var list = this.languages[this.sel_lang.selectedIndex];
+    for (var i = 1; i < list.length; i++) {
+      this.sel_dial.options.add(new Option(list[i][1], list[i][0]));
+    }
+    this.sel_dial.disabled = list[1].length == 1;
+  };
 
-    speech_recog.lang = 'ja-JP';
-    speech_recog.continuous = false;
-    speech_recog.interimResults = false;
-    speech_recog.maxAlternatives = 5;
+  RWTSpeechRecognition.prototype.setContinuous = function(enable) {
+    if (enable && !this.continuous) {
+      this.stop();
+      this.continuous = true;
+    } else if (!enable && this.continuous) {
+      this.stop();
+      this.continuous = false;
+    }
+  };
 
-    speech_recog.onsoundstart = function(){
-        console.log('recog start.');
-        $('#status').text(_('sound start'));
+  RWTSpeechRecognition.prototype.on = function(event, cb) {
+    this.hooks[event] = cb;
+  };
+
+  RWTSpeechRecognition.prototype.start = function() {
+    var that = this;
+    this.sr = new (this.getRecognizer())();
+    this.sr.lang = this.sel_dial.value;
+    this.sr.continuous = this.continuous;
+    this.sr.interimResults = true;
+    this.sr.maxAlternatives = 5;
+    this.sr.onstart = function() {
+      that.recognizing = true;
+      if ("start" in that.hooks) {
+        that.hooks["start"]();
+      }
     };
+    this.sr.onerror = function(event) {
+      if (event.error == 'no-speech'     ||
+          event.error == 'audio-capture' ||
+          event.error == 'not-allowed') {
+        that.ignore_on_end = true;
+      }
 
-    speech_recog.onspeechstart = function() {
-        console.log('onspeechstart');
-        $('#status').text(_('speech start'));
+      that.recognizing = false;
+      if ("error" in that.hooks) {
+        that.hooks["error"](event);
+      }
     };
-
-    speech_recog.onspeechend = function() {
-        console.log('onspeechend');
-        $('#status').text(_('speech end'));
+    this.sr.onend = function() {
+      that.recognizing = false;
+      if (that.ignore_on_end) { return; }
+      if ("end" in that.hooks) {
+        that.hooks["end"]();
+      }
     };
-    speech_recog.onnomatch = function(){
-        console.log('recog nomatch.');
-        $('#status').text(_('nomatch'));
-    };
+    this.sr.onresult = function(event) {
+      if (typeof(event.results) == 'undefined') {
+        that.stop();
+        return;
+      }
 
-    speech_recog.onerror = function(e){
-        console.log('recog error.: ' + e.error);
-        $('#status').text(_('error') + ': ' + e.error);
-    };
+      var isFinal = false;
+      var interim = "";
+      var finals = [];
 
-    speech_recog.onsoundend = function(){
-        console.log('recog soundend.');
-        $('#status').text(_('soundend'));
-    };
-
-    speech_recog.onaudioend = function (){
-        console.log('recog audioend.');
-        if (speech_recog.continuous){
-            speech_recog.stop();
-            setTimeout(function(){
-                speech_recog.start();
-            }, 200);
-        }
-    };
-
-    var addRow3 = function(col1, col2, col3){
-        return '<tr><td>'+col1+'</td><td>'+col2+'</td><td>'+col3+'</td></tr>';
-    };
-
-    isPublishDetail = false;
-    speech_recog.onresult = function(e){
-        var recentResults = e.results[e.results.length-1];
-        var texts = [];
-        var confidences = [];
-        var table = '<table class="table table-striped table-bordered table-condenced">'
-        table += addRow3(_('number'), _('word'), _('confidence'));
-        console.log(e);
-        console.log(recentResults);
-        for (var i = 0; i < recentResults.length; ++i){
-            var word = recentResults[i].transcript;
-            var conf = recentResults[i].confidence;
-            if (word != '')
-                table += addRow3(i+1, word, conf);
-            if (isPublishDetail) {
-                texts.push(word);
-                confidences.push(conf);
-            } else {
-                if (recentResults.isFinal) {
-                    texts.push(word);
-                    confidences.push(conf);
-                }
-            }
-        }
-
-        table += '</table>';
-        $('#messages').prepend(table);
-
-        if (texts.length > 0){
-            var msg = new ROSLIB.Message({
-                transcript: texts,
-                confidence: confidences
-            });
-            console.log('published: ' + JSON.stringify(msg));
-            tabletVoice.publish(msg);
-        }
-
-        if (!speech_recog.continuous){
-            console.log('speak off');
-            speech_recog.stop();
-            isSpeaking = false;
-            $('#speak').text(_('speak'));
-            $('#speak').addClass('btn-default');
-        }
-    };
-
-    var isSpeaking = false;
-    $('#speak').on('click', function (){
-        if (!isSpeaking) {
-            console.log('speak on');
-            speech_recog.start();
-            isSpeaking = true;
-            $('#status').text(_('start recognition'));
-            $('#speak').text(_('stop'));
+      for (var i = event.resultIndex; i < event.results.length; i++) {
+        if (event.results[i].isFinal) {
+          isFinal = true;
+          while (event.results[i].length > finals.length) {
+            finals.push({transcript: "", confidence: 0.0, n: 0});
+          }
+          for (var j = 0; j < event.results[i].length; j++) {
+            finals[j].transcript += event.results[i][j].transcript;
+            finals[j].confidence += event.results[i][j].confidence;
+            finals[j].n += 1;
+          }
         } else {
-            console.log('speak off');
-            speech_recog.stop();
-            isSpeaking = false;
-            $('#status').text(_('stop recognition'));
-            $('#speak').text(_('speak'));
+          interim += event.results[i][0].transcript;
         }
-    });
-    $('#once').on('click', function(){
-        if (speech_recog.continuous){
-            $('#speak').text(_('speak')).removeAttr('disabled');
-            $('#once').addClass('btn-primary');
-            $('#continuous').removeClass('btn-primary');
-            speech_recog.abort();
-            speech_recog.continuous = false;
-        }
-    });
-    $('#continuous').on('click', function (){
-        if (!speech_recog.continuous){
-            $('#speak').text(_('speak')).attr('disabled', 'disabled');
-            $('#continuous').addClass('btn-primary');
-            $('#once').removeClass('btn-primary');
-            $('#once').addClass('btn-default');
-            speech_recog.abort();
-            speech_recog.continuous = true;
-            speech_recog.start();
-        }
-    });
-    $('#detail').click( function (){
-        if (this.checked){
-            console.log('detail enabled');
-            speech_recog.abort();
-            speech_recog.interimResults = true;
-            speech_recog.start();
-        } else {
-            console.log('detail disabled');
-            speech_recog.abort();
-            speech_recog.interimResults = false;
-            speech_recog.start();
-        }
-    });
+      }
 
-    $('#publish-detail').click(function (){
-        if (this.checked){
-            console.log('publish detail enabled');
-            isPublishDetail = true;
-        } else {
-            console.log('publish detail disabled');
-            isPublishDetail = false;
-        }
-    });
+      for (var i = 0; i < finals.length; i++) {
+        finals[i].confidence *= 1.0 / finals[i].n;
+      }
+      
+      if (!isFinal) {
+        finals = [];
+      }
 
-    $('#lang-selector li').click(function (){
-        var lang = $(this).data('value');
-        console.log('lang selected: ' + $(this).text() + ' ' + lang);
-        showMenuString(lang);
-        speech_recog.lang = lang;
-        if (!isSpeaking) {
-            speech_recog.start();
-        }
-    });
+      finals.sort(function(a, b) {
+        return b.confidence - a.confidence;
+      });
+      
+      if ("result" in that.hooks) {
+        that.hooks["result"](finals, interim);
+      }
+    };
+    this.sr.onaudioend = function() {
+      if (that.continuous && !that.stopping) {
+        that.restart();
+      }
+      that.stopping = false;
+    };
+    this.sr.start();
+  };
 
-    $('#clear-result').click(function (){
-        console.log('clear result');
-        $('#messages').html('');
-    });
+  RWTSpeechRecognition.prototype.stop = function() {
+    if (this.sr) {
+      this.stopping = true;
+      this.sr.stop();
+    }
+  };
 
-    $('#topic-alt-button').click(function(e) {
-        if (topic != $('#topic-name').val()) {
-            topic = $('#topic-name').val();
-            console.log('topic changed to ' + topic);
-            tabletVoice = new ROSLIB.Topic({
-                ros: ros,
-                name: topic,
-                messageType: 'speech_recognition_msgs/SpeechRecognitionCandidates.msg'
-            });
-        }
-        var alt = parseInt($('#alternative').val());
-        if (alt) {
-            console.log('alternative: ' + alt);
-            speech_recog.maxAlternatives = alt;
-        }
-        speech_recog.stop();
-    });
-
-    showMenuString();
+  RWTSpeechRecognition.prototype.restart = function() {
+    this.stop();
+    var that = this;
+    setTimeout(function() {
+      that.start();
+    }, 200);
+  };
+  return RWTSpeechRecognition;
 });

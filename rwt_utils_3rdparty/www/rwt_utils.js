@@ -6,6 +6,7 @@ ROSLIB.Ros.prototype.install_config_button = function(id, auto_connect) {
   var dropdown = document.createElement("span");
   parent.appendChild(dropdown);
   dropdown.setAttribute("class", "dropdown");
+  dropdown.style.display = "inline";
   
   var btn = document.createElement("button");
   dropdown.appendChild(btn);
