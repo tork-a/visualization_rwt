@@ -29,15 +29,20 @@ $(function() {
   };
 
   
-  var ros = new ROSLIB.Ros({
-    url: "ws://" + location.hostname + ":8888"
+  var ros = new ROSLIB.Ros();
+  ros.install_config_button("config-button");
+
+  ros.on("connection", function() {
+    ros.getTopicsForType('sensor_msgs/Image', function(image_topics) {
+      image_topics.sort();
+      _.map(image_topics, function(topic) {
+        $("#topic-select").append('<option value="' + topic + '">' + topic + "</option>");
+      });
+    });
   });
 
-  ros.getTopicsForType('sensor_msgs/Image', function(image_topics) {
-    image_topics.sort();
-    _.map(image_topics, function(topic) {
-      $("#topic-select").append('<option value="' + topic + '">' + topic + "</option>");
-    });
+  ros.on("close", function() {
+    $("#topic-select").empty();
   });
 
   var mjpeg_canvas = null;
@@ -55,7 +60,7 @@ $(function() {
     current_image_topic = topic;
     mjpeg_canvas = new MJPEGCANVAS.Viewer({
       divID : "canvas-area",
-      host : location.hostname,
+      host : ros.url().hostname,
       topic : topic,
       width: div_width,
       height: 480 * div_width / 640.0

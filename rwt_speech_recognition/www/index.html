@@ -10,47 +10,76 @@
   <body>
     <div class="container">
       <div class="page-header">
-        <h1><span class="glyphicon glyphicon-star"></span>rwt_speech_recognition <small>robotwebtools speech recognition</small></h1>
+        <h1><span class="glyphicon glyphicon-star"></span>rwt_speech_recognition <small>robotwebtools speech recognition</small> <span id="config-button"></span></h1>
       </div>
-      <div class="btn-group btn-lg">
-        <button type="button" class="btn btn-default" id="continuous"></button>
-        <button type="button" class="btn btn-primary" id="once"></button>
-        <button type="button" class="btn btn-default" id="speak"></button>
-        <div class="btn-group">
-          <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
-            <span id="language"></span>
-            <span class="caret"></span>
-          </button>
-          <ol class="dropdown-menu" id="lang-selector">
-            <li data-value="ja-JP"><a href="#">Japanese</a></li>
-            <li data-value="en-US"><a href="#">English</a></li>
-            <li data-value="ru-RU"><a href="#">Russian</a></li>
-          </ol>
+
+      <div class="control-panel">
+        <label for="lang">Language</label>
+        <div class="input-group" id="lang">
+          <span class="input-group-addon">Language</span>
+          <select class="form-control" id="select-language" name="language"></select>
+          <span class="input-group-addon">Country</span>
+          <select class="form-control" id="select-dialect"  name="dialect"></select>
+        </div>
+
+        <label for="topic">ROS</label>
+        <div class="input-group" id="topic">
+          <span class="input-group-addon">Topic</span>
+          <input type="text" class="form-control" id="input-topic" value="/Tablet/voice">
+          <span class="input-group-addon">Mode</span>
+          <select class="form-control" id="select-mode" name="mode">
+            <option value="once" selected>Once</option>
+            <option value="continuous">Continuous</option>
+          </select>
+        </div>
+
+        <div class="start-stop">
+        <button type="button" class="btn btn-block btn-success" id="button-start">Start</button>
+        <button type="button" class="btn btn-block btn-warning" id="button-stop" style="display:none">Stop</button>
         </div>
       </div>
-      <button id="clear-result" class="btn btn-warning"></button>
-      <form id="topic-form" role="form" class="form-inline">
-        <div class="form-group">
-          <input type="text" class="input-sm" id="topic-name" value="/Tablet/voice">
-          <input type="number" class="input-sm" id="alternative" value="5">
-          <button type="button" class="btn btn-success" id="topic-alt-button"></button>
-        </div>
-      </form>
-      <label class="checkbox inline">
-        <input type="checkbox" id="detail"><span id="detail-label"></span>
-      </label>
-      <label class="checkbox inline">
-        <input type="checkbox" id="publish-detail"><span id="publish-detail-label"></span>
-      </label>
-      <p><span class="bold-label" id="lang-label"></span>: <span id="lang"></span></p>
-      <p><span class="bold-label" id="status-label"></span>: <span id="status"></span></p>
-      <p><span class="bold-label" id="result-label"></span>: <div id="messages"></div></p>
-    </div>
+      
+      <div id="info" class="info">
+        <p id="info_start">
+          Press start button and begin speaking.
+        </p>
+        <p id="info_speak_now" style="display:none">
+          Speak now.
+        </p>
+        <p id="info_no_speech" style="display:none">
+          No speech was detected. You may need to adjust your microphone settings.
+        </p>
+        <p id="info_no_microphone" style="display:none">
+          No microphone was found. Ensure a mic is installed and configured correctly.
+        </p>
+        <p id="info_allow" style="display:none">
+          Click 'Allow' button.
+        </p>
+        <p id="info_denied" style="display:none">
+          Permission to use microphone was denied.
+        </p>
+        <p id="info_blocked" style="display:none">
+          Permission to use microphone is blocked.
+          To unblock, go to chrome://settings/contentExceptions#media-stream
+        </p>
+        <p id="info_no_support" style="display:none">
+          Web Speech API is not supported by this browser.
+        </p>
+      </div>
+      
+      <p id="interim"></p>
+      
+      <div id="finals"></div>
+
+    </div> <!-- container -->
+
     <script type="text/javascript" src="../rwt_utils_3rdparty/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="../rwt_utils_3rdparty/bootstrap/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="3rdparty/ros/js/eventemitter2.js"></script>
     <script type="text/javascript" src="3rdparty/ros/js/roslib.js"></script>
-    <script type="text/javascript" src="js/i18n.js"></script>
+    <script type="text/javascript" src="../rwt_utils_3rdparty/rwt_utils.js"></script>
     <script type="text/javascript" src="js/rwt_speech_recognition.js"></script>
+    <script type="text/javascript" src="js/rwt_speech_recognition.main.js"></script>
+
   </body>
 </html>
