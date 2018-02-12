@@ -52,6 +52,8 @@
 }
 .rwt-diagnostics-plot-window {
   position: relative;
+  margin; 0 auto;
+  transform: translate(50%, 0%)
 }
 .rwt-diagnostics-plot-window .plot-window-inner {
   height: 100px;
