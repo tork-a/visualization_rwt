@@ -23,6 +23,8 @@ from std_msgs.msg import MultiArrayDimension
 from sensor_msgs.msg import JointState
 from moveit_msgs.msg import MoveGroupActionResult
 
+plan_only = False
+
 def joint_position_callback(joints):
 
     global plan_only
@@ -81,19 +83,30 @@ def joint_position_callback(joints):
         else:
             plan_only = False
 
+        rospy.loginfo("send move_group_goal {}".format(move_group_goal))
         client.send_goal(move_group_goal)
-        client.wait_for_result(rospy.Duration.from_sec(5.0))
+        client.wait_for_result()
+        # polling the result, since result can come after the state is Done
+        result = None
+        while result is None:
+            result = client.get_result()
+            rospy.sleep(0.1) 
+        rospy.loginfo("move_group_goal result {}".format(result.error_code.val))
 
 
     except rospy.ROSInterruptException, e:
-        print "failed: %s"%e
+        rospy.logerr("failed: %s".format(e))
 
 
 def moveit_callback(msg):
-    pub = rospy.Publisher('/update_joint_position', Float64MultiArray)
-    stock_pub = rospy.Publisher('/stock_joint_position', Float64MultiArray)
+    pub = rospy.Publisher('/update_joint_position', Float64MultiArray, queue_size=1)
+    stock_pub = rospy.Publisher('/stock_joint_position', Float64MultiArray, queue_size=1)
 
     global plan_only
+
+    if plan_only:
+        global robot_trajectory
+        robot_trajectory = msg.result.planned_trajectory
 
     r = rospy.Rate(10)
     names = msg.result.planned_trajectory.joint_trajectory.joint_names
@@ -112,10 +125,6 @@ def moveit_callback(msg):
         elif plan_only:
             stock_pub.publish(pos_msg)
         r.sleep()
-
-    if plan_only:
-        global robot_trajectory
-        robot_trajectory = msg.result.planned_trajectory
 
 def execute_callback(msg):
     global robot_trajectory

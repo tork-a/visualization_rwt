@@ -17,6 +17,10 @@ from visualization_msgs.msg import (
     InteractiveMarkerFeedback)
 from interactive_markers.interactive_marker_server import InteractiveMarkerServer
 server = None
+group_name = 'manipulator'
+joint_states = None
+joint_names = []
+initial_joint_position = []
 
 
 def makeInteractiveMarker(name, description):
@@ -49,7 +53,7 @@ def setColor(red, green, blue, alpha, marker):
 
 
 def callback(req):
-    print req
+    rospy.logwarn(req)
     return GetPositionIKResponse
 
 def initial_callback(msg):
@@ -84,7 +88,7 @@ def feedback(feedback):
         service = rospy.ServiceProxy('compute_ik', GetPositionIK)
         request = GetPositionIKRequest()
         request.ik_request.group_name = group_name
-        request.ik_request.timeout = rospy.Duration.from_sec(0.0001)
+        request.ik_request.timeout = rospy.Duration.from_sec(0.001)
 
         # initial robot state
         robot_state = RobotState()
@@ -106,10 +110,11 @@ def feedback(feedback):
         pose_stamped.pose.orientation.w = feedback.pose.orientation.w
 
         request.ik_request.pose_stamped = pose_stamped
+
         response = service(request)
-        print response
+        # rospy.logwarn(response)
         if len(response.solution.joint_state.position) != 0:
-            print "success"
+            rospy.loginfo("GetPositionIK succeeded")
             msg = Float64MultiArray()
             for i,joint_name in enumerate(response.solution.joint_state.name):
                 for j, name in enumerate(joint_names):
@@ -120,6 +125,8 @@ def feedback(feedback):
                         msg.layout.dim.append(dim)
                         msg.data.append(response.solution.joint_state.position[i])
             pub.publish(msg)
+        else:
+            rospy.logfatal("GetPositionIK FAILED")
 
     except rospy.ServiceException, e:
         print "Service call failed: %s"%e
@@ -158,10 +165,16 @@ if __name__ == '__main__':
     control_sphere = makeInteractiveMarkerControl(
         interactive_marker, InteractiveMarkerControl.MOVE_ROTATE_3D)
     marker = Marker()
-    marker.color.r = 0.2
-    marker.color.g = 0.3
-    marker.color.b = 0.7
-    marker.color.a = 0.5
+    if prefix == 'start':
+        marker.color.r = 0.2
+        marker.color.g = 0.2
+        marker.color.b = 0.7
+        marker.color.a = 0.5
+    else:
+        marker.color.r = 0.2
+        marker.color.g = 0.7
+        marker.color.b = 0.2
+        marker.color.a = 0.5
 
     marker.type = Marker.SPHERE
     marker.scale.x = 0.2

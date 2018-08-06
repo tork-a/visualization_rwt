@@ -2,7 +2,6 @@
 
 import roslib; roslib.load_manifest('joint_state_publisher')
 import rospy
-import wx
 import xml.dom.minidom
 from sensor_msgs.msg import JointState
 from math import pi
@@ -145,11 +144,11 @@ class JointStatePublisher():
                 goal_value = goal_baseval * param.get('factor', 1) + param.get('offset', 0)
 
                 start_msg.name.append(str(name))
-                start_msg.position.append(value)
+                start_msg.position.append(start_value)
                 start_msg.velocity.append(0)
 
                 goal_msg.name.append(str(name))
-                goal_msg.position.append(value)
+                goal_msg.position.append(goal_value)
                 goal_msg.velocity.append(0)
 
             self.start_pub.publish(start_msg)
