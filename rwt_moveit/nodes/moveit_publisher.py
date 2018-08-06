@@ -95,7 +95,7 @@ def joint_position_callback(joints):
 
 
     except rospy.ROSInterruptException, e:
-        rospy.logerr("failed: %s".format(e))
+        rospy.logerr("failed: {}".format(e))
 
 
 def moveit_callback(msg):
