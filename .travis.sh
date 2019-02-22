@@ -24,7 +24,8 @@ function travis_time_end {
 
 travis_time_start setup_apt_sources
 
-apt-get update -qq && apt-get install -y -q wget sudo lsb-release # for docker
+apt-get update -qq && apt-get install -y -q wget sudo lsb-release gnupg # for docker
+DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata # https://stackoverflow.com/questions/44331836/apt-get-install-tzdata-noninteractive
 
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
 wget http://packages.ros.org/ros.key -O - | sudo apt-key add -

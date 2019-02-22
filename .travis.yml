@@ -4,6 +4,7 @@ env:
   matrix:
     - ROS_DISTRO=indigo  DOCKER_IMAGE=ubuntu:trusty
     - ROS_DISTRO=kinetic DOCKER_IMAGE=ubuntu:xenial
+    - ROS_DISTRO=melodic DOCKER_IMAGE=ubuntu:bionic
 sudo: required
 language: node_js
 services:
@@ -14,6 +15,8 @@ branches:
 dist: xenial
 matrix:
   fast_finish: true
+  allow_failures:
+    - env: ROS_DISTRO=melodic DOCKER_IMAGE=ubuntu:bionic
 before_script:
   - export CI_SOURCE_PATH=$(pwd)
   - export REPOSITORY_NAME=${PWD##*/}
