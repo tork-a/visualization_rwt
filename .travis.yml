@@ -2,51 +2,30 @@ env:
   global:
     - PUBLISHED_DIR=public
   matrix:
-    - ROS_DISTRO=indigo
-    - ROS_DISTRO=jade
-    - ROS_DISTRO=kinetic
+    - ROS_DISTRO=indigo  DOCKER_IMAGE=ubuntu:trusty
+    - ROS_DISTRO=kinetic DOCKER_IMAGE=ubuntu:xenial
+    - ROS_DISTRO=melodic DOCKER_IMAGE=ubuntu:bionic
 sudo: required
-dist: trusty
 language: node_js
+services:
+  - docker
 branches:
   except:
     - master
+dist: xenial
 matrix:
   fast_finish: true
   allow_failures:
-    - env: ROS_DISTRO=kinetic
+    - env: ROS_DISTRO=melodic DOCKER_IMAGE=ubuntu:bionic
 before_script:
-  # Force travis to use its minimal image with default Python settings
-  - sudo rm -fr /opt/python/
-  - export DEBIAN_FRONTEND=noninteractive
   - export CI_SOURCE_PATH=$(pwd)
   - export REPOSITORY_NAME=${PWD##*/}
-  - sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu trusty main" > /etc/apt/sources.list.d/ros-latest.list'
-  - wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
-  - sudo apt-get update -qq || echo Ignore error on apt-get update
-  - sudo apt-get install -qq -y python-catkin-pkg python-catkin-tools python-rosdep python-wstool
-  - sudo apt-get install -qq -y ros-$ROS_DISTRO-ros ros-$ROS_DISTRO-catkin ros-$ROS_DISTRO-common-tutorials ros-$ROS_DISTRO-rospy-tutorials ros-$ROS_DISTRO-actionlib-tutorials
-  - sudo apt-get install -qq -y ros-$ROS_DISTRO-rosbridge-server ros-$ROS_DISTRO-tf2-web-republisher
-  - source /opt/ros/$ROS_DISTRO/setup.bash
-  # Set up Xfvb for Firefox headless testing
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
-  # Setup Catkin workspace
-  - mkdir -p ~/catkin_ws/src
-  - cd ~/catkin_ws && catkin init
-  - wstool init src
-  - wstool merge -t src ${CI_SOURCE_PATH}/.rosinstall
-  - wstool update -t src
-  - ln -s $CI_SOURCE_PATH src/${REPOSITORY_NAME}
-  - ls -al src/
-  - wstool info -t src
-  - sudo rosdep init || sudo rosdep init
-  - rosdep update
-  - rosdep install --from-paths src --ignore-src --rosdistro $ROS_DISTRO -r -y -n
+  - echo "Testing branch $TRAVIS_BRANCH of $REPOSITORY_NAME from $CI_SOURCE_PATH"
 script:
-  - catkin build
-  - source devel/setup.bash
+  - docker run --rm -i -v $CI_SOURCE_PATH:$CI_SOURCE_PATH -e "CI_SOURCE_PATH=$CI_SOURCE_PATH" -e "HOME=$HOME" -e "ROS_DISTRO=$ROS_DISTRO" -t $DOCKER_IMAGE sh -c "cd $CI_SOURCE_PATH; ./.travis.sh"
 after_success:
+  - sudo apt-get update -qq || echo "Ignore error on apt-get update"
+  - sudo apt-get install -qq -y catkin # .deploy.sh needs catkin_topological_order
   - $CI_SOURCE_PATH/.deploy.sh
   - cd $CI_SOURCE_PATH  # This is for deploy section
 deploy:
@@ -58,4 +37,5 @@ deploy:
   keep_history: false
   on:
     branch: kinetic-devel  # set to default branch
-    condition: "$ROS_DISTRO = indigo"
+    condition: "$ROS_DISTRO = kinetic"
+
