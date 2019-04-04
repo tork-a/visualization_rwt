@@ -35,7 +35,7 @@ function createJoystick() {
         var options = {
             zone: joystickContainer,
             color: "#FF0000",
-            size: 200,
+            size: 225,
             
             mode: 'static',
             restJoystick: true
@@ -146,7 +146,7 @@ function videoon() {
     var lv = document.getElementById("lv");
     
     lv.addEventListener("click", function() {
-        video.src = "http://localhost:8080/stream?topic=" + cameratopic +"&type=mjpeg&quality=80";
+        video.src = "http://localhost:8080/stream?topic=" + cameratopic +"&type=mjpeg&width=600&height=400";
     })
     
     

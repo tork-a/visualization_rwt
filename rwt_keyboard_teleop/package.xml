@@ -3,7 +3,7 @@
   <name>rwt_keyboard_teleop</name>
   <version>0.0.3</version>
   <description>The rwt_keyboard_teleop package</description>
-  <author email="yugajmera@gmail.com">Yug Ajmera</author>
+  <author>Yug Ajmera</author>
   <maintainer email="yugajmera@gmail.com">Yug Ajmera</maintainer>
 
   <license>BSD</license>

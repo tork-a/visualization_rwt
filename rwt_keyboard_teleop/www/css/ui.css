@@ -3,6 +3,7 @@
     border-bottom: 0.5px solid grey;
     
 }
+
 .row{
     margin: 20px 20px auto 20px;
     text-align: center;
@@ -14,16 +15,23 @@
 }
 
 #joystick{
-    margin: 120px auto auto 50%;
+    margin: 140px auto auto 50%;
 }
 
 #linvel{
     text-align: left;
-    margin-top : 300px;
+    margin-top : 320px;
+
 }
+
 #angvel{
     text-align: left;
     margin-top : 10px;
+
+}
+
+#display{
+    font-size: 20px;
 }
 
 #topic{
@@ -32,3 +40,6 @@
     font-size: 20px;
 }
 
+button{
+    font-size:17px
+}
