@@ -38,3 +38,4 @@ PROJECTS
 * [rwt_moveit](rwt_moveit/README.rst)
 * [rwt_plot](rwt_plot/README.md)
 * [rwt_speech_recognition](rwt_speech_recognition/README.md)
+* [rwt_keyboard_teleop](rwt_keyboard_teleop/README.md)
