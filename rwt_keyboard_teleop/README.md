@@ -18,4 +18,4 @@ for example : `http://localhost:8000/rwt_keyboard_teleop/`
 - Add camera topic
 - Press Load video button
 
-![rwt_keyboard_teleop.png](images/rwt_keyboard-teleop.png)
+![rwt_keyboard_teleop.png](images/rwt_keyboard_teleop.png)
