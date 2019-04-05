@@ -24,6 +24,7 @@
   <run_depend>rwt_speech_recognition</run_depend>
   <run_depend>rwt_app_chooser</run_depend>
   <run_depend>rwt_utils_3rdparty</run_depend>
+  <run_depend>rwt_map</run_depend>
 
   <export>
     <metapackage/>
