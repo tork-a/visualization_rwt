@@ -1,6 +1,6 @@
 var manager = null;
-var lin = 0;
-var ang = 0;
+var lin = 0.0;
+var ang = 0.0;
 var linvel = 0.5;
 var angvel = 1.0;
 var ros;
@@ -46,33 +46,22 @@ function createJoystick() {
 
         manager.on('move', function (evt, data) {
         try {
-            var dirx = data.direction.x;
-            var diry = data.direction.y;
             var dist = data.distance;
+            var angle = data.angle.degree;
         }
         catch(error){
             createJoystick();
             console.error(error);
         }
 
-        if(diry == "up") {
-            lin=linvel * dist/100;
-        }
-        if(diry == "down") {
-            lin = -linvel * dist/100 ;
-        }
-        if(dirx == "right"){
-            ang = -angvel * dist/100;
-        }
-        if(dirx == "left"){
-            ang = angvel * dist/100;
-        }
+        lin = Math.sin(angle / 57.29) * dist/100.0 * linvel;
+        ang = Math.cos(angle / 57.29) * dist/100.0 * -angvel;
         move();
-        });
+        }); 
 
         manager.on('end', function () {
-            lin=0;
-            ang=0;
+            lin=0.0;
+            ang=0.0;
             move();
         });     
         
@@ -88,14 +77,14 @@ function initvelocitypublisher() {
 
     twist = new ROSLIB.Message({
         linear : {
-            x : 0,
-            y : 0,
-            z : 0
+            x : 0.0,
+            y : 0.0,
+            z : 0.0
             },
         angular : {
-            x : 0,
-            y : 0,
-            z : 0
+            x : 0.0,
+            y : 0.0,
+            z : 0.0
             }
     });
    
