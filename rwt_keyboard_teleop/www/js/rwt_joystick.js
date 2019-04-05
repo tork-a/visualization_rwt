@@ -60,8 +60,8 @@ function createJoystick() {
         }); 
 
         manager.on('end', function () {
-            lin=0.0;
-            ang=0.0;
+            lin = 0.0;
+            ang = 0.0;
             move();
         });     
         
