@@ -6,6 +6,7 @@ Usage
 ```
 roslaunch rwt_map rwt_map.launch 
 ```
+Launch your gmapping node which provides `/map` topic.
 
 Open your browser, and access to:
 
