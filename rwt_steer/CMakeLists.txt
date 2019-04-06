@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(rwt_keyboard_teleop)
+project(rwt_steer)
 
 find_package(catkin REQUIRED COMPONENTS
   rosbridge_server

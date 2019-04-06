@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>rwt_keyboard_teleop</name>
+  <name>rwt_steer</name>
   <version>0.0.3</version>
-  <description>The rwt_keyboard_teleop package</description>
+  <description>The rwt_steer package</description>
   <author>Yug Ajmera</author>
   <maintainer email="yugajmera@gmail.com">Yug Ajmera</maintainer>
 

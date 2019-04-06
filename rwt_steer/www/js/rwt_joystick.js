@@ -35,8 +35,7 @@ function createJoystick() {
         var options = {
             zone: joystickContainer,
             color: "#FF0000",
-            size: 225,
-            
+            size: 225, 
             mode: 'static',
             restJoystick: true
 
@@ -91,8 +90,13 @@ function initvelocitypublisher() {
 }
   
 function move() {
-    twist.linear.x = lin;
-    twist.angular.z = ang;
+    if (lin !== undefined && ang !== undefined) {
+        twist.linear.x = lin;
+    	twist.angular.z = ang;
+    } else {
+        twist.linear.x = 0;
+        twist.angular.z = 0;
+    }
     cmdVel.publish(twist);
 }
 
