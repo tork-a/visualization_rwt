@@ -17,6 +17,9 @@ for example : `http://localhost:8000/rwt_map/`
 - Control using Joystick
 - Add camera topic
 - Press Load video button
+- View the map built in real time
+- Ctrl + mouse movement = Zoom
+- Shift + mouse movement = Pan 
 
 ![rwt_map.png](images/rwt_map.png)
 

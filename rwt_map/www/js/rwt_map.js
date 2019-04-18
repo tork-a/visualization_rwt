@@ -156,12 +156,65 @@ function viewMap() {
         continuous : true
     });
 	
-    console.log(gridClient.currentGrid.width);
+    var zoomView = new ROS2D.ZoomView({
+	rootObject : viewer.scene
+    });
+		
+    var panView = new ROS2D.PanView({
+	rootObject : viewer.scene
+    });
 
     gridClient.on('change', function() {
       viewer.scaleToDimensions(gridClient.currentGrid.width, gridClient.currentGrid.height);
       viewer.shift(gridClient.currentGrid.pose.position.x, gridClient.currentGrid.pose.position.y);
+      registerMouseHandlers();
     });	
+
+    function registerMouseHandlers() {
+			
+        var mouseDown = false;
+        var zoomKey = false;
+        var panKey = false;
+        var startPos = new ROSLIB.Vector3();
+        
+        viewer.scene.addEventListener('stagemousedown', function(event) {
+            console.log("event");
+            if (event.nativeEvent.ctrlKey === true) {
+                zoomKey = true;
+                zoomView.startZoom(event.stageX, event.stageY);
+            }
+            else if (event.nativeEvent.shiftKey === true) {
+                panKey = true;
+                panView.startPan(event.stageX, event.stageY);
+            }
+            startPos.x = event.stageX;
+            startPos.y = event.stageY;
+            mouseDown = true;
+        });
+        
+        viewer.scene.addEventListener('stagemousemove', function(event) {
+            if (mouseDown === true) {
+                if (zoomKey === true) {
+                    var dy = event.stageY - startPos.y;
+                    var zoom = 1 + 10*Math.abs(dy) / viewer.scene.canvas.clientHeight;
+                    if (dy < 0)
+                        zoom = 1 / zoom;
+                    zoomView.zoom(zoom);
+                }
+                else if (panKey === true) {
+                    panView.pan(event.stageX, event.stageY);
+                }
+            }
+        });
+
+        viewer.scene.addEventListener('stagemouseup', function(event) {
+            if (mouseDown === true) {
+                zoomKey = false;
+				panKey = false;
+                mouseDown = false;
+            }
+        });
+    }
     
 }
 
@@ -173,4 +226,3 @@ window.onload = function () {
     videoon();
     viewMap();
 }
-
