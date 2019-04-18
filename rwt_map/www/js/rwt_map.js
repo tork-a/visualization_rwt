@@ -228,17 +228,25 @@ function viewMap() {
         });
     
         var robotMarker = new ROS2D.NavigationArrow({
-            size : 0.1,
-            strokeSize : 0.005,
+            size : 0.2,
+            strokeSize : 0.01,
             pulse : true
     
         });
     
         poseTopic.subscribe(
             function (pose) {
-                console.log(pose);
                 robotMarker.x = pose.position.x;
                 robotMarker.y = -pose.position.y;
+                var quaZ = pose.orientation.z;
+                var degreeZ = 0;
+                if( quaZ >= 0 ) {
+                    degreeZ = quaZ / 1 * 180
+                } 
+                else {
+                    degreeZ = (-quaZ) / 1 * 180 + 180
+                };
+                robotMarker.rotation = -degreeZ + 35;
             }
         )
 

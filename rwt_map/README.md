@@ -20,6 +20,11 @@ for example : `http://localhost:8000/rwt_map/`
 - View the map built in real time
 - Ctrl + mouse movement = Zoom
 - Shift + mouse movement = Pan
+
+To view live location of robot :
+```
+rosrun robot_pose_publisher robot_pose_publisher
+```
 - Current position of the robot is shown by Red Arrow 
 
 ![rwt_map.png](images/rwt_map.png)
