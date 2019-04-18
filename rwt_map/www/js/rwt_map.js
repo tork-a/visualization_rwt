@@ -155,10 +155,14 @@ function viewMap() {
         rootObject : viewer.scene,
         continuous : true
     });
+	
+    console.log(gridClient.currentGrid.width);
 
-    gridClient.on('change', function(){
-    viewer.scaleToDimensions(gridClient.currentGrid.width, gridClient.currentGrid.height);
-    });
+    gridClient.on('change', function() {
+      viewer.scaleToDimensions(gridClient.currentGrid.width, gridClient.currentGrid.height);
+      viewer.shift(gridClient.currentGrid.pose.position.x, gridClient.currentGrid.pose.position.y);
+    });	
+    
 }
 
 window.onload = function () {

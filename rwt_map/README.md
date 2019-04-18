@@ -20,4 +20,3 @@ for example : `http://localhost:8000/rwt_map/`
 
 ![rwt_map.png](images/rwt_map.png)
 
-View [demo](https://www.youtube.com/watch?v=oAceJ7BeGoE&t=11s)
