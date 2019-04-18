@@ -19,7 +19,8 @@ for example : `http://localhost:8000/rwt_map/`
 - Press Load video button
 - View the map built in real time
 - Ctrl + mouse movement = Zoom
-- Shift + mouse movement = Pan 
+- Shift + mouse movement = Pan
+- Current position of the robot is shown by Red Arrow 
 
 ![rwt_map.png](images/rwt_map.png)
 

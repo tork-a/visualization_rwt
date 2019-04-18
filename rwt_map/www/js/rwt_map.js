@@ -142,7 +142,6 @@ function videoon() {
 }
 
 function viewMap() {
-
     var viewer = new ROS2D.Viewer({
         divID : 'map',
         width : 600,
@@ -164,10 +163,15 @@ function viewMap() {
 	rootObject : viewer.scene
     });
 
+    var temp = true;
     gridClient.on('change', function() {
-      viewer.scaleToDimensions(gridClient.currentGrid.width, gridClient.currentGrid.height);
-      viewer.shift(gridClient.currentGrid.pose.position.x, gridClient.currentGrid.pose.position.y);
+      if(temp == true) {
+        viewer.scaleToDimensions(gridClient.currentGrid.width, gridClient.currentGrid.height);
+        viewer.shift(gridClient.currentGrid.pose.position.x, gridClient.currentGrid.pose.position.y);
+        temp = false;
+    }  
       registerMouseHandlers();
+      viewPose();
     });	
 
     function registerMouseHandlers() {
@@ -215,8 +219,35 @@ function viewMap() {
             }
         });
     }
+
+    function viewPose() {
+        var poseTopic = new ROSLIB.Topic({
+            ros : ros,
+            name : '/robot_pose',
+            messageType : 'geometry_msgs/Pose'
+        });
     
+        var robotMarker = new ROS2D.NavigationArrow({
+            size : 0.1,
+            strokeSize : 0.005,
+            pulse : true
+    
+        });
+    
+        poseTopic.subscribe(
+            function (pose) {
+                console.log(pose);
+                robotMarker.x = pose.position.x;
+                robotMarker.y = -pose.position.y;
+            }
+        )
+
+        gridClient.rootObject.addChild(robotMarker);
+    
+    }
 }
+
+
 
 window.onload = function () {
     rosconnection();
