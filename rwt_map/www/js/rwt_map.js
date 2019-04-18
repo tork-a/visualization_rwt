@@ -146,7 +146,8 @@ function viewMap() {
     var viewer = new ROS2D.Viewer({
         divID : 'map',
         width : 600,
-        height : 500
+        height : 500,
+	background : '#FFFFFF'
     });
 
     var gridClient = new ROS2D.OccupancyGridClient({
@@ -168,11 +169,4 @@ window.onload = function () {
     videoon();
     viewMap();
 }
-window.onload = function () {
-    rosconnection();
-    initvelocitypublisher();
-    createJoystick();
-    buttons();
-    videoon();
-    viewMap();
-}
+
