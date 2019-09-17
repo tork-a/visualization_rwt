@@ -64,7 +64,7 @@ travis_time_end
 travis_time_start rosdep_init_update
 
 sudo rosdep init || sudo rosdep init
-rosdep update
+rosdep update --include-eol-distros 
 rosdep install --from-paths src --ignore-src --rosdistro $ROS_DISTRO -r -y -n
 
 travis_time_end
