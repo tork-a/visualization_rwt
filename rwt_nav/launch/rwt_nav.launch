@@ -1,0 +1,18 @@
+<launch>
+
+  <arg name="launch_roswww" default="true" />
+  <arg name="launch_rosbridge_websocket" default="true" />
+
+  <include file="$(find roswww)/launch/roswww.launch"
+           if="$(arg launch_roswww)">
+    <arg name="port" value="8000" />
+  </include>
+
+  <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"
+           if="$(arg launch_rosbridge_websocket)">
+    <arg name="port" value="9090" />
+  </include>
+
+  <node name="robot_pose_publisher" pkg="robot_pose_publisher" type="robot_pose_publisher" />
+
+</launch>
