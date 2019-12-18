@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<package>
+  <name>rwt_nav</name>
+  <version>0.0.3</version>
+  <description>The rwt_nav package</description>
+  <author>Yug Ajmera</author>
+  <maintainer email="yugajmera@gmail.com">Yug Ajmera</maintainer>
+
+  <license>BSD</license>
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>rosbridge_server</build_depend>
+  <build_depend>web_video_server</build_depend>
+  <build_depend>rwt_utils_3rdparty</build_depend>
+  <build_depend>roswww</build_depend>
+
+  <run_depend>rosbridge_server</run_depend>
+  <run_depend>rwt_utils_3rdparty</run_depend>
+  <run_depend>web_video_server</run_depend>
+  <run_depend>roswww</run_depend>
+  
+
+  <!-- The export tag contains other, unspecified, tags -->
+  <export>
+    <!-- You can specify that this package is a metapackage here: -->
+    <!-- <metapackage/> -->
+    <!-- Other tools can request additional information be placed here -->
+
+  </export>
+</package>

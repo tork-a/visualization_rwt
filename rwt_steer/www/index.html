@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>rwt_steer</title>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="../rwt_utils_3rdparty/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/ui.css">
+
+    <script src="3rdparty/ros/js/nipplejs.js"></script>
+    <script src="js/rui_joystick.js"></script>
+    
+</head>
+  <body>
+    <div class="container">
+        <h1><span class="glyphicon glyphicon-star"></span>rwt_steer <small>robotwebtools steer</small></h1>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-6">
+            <div id="Head">Joystick</div>
+            <div id="joystick"></div>
+            <div id = "linvel">
+              <div id="display">Current linear velocity(m/s)  : <span id="lindisp">0.5</span></div><button id = "bl1">Inc by 10%</button><button id = "bl2">Dec by 10%</button>
+            </div>  
+            <div id = "angvel"> 
+              <div id="display">Current angular velocity(m/s) : <span id="angdisp">1.0</span></div><button id = "ba1">Inc by 10%</button><button id = "ba2">Dec by 10%</button>
+           </div>
+        </div>
+        <div class="col-lg-6">
+            <div id="Head">Camera Feed</div>
+            <div id="topic">Camera topic : <input type="text" placeholder="/camera/rgb/image_raw"><button id= "lv">Load Video</button></div>         
+            <img src=""  alt="" id="video" />
+        </div>
+    </div>
+
+    <script type="text/javascript" src="../rwt_utils_3rdparty/jquery.min.js"></script>
+    <script type="text/javascript" src="../rwt_utils_3rdparty/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="3rdparty/ros/js/eventemitter2.js"></script>
+    <script type="text/javascript" src="3rdparty/ros/js/roslib.js"></script>
+    <script type="text/javascript" src="../rwt_utils_3rdparty/rwt_utils.js"></script>
+  </body>
+</html>

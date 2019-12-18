@@ -1,0 +1,44 @@
+.container{
+    margin: auto auto auto 10px;
+    border-bottom: 0.5px solid grey;
+    
+}
+.row{
+    width: 100%;
+    margin-top : 10px;
+}
+
+#Head{
+    font-size: 25px;
+    font-weight :bold;
+    text-align: center;
+}
+
+#video{
+    width:100%;
+}
+#display{
+    font-size: 15px;
+}
+
+#ang{
+    margin-left: 25%;
+}
+
+#topic{
+    text-align: left;
+    font-size: 17px;
+}
+
+
+button{
+    font-size:12px;
+}
+
+#lv{
+    font-size:17px;
+}
+
+#map{
+    width:100%;
+}
