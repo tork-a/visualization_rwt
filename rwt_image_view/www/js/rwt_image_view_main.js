@@ -30,7 +30,7 @@ $(function() {
 
   
   var ros = new ROSLIB.Ros();
-  ros.install_config_button("config-button");
+  ros.install_config_button("config-button", true, 9090);
 
   ros.on("connection", function() {
     ros.getTopicsForType('sensor_msgs/Image', function(image_topics) {

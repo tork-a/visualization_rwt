@@ -1,4 +1,4 @@
-ROSLIB.Ros.prototype.install_config_button = function(id, auto_connect) {
+ROSLIB.Ros.prototype.install_config_button = function(id, auto_connect, port=8888) {
   var auto_connect = typeof auto_connect !== 'undefined' ? auto_connect : true;
   var that = this;
   var parent = document.getElementById(id);
@@ -52,7 +52,7 @@ ROSLIB.Ros.prototype.install_config_button = function(id, auto_connect) {
   input.type = "text";
   input.pattern = "^wss?://[a-zA-Z0-9\-\._]+:[0-9]+/$";
   input.required = true;
-  input.value = "ws://" + location.hostname + ":8888/";
+  input.value = "ws://" + location.hostname + ":" + port + "/";
   input.setAttribute("class", "form-control");
   input.setAttribute("placeholder", "ROS WS Master URI");
   // input.setAttribute("aria-label", "ROS WS Master URI");
