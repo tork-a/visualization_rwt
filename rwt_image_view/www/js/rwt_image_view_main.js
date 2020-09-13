@@ -45,6 +45,31 @@ $(function() {
     $("#topic-select").empty();
   });
 
+
+  ///// calc round trip delay for individual client
+  const client_id = "random" + Math.random().toString(32).substring(2);
+  const time_echo_topic = new ROSLIB.Topic({ // used both in pub/sub
+    ros : ros,
+    name : '/time_echo_' + client_id,
+    messageType : 'std_msgs/Time'
+  });
+  // pub
+  var calc_delay = function(){
+    const time_now = Date.now();// msec
+    time_echo_topic.publish(
+      new ROSLIB.Message({
+        data : { secs : Math.floor(time_now / 1e3), nsecs : (time_now % 1e3) * 1e6}
+      })
+    );
+  } 
+  setInterval(calc_delay, 100);
+  // sub
+  time_echo_topic.subscribe(message => {
+    const time_now = message.data.secs * 1e3 + message.data.nsecs / 1e6;
+    document.getElementById("debug-text-area4").innerText = "Delay: " + (Date.now() - time_now) + " [ms] (client id: " + client_id + ")";
+  });
+
+
   
   ////// mouse point calc
   // generally, "canvas-area" size is not completelly equal to "canvas-area canvas", but we have to access "canvas-area" to get mouse position
