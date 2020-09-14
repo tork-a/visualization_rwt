@@ -233,6 +233,7 @@ $(function() {
     	  divID : "canvas-area",
     	  host : ros.url().hostname,
     	  topic : current_image_info.topic,
+        quality : 50,
     	  width: div_width,
     	  height: current_image_info.height * div_width / current_image_info.width
     	});
