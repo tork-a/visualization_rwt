@@ -187,6 +187,7 @@ $(function() {
       });
   }else{
     console.log('navigator.mediaDevices not found');
+    document.getElementById("debug-text-area6").innerText = "navigator.mediaDevices not found";
   }
 
   ///// gazebo reset
