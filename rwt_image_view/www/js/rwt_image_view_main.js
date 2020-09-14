@@ -39,10 +39,17 @@ $(function() {
         $("#topic-select").append('<option value="' + topic + '">' + topic + "</option>");
       });
     });
+    ros.getTopicsForType('audio_common_msgs/AudioData', function(audio_topics) {
+      audio_topics.sort();
+      _.map(audio_topics, function(topic) {
+        $("#audio-select").append('<option value="' + topic + '">' + topic + "</option>");
+      });
+    });
   });
 
   ros.on("close", function() {
     $("#topic-select").empty();
+    $("#audio-select").empty();
   });
 
 
@@ -53,8 +60,7 @@ $(function() {
     name : '/time_echo_' + client_id,
     messageType : 'std_msgs/Time'
   });
-  // pub
-  var calc_delay = function(){
+  var calc_delay = function(){ // pub
     const time_now = Date.now();// msec
     time_echo_topic.publish(
       new ROSLIB.Message({
@@ -62,15 +68,12 @@ $(function() {
       })
     );
   } 
-  setInterval(calc_delay, 100);
-  // sub
-  time_echo_topic.subscribe(message => {
+  setInterval(calc_delay, 100);//100ms
+  time_echo_topic.subscribe(message => { // sub
     const time_now = message.data.secs * 1e3 + message.data.nsecs / 1e6;
     document.getElementById("debug-text-area4").innerText = "Delay: " + (Date.now() - time_now) + " [ms] (client id: " + client_id + ")";
   });
 
-
-  
   ////// mouse point calc
   // generally, "canvas-area" size is not completelly equal to "canvas-area canvas", but we have to access "canvas-area" to get mouse position
   function calc_mouse_position_on_image(canvas, e){
@@ -117,6 +120,75 @@ $(function() {
     document.getElementById("debug-text-area2").innerText = topic_name + " : " + imageX.toFixed(1) +", "+ imageY.toFixed(1);
   });
 
+  ///// 3D point
+  listener1 = new ROSLIB.Topic({
+    ros : ros,
+    name : '/pointcloud_screenpoint_nodelet/output_point',
+    messageType : 'geometry_msgs/PointStamped'
+  });
+  listener1.subscribe(message => {
+    document.getElementById("debug-text-area3").innerText =
+      listener1.name + " = "+ message.point.x +", "+ message.point.y +", "+ message.point.z +"\n\n";
+  });
+
+  var audio_pub = new ROSLIB.Topic({
+    ros : ros,
+    name : '/audio_from_' + client_id + '/audio',
+    messageType : 'audio_common_msgs/AudioData'
+  });
+
+  let audioData = [];
+  const bufferSize = 16384;//max
+
+  const Float32ArrayTo16BitPCM = function (samples) {
+    let buffer = new ArrayBuffer(samples.length * 2);
+    let view = new DataView(buffer);
+    const floatTo16BitPCM = function (output, input) {
+      for (let i = 0; i < input.length; i++) {
+        let s = Math.max(-1, Math.min(1, input[i]));
+        output.setInt16(i*2, s < 0 ? s * 0x8000 : s * 0x7FFF, true);
+      }
+    };
+    floatTo16BitPCM(view, samples); // 波形データ
+    return view;
+  };
+
+  // save audio data
+  const onAudioProcess = function (e) {
+    document.getElementById("debug-text-area6").innerText = "Your Mic is ON ("+ audio_pub.name +")";
+    const input = e.inputBuffer.getChannelData(0);
+    const dataview = Float32ArrayTo16BitPCM(input);
+    const base64String = btoa(String.fromCharCode(...new Uint8Array(dataview.buffer)));
+    audio_pub.publish( new ROSLIB.Message({ data : base64String }) );
+  };
+
+  // getusermedia
+  const handleSuccess = function (stream) {
+    document.getElementById("debug-text-area6").innerText = "navigator.mediaDevices.getUserMedia() success";
+    let audioContext = new AudioContext({
+      latencyHint: 'interactive',
+      sampleRate: 16000,
+    });
+    var buf = audioContext.createBuffer(1, bufferSize, audioContext.sampleRate);
+    scriptProcessor = audioContext.createScriptProcessor(bufferSize, 1, 1);
+    var mediastreamsource = audioContext.createMediaStreamSource(stream);
+    mediastreamsource.connect(scriptProcessor);
+    scriptProcessor.onaudioprocess = onAudioProcess;
+    scriptProcessor.connect(audioContext.destination);
+    console.log('setup audio complete. samplerate: ' + audioContext.sampleRate + " bufferSize: " + bufferSize);
+  };
+
+  if(navigator.mediaDevices){
+    navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+      .then(handleSuccess)
+      .catch(function(err){
+        document.getElementById("debug-text-area6").innerText = "Cannot get Mic device";
+        console.log('getUserMedia fail');
+      });
+  }else{
+    console.log('navigator.mediaDevices not found');
+  }
+
   ///// gazebo reset
   $("#reset-gazebo-button").click(function(e) {
     e.preventDefault();
@@ -129,7 +201,8 @@ $(function() {
     var request1 = new ROSLIB.ServiceRequest();
     resetWorld.callService(request1, result => { console.log('Call ' + setModelState.name); });
   });
-  
+
+
   var mjpeg_canvas = null;
   var current_image_info = {topic:'', width:0, height:0, frame_id:''};
   $("#topic-form").submit(function(e) {
@@ -164,6 +237,58 @@ $(function() {
     	});
       }
       image_sub_once.unsubscribe();// subscribe only once to get image info (continuous subscription cause high traffic)
+    });
+    return false;
+  });
+
+  $("#audio-topic-update-button").click(function(e) {
+    $("#audio-select").empty();
+    ros.getTopicsForType('audio_common_msgs/AudioData', function(audio_topics) {
+      audio_topics.sort();
+      _.map(audio_topics, function(topic) {
+        $("#audio-select").append('<option value="' + topic + '">' + topic + "</option>");
+      });
+    });
+  });
+
+  let audio_sub = null;
+  var current_audio_info = {topic:''};
+  $("#audio-form").submit(function(e) {
+    if(audio_sub){
+      audio_sub.unsubscribe();
+    }
+    current_audio_info.topic = $("#audio-select").val();
+    var base64;
+    audio_sub = new ROSLIB.Topic({
+      ros : ros,
+      name : current_audio_info.topic,
+      messageType : 'audio_common_msgs/AudioData'
+    });
+    audio_sub.subscribe(message => {
+      document.getElementById("debug-text-area5").innerText = audio_sub.name + " = "+ message.data +"\n\n";
+      base64 = message.data;
+      B=(f,b=4)=>String.fromCodePoint.apply(this, Array(b).fill().map((v,i)=>(f>>i*8)&255))
+      D=f=>B(f,2)
+      // tweek this:
+      samplerate=16000 // keep this above 4000 hz
+      ch=1 // channels
+      bits=16 // multiples of 8
+      samples=samplerate,
+      s1=16,
+      s2=samples*ch*bits/8
+      header="RIFF"+
+      B(4+(8+s1)+(8+s2))+ "WAVEfmt "+ //chunksize
+      B(s1)+ //subchunk1size
+      D(1)+ //format
+      D(ch)+ //channels
+      B(samplerate)+
+      B(samplerate*ch*bits/8)+ //Byte rate
+      D(ch*bits/8)+ // align
+      D(bits)+"data"+ //8 Bits per sample
+      D(s2) // subchunk2size
+      h64=window.btoa(header)
+      var sound = new Audio("data:audio/wav;base64," + h64 + base64);
+      sound.play();
     });
     return false;
   });

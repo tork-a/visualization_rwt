@@ -21,7 +21,16 @@
           </div>
           <button type="submit" class="btn btn-primary">view</button>
           <button type="button" id="record-button" class="btn btn-success">record</button>
-	  <button type="button" id="reset-gazebo-button" class="btn btn-success">reset-gazebo</button>
+	        <button type="button" id="reset-gazebo-button" class="btn btn-success">reset-gazebo</button>
+        </form>
+        
+        <form id="audio-form" role="form" class="form-inline">
+          <div class="form-group">
+            <label class="sr-only" for="audio-select">audio</label>
+            <select id="audio-select" class="form-control"></select>
+          </div>
+          <button type="submit" class="btn btn-primary">listen</button>
+          <button type="button" id="audio-topic-update-button" class="btn btn-success">update list</button>
         </form>
       </div>
       <!-- click point goes wrong -->
@@ -35,6 +44,8 @@
     <div id="debug-text-area2">text2</div>
     <div id="debug-text-area3">text3</div>
     <div id="debug-text-area4">text4</div>
+    <div id="debug-text-area5">text5</div>
+    <h1><div id="debug-text-area6">Your Mic is OFF</div></h1>
     
     <script type="text/javascript" src="/rwt_utils_3rdparty/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="/rwt_image_view/3rdparty/ros/js/eventemitter2.js"></script>
