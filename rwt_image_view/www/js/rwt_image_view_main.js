@@ -53,6 +53,36 @@ $(function() {
   });
 
 
+  $("#grab-button").click(function(e) {
+    e.preventDefault();
+    const pub = new ROSLIB.Topic({
+      ros : ros,
+      name : "/l_gripper_controller/gripper_action/goal",
+      messageType : 'pr2_controllers_msgs/Pr2GripperCommandActionGoal'
+    });
+    const goal = new ROSLIB.Message({
+      header : { frame_id : "test" },
+      goal  : { command : {position : 0.0, max_effort: 25} }
+    });
+    pub.publish(goal);
+  });
+
+  $("#release-button").click(function(e) {
+    e.preventDefault();
+    const pub = new ROSLIB.Topic({
+      ros : ros,
+      name : "/l_gripper_controller/gripper_action/goal",
+      messageType : 'pr2_controllers_msgs/Pr2GripperCommandActionGoal'
+    });
+    const goal = new ROSLIB.Message({
+      header : { frame_id : "test" },
+      goal  : { command : {position : 0.1, max_effort: 25} }
+    });
+    pub.publish(goal);
+  });
+
+
+
   ///// calc round trip delay for individual client
   const client_id = "random" + Math.random().toString(32).substring(2);
   const time_echo_topic = new ROSLIB.Topic({ // used both in pub/sub
