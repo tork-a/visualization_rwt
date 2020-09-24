@@ -53,33 +53,43 @@ $(function() {
   });
 
 
-  $("#grab-button").click(function(e) {
-    e.preventDefault();
+  ///// L R button manipulation
+  function fingerClose(e, lr, open_close) {
     const pub = new ROSLIB.Topic({
       ros : ros,
-      name : "/l_gripper_controller/gripper_action/goal",
+      name : "/" + lr + "_gripper_controller/gripper_action/goal",
       messageType : 'pr2_controllers_msgs/Pr2GripperCommandActionGoal'
     });
-    const goal = new ROSLIB.Message({
-      header : { frame_id : "test" },
-      goal  : { command : {position : 0.0, max_effort: 25} }
-    });
-    pub.publish(goal);
-  });
+    pub.publish(
+      new ROSLIB.Message({
+        header : { frame_id : "test" },
+        goal  : { command : {position : open_close == "close" ? 0.0 : 0.1, max_effort: 25} }
+      })
+    );
+  }
+  // $("#l-grab-button").click(function(e){ fingerClose(e, "l", "open"); });
+  // $("#l-grab-button").click(function(e){ fingerClose(e, "l", "close"); });
+  // $("#r-grab-button").click(function(e){ fingerClose(e, "r", "open"); });
+  // $("#r-grab-button").click(function(e){ fingerClose(e, "r", "close"); });
 
-  $("#release-button").click(function(e) {
-    e.preventDefault();
+
+  ///// general command publish
+  function pubCommandString(e, com_str) {
     const pub = new ROSLIB.Topic({
       ros : ros,
-      name : "/l_gripper_controller/gripper_action/goal",
-      messageType : 'pr2_controllers_msgs/Pr2GripperCommandActionGoal'
+      name : "/rwt_command_string",
+      messageType : 'std_msgs/String'
     });
-    const goal = new ROSLIB.Message({
-      header : { frame_id : "test" },
-      goal  : { command : {position : 0.1, max_effort: 25} }
-    });
-    pub.publish(goal);
-  });
+    pub.publish( new ROSLIB.Message({ data  : com_str }) );
+  }
+  $("#l-release-button" ).click(function(e){ pubCommandString(e, "l_open" );  });
+  $("#r-release-button" ).click(function(e){ pubCommandString(e, "r_open" );  });
+  $("#l-grab-button"    ).click(function(e){ pubCommandString(e, "l_close");  });
+  $("#r-grab-button"    ).click(function(e){ pubCommandString(e, "r_close");  });
+  $("#l-pull-button"    ).click(function(e){ pubCommandString(e, "l_pull");   });
+  $("#r-turn-button"    ).click(function(e){ pubCommandString(e, "r_turn");   });
+  $("#l-mode-button"    ).click(function(e){ pubCommandString(e, "l_mode" );  });
+  $("#r-mode-button"    ).click(function(e){ pubCommandString(e, "r_mode" );  });
 
 
 
