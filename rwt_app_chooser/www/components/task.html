@@ -73,8 +73,8 @@
      item.on('tap', function() {
        var that = this;
        if (this.running) {
-         var prompt = phonon.prompt("Shutdown " + this.display_name + "?", "Kill application");
-         prompt.on("confirm", function(value) {
+         var confirm = phonon.confirm("Shutdown " + that.display_name + "?", "Kill application");
+         confirm.on("confirm", function() {
            stop_app(that.name, function(res) {
              console.log("stop_app", res);
              if (res.stopped) {
@@ -85,8 +85,8 @@
            });
          });
        } else {
-         var prompt = phonon.prompt("Launch " + this.display_name + "?", "Launch application");
-         prompt.on("confirm", function(value) {
+         var confirm = phonon.confirm("Launch " + this.display_name + "?", "Launch application");
+         confirm.on("confirm", function() {
            start_app(that.name, function(res) {
              console.log("start_app", res);
              if (res.started) {

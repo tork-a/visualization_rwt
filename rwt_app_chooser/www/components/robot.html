@@ -73,13 +73,13 @@
    });
 
    document.querySelector("#clear").on("tap", function() {
-     var prompt = phonon.prompt("Are you sure to remove all robots from the list?", "Clear");
-     prompt.on("confirm", function(value) {
+     var confirm = phonon.confirm("Are you sure to remove all robots from the list?", "Clear");
+     confirm.on("confirm", function() {
        robots = [];
        render_list();
        phonon.notif("Cleared all robots", 3000, false, false);
      });
-     prompt.on("cancel", function() {
+     confirm.on("cancel", function() {
        phonon.notif("Canceled removing the list", 3000, false, false);
      });
    });
