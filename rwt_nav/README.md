@@ -1,22 +1,21 @@
-rwt_nav
-====================
+# rwt_nav
 
-Usage
------
-```
+## Usage
+
+```bash
 roslaunch rwt_nav rwt_nav.launch
 ```
 
-Open your browser, and access to:
-
-`http://<your host name>:8000/rwt_nav/`
+Open your browser, and access to: `http://<your host name>:8000/rwt_nav/`
 
 for example : `http://localhost:8000/rwt_nav/`
 
 To view live location of robot :
-```
+
+```bash
 rosrun robot_pose_publisher robot_pose_publisher
 ```
+
 - Current position of the robot is shown by yellow arrow.
 - Ctrl + mouse movement = Zoom
 - Shift + mouse movement = Pan
