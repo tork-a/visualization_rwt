@@ -1,0 +1,32 @@
+<?xml version="1.0"?>
+<package>
+  <name>rwt_nav</name>
+  <version>0.0.3</version>
+  <description>The rwt_nav package</description>
+
+  <author email="yugajmera@gmail.com">Yug Ajmera</author>
+  <author email="shingogo.5511@gmail.com">Shingo Kitagawa</author>
+  <maintainer email="yugajmera@gmail.com">Yug Ajmera</maintainer>
+  <maintainer email="shingogo.5511@gmail.com">Shingo Kitagawa</maintainer>
+
+  <url type="website">http://wiki.ros.org/rwt_nav</url>
+  <url type="bugtracker">https://github.com/tork-a/visualization_rwt/issues</url>
+  <url type="repository">https://github.com/tork-a/visualization_rwt</url>
+
+  <license>BSD</license>
+  <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>rosbridge_server</build_depend>
+  <build_depend>web_video_server</build_depend>
+  <build_depend>rwt_utils_3rdparty</build_depend>
+  <build_depend>roswww</build_depend>
+
+  <run_depend>robot_pose_publisher</run_depend>
+  <run_depend>rosbridge_server</run_depend>
+  <run_depend>rwt_utils_3rdparty</run_depend>
+  <run_depend>web_video_server</run_depend>
+  <run_depend>roswww</run_depend>
+
+  <!-- The export tag contains other, unspecified, tags -->
+  <export>
+  </export>
+</package>

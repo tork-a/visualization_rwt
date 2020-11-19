@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="../rwt_utils_3rdparty/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/rwt_nav.css">
+
+    <title>rwt_nav</title>
+
+  </head>
+
+  <body>
+    <div class="container">
+      <h1><span class="glyphicon glyphicon-star"></span>rwt_nav <small>robotwebtools navigation</small> <span id="config-button"></span></h1>
+    </div>
+    <div class="row">
+      <div class="col-lg-6">
+        <div id="Head">Navigate</div>
+        <div class="row">
+          <div id="map"></div>
+        </div>
+      </div>
+      <div id="topic-area" class="col-lg-6">
+        <div id="Head">Camera Feed</div>
+        <form id="image-topic-form" role="form" class="form-inline">
+          <div class="form-group">
+            <label class="sr-only" for="image-topic-select">image-topic</label>
+            <select id="image-topic-select" class="form-control"></select>
+          </div>
+          <button type="submit" class="btn btn-primary">view</button>
+        </form>
+        <div id="canvas-area"></div>
+      </div>
+    </div>
+    <script type="text/javascript" src="3rdparty/ros/js/roslib.js"></script>
+    <script type="text/javascript" src="3rdparty/ros/js/eventemitter2.js"></script>
+    <script type="text/javascript" src="3rdparty/ros/js/easel.js"></script>
+    <script type="text/javascript" src="3rdparty/ros/js/ros2d.js"></script>
+    <script type="text/javascript" src="3rdparty/ros/js/nav2d.js"></script>
+    <script type="text/javascript" src="../rwt_utils_3rdparty/lodash.min.js"></script>
+    <script type="text/javascript" src="../rwt_utils_3rdparty/jquery.min.js"></script>
+    <script type="text/javascript" src="../rwt_utils_3rdparty/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../rwt_utils_3rdparty/mjpegcanvasjs/build/mjpegcanvas.min.js"></script>
+    <script type="text/javascript" src="../rwt_utils_3rdparty/rwt_utils.js"></script>
+    <script type="text/javascript" src="js/rwt_nav.js"></script>
+  </body>
+</html>

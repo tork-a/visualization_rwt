@@ -39,3 +39,4 @@ PROJECTS
 * [rwt_plot](rwt_plot/README.md)
 * [rwt_speech_recognition](rwt_speech_recognition/README.md)
 * [rwt_steer](rwt_steer/README.md)
+* [rwt_nav](rwt_nav/README.md)
