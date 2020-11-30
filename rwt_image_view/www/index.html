@@ -39,14 +39,30 @@
       <!-- </div> -->
       <div id="canvas-area"></div>
 
-      <button type="button" id="l-grab-button"    class="btn btn-primary">L grab</button>
-      <button type="button" id="l-release-button" class="btn btn-primary">L release</button>
-      <button type="button" id="l-pull-button"    class="btn btn-primary">L pull</button>
-      <button type="button" id="r-grab-button"    class="btn btn-primary">R grab</button>
-      <button type="button" id="r-release-button" class="btn btn-primary">R release</button>
-      <button type="button" id="r-turn-button"    class="btn btn-primary">R turn</button>
-      <button type="button" id="l-mode-button"    class="btn btn-primary">L mode</button>
-      <button type="button" id="r-mode-button"    class="btn btn-primary">R mode</button>
+      <center>
+        <button type="button" id="l-grab-button"    class="btn btn-primary">L grab</button>
+        <button type="button" id="l-release-button" class="btn btn-primary">L release</button>
+        <button type="button" id="l-pull-button"    class="btn btn-primary">L pull</button>
+        
+        <label class="btn btn-primary active">
+          <input type="radio" name="options" id="l-mode-button" autocomplete="off" checked>L Mode
+        </label>
+        <label class="btn btn-primary">
+          <input type="radio" name="options" id="r-mode-button" autocomplete="off">R Mode
+        </label>
+
+        <button type="button" id="r-grab-button"    class="btn btn-primary">R grab</button>
+        <button type="button" id="r-release-button" class="btn btn-primary">R release</button>
+        <button type="button" id="r-turn-button"    class="btn btn-primary">R turn</button>
+        <br><br>
+        <button type="button" style="width:20%;" id="u-look-button" class="btn btn-primary">Up    </button><br>
+        <button type="button" style="width:20%;" id="l-look-button" class="btn btn-primary">Left  </button>
+        <button type="button" style="width:10%;" id="c-look-button" class="btn btn-primary">Center</button>
+        <button type="button" style="width:20%;" id="r-look-button" class="btn btn-primary">Right </button><br>
+        <button type="button" style="width:20%;" id="d-look-button" class="btn btn-primary">Down  </button>
+      </center>
+
+
     </div>
 
     <div id="debug-text-area1">text1</div>
