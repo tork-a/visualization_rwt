@@ -36,7 +36,8 @@ $(function() {
     ros.getTopicsForType('sensor_msgs/Image', function(image_topics) {
       image_topics.sort();
       _.map(image_topics, function(topic) {
-        $("#topic-select").append('<option value="' + topic + '">' + topic + "</option>");
+        default_option = "/kinect_head/rgb/image_rect_color";
+        $("#topic-select").append('<option value="' + topic + (topic == default_option ? '" selected>' : '">') + topic + "</option>");
       });
     });
     ros.getTopicsForType('audio_common_msgs/AudioData', function(audio_topics) {
@@ -52,29 +53,52 @@ $(function() {
     $("#audio-select").empty();
   });
 
-  ///// general command publish
-  function pubCommandString(e, com_str) {
-    const pub = new ROSLIB.Topic({
-      ros : ros,
-      name : "/rwt_command_string",
-      messageType : 'std_msgs/String'
-    });
-    pub.publish( new ROSLIB.Message({ data  : com_str }) );
-  }
-  $("#l-release-button").click(function(e){ pubCommandString(e, "l_open" );});
-  $("#r-release-button").click(function(e){ pubCommandString(e, "r_open" );});
-  $("#l-grab-button"   ).click(function(e){ pubCommandString(e, "l_close");});
-  $("#r-grab-button"   ).click(function(e){ pubCommandString(e, "r_close");});
-  $("#l-pull-button"   ).click(function(e){ pubCommandString(e, "l_pull" );});
-  $("#r-turn-button"   ).click(function(e){ pubCommandString(e, "r_turn" );});
-  $("#l-mode-button"   ).click(function(e){ pubCommandString(e, "l_mode" );});
-  $("#r-mode-button"   ).click(function(e){ pubCommandString(e, "r_mode" );});
-  $("#u-look-button"   ).click(function(e){ pubCommandString(e, "u_look" );});
-  $("#l-look-button"   ).click(function(e){ pubCommandString(e, "l_look" );});
-  $("#c-look-button"   ).click(function(e){ pubCommandString(e, "c_look" );});
-  $("#r-look-button"   ).click(function(e){ pubCommandString(e, "r_look" );});
-  $("#d-look-button"   ).click(function(e){ pubCommandString(e, "d_look" );});
+  ///// servo state
+  new ROSLIB.Topic({
+    ros : ros,
+    name : '/pr2_ethercat/motors_halted',
+    messageType : 'std_msgs/Bool'
+  }).subscribe(message => {
+    isOn = (message.data == false); // (halted == false) = servoOn
+    txtarea = document.getElementById("servo-state-text");
+    txtarea.innerText             = (isOn ? "Servo ON" : "Servo OFF");
+    txtarea.style.backgroundColor = (isOn ? "green" : "gray");
+    txtarea.style.color           = (isOn ? "white" : "red");
+  });
 
+  ///// LR click mode
+  new ROSLIB.Topic({
+    ros : ros,
+    name : '/rwt_current_state',
+    messageType : 'std_msgs/String'
+  }).subscribe(message => {
+    isL = (message.data == "l");
+    ltxtarea = document.getElementById("l-text");
+    ltxtarea.innerText             = (isL  ? "L Arm Click Enable" : "L Arm Click Disable");
+    ltxtarea.style.backgroundColor = (isL  ? "green" : "gray");
+    ltxtarea.style.color           = (isL  ? "white" : "red");
+    rtxtarea = document.getElementById("r-text");
+    rtxtarea.innerText             = (!isL ? "R Arm Click Enable" : "R Arm Click Disable");
+    rtxtarea.style.backgroundColor = (!isL ? "green" : "gray");
+    rtxtarea.style.color           = (!isL ? "white" : "red");
+  });
+
+  ///// search all buttons in "rwt-command-buttons" div and set callback
+  const rwt_command_pub = new ROSLIB.Topic({
+    ros : ros,
+    name : "/rwt_command_string",
+    messageType : 'std_msgs/String'
+  });
+  buttons = Array.from(document.getElementById("rwt-command-buttons").getElementsByTagName("button"));
+  buttons.forEach(
+    function(b){
+      b.onclick = function(){
+        rwt_command_pub.publish( new ROSLIB.Message({ data : b.id }) ); // simply send button id as rwt command string
+      }
+    }
+  )
+  
+ 
 
   ///// calc round trip delay for individual client
   const client_id = "random" + Math.random().toString(32).substring(2);
@@ -225,6 +249,9 @@ $(function() {
     var request1 = new ROSLIB.ServiceRequest();
     resetWorld.callService(request1, result => { console.log('Call ' + setModelState.name); });
   });
+
+
+
 
 
   var mjpeg_canvas = null;
