@@ -19,7 +19,7 @@
             <select id="topic-select" class="form-control">
             </select>
           </div>
-          <button type="submit" class="btn btn-primary">view</button>
+          <button type="submit" id="submit-button" class="btn btn-primary">view</button>
           <button type="button" id="record-button" class="btn btn-success">record</button>
 	        <button type="button" id="reset-gazebo-button" class="btn btn-success">reset-gazebo</button>
         </form>
@@ -43,6 +43,9 @@
 
       <div style="display:inline-block; width:50%; text-align:center; font-size:200%; float:left;"  id="l-text">L control state</div>
       <div style="display:inline-block; width:50%; text-align:center; font-size:200%; float:right;" id="r-text">R control state</div>
+
+
+      <button type="button" id="l_gripper_open"    class="btn btn-primary">#Url.empid#</button>
 
       <div id="rwt-command-buttons" style="text-align:center;">
           Manipulation Specific Control<br>
@@ -110,7 +113,15 @@
     <script type="text/javascript" src="/rwt_image_view/js/rwt_image_view_main.js"></script>
 
 
-    <iframe class="embed-responsive-item" style="width:100%;height:500px" src="../rwt_speech_recognition/index.html" ></iframe>
+    <!-- <iframe class="embed-responsive-item" style="width:100%;height:500px" src="../rwt_speech_recognition/index.html" ></iframe> -->
+    <!-- <iframe class="embed-responsive-item" style="width:100%;height:500px" src="http://pr1040s.jsk.imi.i.u-tokyo.ac.jp:8000/rwt_image_view/?id=safgesfd" ></iframe> -->
+
+    <!-- <script>
+         var full_url = "http://" + location.host + "/rwt_image_view/?id=asgrga";
+         document.write("<iframe class=\"embed-responsive-item\" style=\"width:100%;height:500px\" src=\""+full_url+"\" ></iframe>");
+         </script> -->
+
+<div id="hoge" class="none">2143ds</div>
 
 
   </body>

@@ -28,7 +28,6 @@ $(function() {
     });
   };
 
-  
   var ros = new ROSLIB.Ros();
   ros.install_config_button("config-button", true, 9090);
 
@@ -40,6 +39,7 @@ $(function() {
         $("#topic-select").append('<option value="' + topic + (topic == default_option ? '" selected>' : '">') + topic + "</option>");
       });
     });
+    
     ros.getTopicsForType('audio_common_msgs/AudioData', function(audio_topics) {
       audio_topics.sort();
       _.map(audio_topics, function(topic) {
@@ -99,6 +99,22 @@ $(function() {
   )
   
  
+  var queryString = window.location.search;
+  var queryObject = new Object();
+  if(queryString){
+    queryString = queryString.substring(1);
+    var parameters = queryString.split('&');
+
+    for (var i = 0; i < parameters.length; i++) {
+      var element = parameters[i].split('=');
+
+      var paramName = decodeURIComponent(element[0]);
+      var paramValue = decodeURIComponent(element[1]);
+
+      queryObject[paramName] = paramValue;
+    }
+  }
+
 
   ///// calc round trip delay for individual client
   const client_id = "random" + Math.random().toString(32).substring(2);
@@ -119,7 +135,14 @@ $(function() {
   time_echo_topic.subscribe(message => { // sub
     const time_now = message.data.secs * 1e3 + message.data.nsecs / 1e6;
     document.getElementById("debug-text-area4").innerText = "Delay: " + (Date.now() - time_now) + " [ms] (client id: " + client_id + ")";
+    if(init_once){// we should wait clicking button till something done (ros connection ready?). 
+      document.getElementById("submit-button").click();
+      init_once = false;
+      console.log(queryObject["id"]);
+      console.log($("#hoge").text());
+    }
   });
+  var init_once = true;
 
   ////// mouse point calc
   // generally, "canvas-area" size is not completelly equal to "canvas-area canvas", but we have to access "canvas-area" to get mouse position
@@ -250,13 +273,11 @@ $(function() {
     resetWorld.callService(request1, result => { console.log('Call ' + setModelState.name); });
   });
 
-
-
-
-
   var mjpeg_canvas = null;
   var current_image_info = {topic:'', width:0, height:0, frame_id:''};
   $("#topic-form").submit(function(e) {
+      console.log("submit called");
+
     if (mjpeg_canvas) {
       // remove the canvas here. (but mjpeg_canvas wonn't be released like this) 
       // https://github.com/tork-a/visualization_rwt/issues/92
