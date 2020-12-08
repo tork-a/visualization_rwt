@@ -60,10 +60,10 @@ $(function() {
     messageType : 'std_msgs/Bool'
   }).subscribe(message => {
     isOn = (message.data == false); // (halted == false) = servoOn
-    txtarea = document.getElementById("servo-state-text");
-    txtarea.innerText             = (isOn ? "Servo ON" : "Servo OFF");
-    txtarea.style.backgroundColor = (isOn ? "green" : "gray");
-    txtarea.style.color           = (isOn ? "white" : "red");
+    txt_area = document.getElementById("servo-state-text");
+    txt_area.innerText             = (isOn ? "Servo ON" : "Servo OFF");
+    txt_area.style.backgroundColor = (isOn ? "green" : "gray");
+    txt_area.style.color           = (isOn ? "white" : "red");
   });
 
   ///// LR click mode
@@ -73,15 +73,45 @@ $(function() {
     messageType : 'std_msgs/String'
   }).subscribe(message => {
     isL = (message.data == "l");
-    ltxtarea = document.getElementById("l-text");
-    ltxtarea.innerText             = (isL  ? "L Arm Click Enable" : "L Arm Click Disable");
-    ltxtarea.style.backgroundColor = (isL  ? "green" : "gray");
-    ltxtarea.style.color           = (isL  ? "white" : "red");
-    rtxtarea = document.getElementById("r-text");
-    rtxtarea.innerText             = (!isL ? "R Arm Click Enable" : "R Arm Click Disable");
-    rtxtarea.style.backgroundColor = (!isL ? "green" : "gray");
-    rtxtarea.style.color           = (!isL ? "white" : "red");
+    l_txt_area = document.getElementById("l-text");
+    l_txt_area.innerText             = (isL  ? "L Arm Click Enable" : "L Arm Click Disable");
+    l_txt_area.style.backgroundColor = (isL  ? "green" : "gray");
+    l_txt_area.style.color           = (isL  ? "white" : "red");
+    r_txt_area = document.getElementById("r-text");
+    r_txt_area.innerText             = (!isL ? "R Arm Click Enable" : "R Arm Click Disable");
+    r_txt_area.style.backgroundColor = (!isL ? "green" : "gray");
+    r_txt_area.style.color           = (!isL ? "white" : "red");
   });
+
+
+  ///// net
+  new ROSLIB.Topic({
+    ros : ros,
+    name : '/pr1040/wan0/transmit_mbps',
+    messageType : 'std_msgs/Float32'
+  }).subscribe(message => {
+    document.getElementById("net-tx-info").innerText = "Robot TX: " + message.data + "[Mbps]";
+  });
+  new ROSLIB.Topic({
+    ros : ros,
+    name : '/pr1040/wan0/receive_mbps',
+    messageType : 'std_msgs/Float32'
+  }).subscribe(message => {
+    document.getElementById("net-rx-info").innerText = "Robot RX: " + message.data + "[Mbps]";
+  });
+  new ROSLIB.Topic({
+    ros : ros,
+    name : '/connected_clients',
+    messageType : 'rosbridge_msgs/ConnectedClients'
+  }).subscribe(message => {
+    document.getElementById("connecting-user-info").innerText = "Connecting user num : " + message.clients.length + "\n";
+    message.clients.forEach(c => {
+      document.getElementById("connecting-user-info").innerText += " - " + c.ip_address + "\n";
+    });
+  });
+
+
+
 
   ///// search all buttons in "rwt-command-buttons" div and set callback
   const rwt_command_pub = new ROSLIB.Topic({
@@ -134,12 +164,12 @@ $(function() {
   setInterval(calc_delay, 100);//100ms
   time_echo_topic.subscribe(message => { // sub
     const time_now = message.data.secs * 1e3 + message.data.nsecs / 1e6;
-    document.getElementById("debug-text-area4").innerText = "Delay: " + (Date.now() - time_now) + " [ms] (client id: " + client_id + ")";
+    document.getElementById("net-delay-info").innerText = "Delay: " + (Date.now() - time_now) + " [ms] (client id: " + client_id + ")";
     if(init_once){// we should wait clicking button till something done (ros connection ready?). 
       document.getElementById("submit-button").click();
       init_once = false;
-      console.log(queryObject["id"]);
-      console.log($("#hoge").text());
+      /* console.log(queryObject["id"]);
+       * console.log($("#hoge").text());*/
     }
   });
   var init_once = true;
