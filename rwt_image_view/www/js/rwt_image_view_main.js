@@ -72,15 +72,43 @@ $(function() {
     name : '/rwt_current_state',
     messageType : 'std_msgs/String'
   }).subscribe(message => {
-    isL = (message.data == "l");
-    l_txt_area = document.getElementById("l-text");
-    l_txt_area.innerText             = (isL  ? "L Arm Click Enable" : "L Arm Click Disable");
-    l_txt_area.style.backgroundColor = (isL  ? "green" : "gray");
-    l_txt_area.style.color           = (isL  ? "white" : "red");
-    r_txt_area = document.getElementById("r-text");
-    r_txt_area.innerText             = (!isL ? "R Arm Click Enable" : "R Arm Click Disable");
-    r_txt_area.style.backgroundColor = (!isL ? "green" : "gray");
-    r_txt_area.style.color           = (!isL ? "white" : "red");
+
+    msg_part = message.data.split("_");
+    lr = msg_part[0]
+    isL = (lr == "l");
+
+    switch (msg_part[1]) {
+      case "forclick":
+        l_txt_area = document.getElementById("l-clk-text");
+        l_txt_area.innerText             = (isL  ? "L Arm Click Enable" : "L Arm Click Disable");
+        l_txt_area.style.backgroundColor = (isL  ? "green" : "gray");
+        l_txt_area.style.color           = (isL  ? "white" : "red");
+        r_txt_area = document.getElementById("r-clk-text");
+        r_txt_area.innerText             = (!isL ? "R Arm Click Enable" : "R Arm Click Disable");
+        r_txt_area.style.backgroundColor = (!isL ? "green" : "gray");
+        r_txt_area.style.color           = (!isL ? "white" : "red");
+        break;
+      case "push":
+        txt_area = document.getElementById(lr+"-act-text");
+        switch (msg_part[2]) {
+          case "ok":
+            txt_area.innerText             = "Push Completed!";
+            txt_area.style.backgroundColor = "green";
+            txt_area.style.color           = "white";
+            break;
+          case "doing":
+            txt_area.innerText             = "Pushing...";
+            txt_area.style.backgroundColor = "red";
+            txt_area.style.color           = "yellow";
+            break;
+          case "fail":
+            txt_area.innerText             = "Push Failed";
+            txt_area.style.backgroundColor = "gray";
+            txt_area.style.color           = "red";
+            break;
+        }
+        break;
+    }
   });
 
 
