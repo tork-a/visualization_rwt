@@ -2,6 +2,12 @@
 Changelog for package rwt_plot
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.0.4 (2021-03-09)
+------------------
+* Add settings for ROS connection (`#76 <https://github.com/tork-a/visualization_rwt//issues/76>`_)
+* Modified rwt's javascript module path. (`#70 <https://github.com/tork-a/visualization_rwt//issues/70>`_)
+* Contributors: Furuta Yuki, Kei Okada, Iory Yanokura
+
 0.0.3 (2016-10-01)
 ------------------
 

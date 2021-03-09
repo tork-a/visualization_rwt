@@ -2,6 +2,11 @@
 Changelog for package visualization_rwt
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+0.0.4 (2021-03-09)
+------------------
+* update README and images (`#70 <https://github.com/tork-a/visualization_rwt//issues/70>`_)
+* Contributors: Iory Yanokura
+
 0.0.3 (2016-10-01)
 ------------------
 * rwt_robot_monitor depends on roslibjs_experimental whcih is not releaed yet
