@@ -1,0 +1,28 @@
+.container{
+    margin: auto auto auto 10px;
+    border-bottom: 0.5px solid grey;
+    
+}
+
+.row{
+    margin: 20px 20px auto 20px;
+    text-align: center;
+}
+
+#Head{
+    font-size: 25px;
+    font-weight :bold;
+}
+
+#map{
+    width:100%;
+    margin-top : 20px;
+}
+
+#canvas-area{
+    margin-top : 20px;
+}
+
+button{
+    font-size:12px;
+}

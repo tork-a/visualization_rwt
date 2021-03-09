@@ -1,0 +1,43 @@
+.container{
+    margin: auto auto auto 10px;
+    border-bottom: 0.5px solid grey;
+    
+}
+
+.row{
+    margin: 20px 20px auto 20px;
+    text-align: center;
+}
+
+#Head{
+    font-size: 25px;
+    font-weight :bold;
+}
+
+#joystick{
+    margin: 250px auto auto 50%;
+}
+
+#linvel{
+    text-align: left;
+    margin-top : 20px;
+
+}
+
+#angvel{
+    text-align: left;
+    margin-top : 20px;
+
+}
+
+#canvas-area{
+    margin-top : 20px;
+}
+
+#display{
+    font-size: 20px;
+}
+
+button{
+    font-size:17px
+}

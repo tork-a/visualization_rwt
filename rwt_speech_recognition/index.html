@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../rwt_utils_3rdparty/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/rwt_speech_recognition.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>rwt_speech_recognition</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="page-header">
+        <h1><span class="glyphicon glyphicon-star"></span>rwt_speech_recognition <small>robotwebtools speech recognition</small> <span id="config-button"></span></h1>
+      </div>
+
+      <div class="control-panel">
+        <label for="lang">Language</label>
+        <div class="input-group" id="lang">
+          <span class="input-group-addon">Language</span>
+          <select class="form-control" id="select-language" name="language"></select>
+          <span class="input-group-addon">Country</span>
+          <select class="form-control" id="select-dialect"  name="dialect"></select>
+        </div>
+
+        <label for="topic">ROS</label>
+        <div class="input-group" id="topic">
+          <span class="input-group-addon">Topic</span>
+          <input type="text" class="form-control" id="input-topic" value="/Tablet/voice">
+          <span class="input-group-addon">Mode</span>
+          <select class="form-control" id="select-mode" name="mode">
+            <option value="once" selected>Once</option>
+            <option value="continuous">Continuous</option>
+          </select>
+        </div>
+
+        <div class="start-stop">
+        <button type="button" class="btn btn-block btn-success" id="button-start">Start</button>
+        <button type="button" class="btn btn-block btn-warning" id="button-stop" style="display:none">Stop</button>
+        </div>
+      </div>
+      
+      <div id="info" class="info">
+        <p id="info_start">
+          Press start button and begin speaking.
+        </p>
+        <p id="info_speak_now" style="display:none">
+          Speak now.
+        </p>
+        <p id="info_no_speech" style="display:none">
+          No speech was detected. You may need to adjust your microphone settings.
+        </p>
+        <p id="info_no_microphone" style="display:none">
+          No microphone was found. Ensure a mic is installed and configured correctly.
+        </p>
+        <p id="info_allow" style="display:none">
+          Click 'Allow' button.
+        </p>
+        <p id="info_denied" style="display:none">
+          Permission to use microphone was denied.
+        </p>
+        <p id="info_blocked" style="display:none">
+          Permission to use microphone is blocked.
+          To unblock, go to chrome://settings/contentExceptions#media-stream
+        </p>
+        <p id="info_no_support" style="display:none">
+          Web Speech API is not supported by this browser.
+        </p>
+      </div>
+      
+      <p id="interim"></p>
+      
+      <div id="finals"></div>
+
+    </div> <!-- container -->
+
+    <script type="text/javascript" src="../rwt_utils_3rdparty/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="../rwt_utils_3rdparty/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="3rdparty/ros/js/eventemitter2.js"></script>
+    <script type="text/javascript" src="3rdparty/ros/js/roslib.js"></script>
+    <script type="text/javascript" src="../rwt_utils_3rdparty/rwt_utils.js"></script>
+    <script type="text/javascript" src="js/rwt_speech_recognition.js"></script>
+    <script type="text/javascript" src="js/rwt_speech_recognition.main.js"></script>
+
+  </body>
+</html>

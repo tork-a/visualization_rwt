@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="/rwt_utils_3rdparty/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/rwt_robot_monitor.css"></link>
+    <title>rwt_diagnostics_plotter</title>
+  </head>
+  <body>
+    <div class="container">
+      
+      <div class="page-header">
+        <h1><span class="glyphicon glyphicon-star"></span>rwt diagnostics plotter <small>robotwebtools robot plotter
+        <a href="./index.html">monitor is here</a></small></h1>
+      </div>
+      <!-- form to choose -->
+      <div>
+        <form>
+          <div class="row">
+            <div class=" col-xs-6">
+              <select class="form-control" id="name-select">
+              </select>
+            </div>
+            <div class=" col-xs-5">
+              <select class="form-control" id="plot-field-select">
+              </select>
+            </div>
+            <div class=" col-xs-1">
+              <input type="submit" class="btn btn-primary"
+                     value="add" id="add-button"/>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div id="plot-windows-area">
+    </div>
+    <script type="text/javascript" src="/rwt_plot/flot/jquery.min.js"></script>
+    <script type="text/javascript" src="/rwt_utils_3rdparty/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="http://cdn.robotwebtools.org/EventEmitter2/current/eventemitter2.min.js"></script>
+    <script type="text/javascript" src="http://cdn.robotwebtools.org/roslibjs/current/roslib.min.js"></script>
+    <script type="text/javascript" src="/roslibjs_experimental/roslibjs_experimental.js"></script>
+    <script type="text/javascript" src="/rwt_utils_3rdparty/lodash.min.js"></script>
+    <script type="text/javascript" src="/rwt_plot/d3.v3.min.js"></script>
+    <script type="text/javascript" src="/rwt_plot/rwt_plot.js"></script>
+    <script type="text/javascript" src="rwt_robot_monitor.js"></script>
+    <script type="text/javascript" src="rwt_robot_monitor_plotter.js"></script>
+  </body>
+</html>

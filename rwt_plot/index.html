@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="../rwt_utils_3rdparty/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="css/rwt_plot.css"></link>
+    <title>rwt_plot</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="page-header">
+        <h1><span class="glyphicon glyphicon-star"></span>rwt_plot <small>robotwebtools plot</small> <span id="config-button"></span></h1>
+      </div>
+      <div id="topic-area">
+        <form id="topic-form" role="form" class="form-inline">
+          <div class="form-group">
+            <label class="sr-only" for="topic-select">topic</label>
+            <select id="topic-select" class="form-control">
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="sr-only" for="field-accessor">field-accessor</label>
+            <input type="name" class="form-control" name="field-accessor" id="field-accessor" placeholder="specify field like data"/>
+          </div>
+          <button type="submit" class="btn btn-primary">plot</button>
+        </form>
+      </div>
+      <div class="row">
+        <div id="plot-area" class="col-md-8" style="height: 400px;"></div>
+        <div id="message-detail" class="col-md-4">
+          <div class="row">
+            <h2>topic type info</h2>
+          </div>
+          <div class="row">
+            <pre></pre>
+          </div>
+          
+        </div>
+        
+      </div>
+    </div>
+    <script type="text/javascript" src="../rwt_utils_3rdparty/jquery/jquery.min.js"></script>
+    <script type="text/javascript" src="3rdparty/ros/js/eventemitter2.js"></script>
+    <script type="text/javascript" src="3rdparty/ros/js/roslib.js"></script>
+    <script type="text/javascript" src="../rwt_utils_3rdparty/lodash/dist/lodash.min.js"></script>
+    <script type="text/javascript" src="../rwt_utils_3rdparty/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../rwt_utils_3rdparty/d3/d3.min.js"></script>
+    <script type="text/javascript" src="../rwt_utils_3rdparty/rwt_utils.js"></script>
+    <script type="text/javascript" src="js/rwt_plot.js"></script>
+    <script type="text/javascript" src="js/rwt_plot_main.js"></script>
+  </body>
+</html>
