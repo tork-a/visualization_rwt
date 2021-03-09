@@ -21,13 +21,20 @@
           </div>
           <button type="submit" class="btn btn-primary">view</button>
           <button type="button" id="record-button" class="btn btn-success">record</button>
+	  <button type="button" id="reset-gazebo-button" class="btn btn-success">reset-gazebo</button>
         </form>
       </div>
-      <div class="row">
-        <div id="canvas-area" class="col-md-12"></div>
-      </div>
+      <!-- click point goes wrong -->
+      <!-- <div class="row"> -->
+      <!--   <div id="canvas-area" class="col-md-12"></div> -->
+      <!-- </div> -->
+      <div id="canvas-area"></div>
     </div>
 
+    <div id="debug-text-area1">text1</div>
+    <div id="debug-text-area2">text2</div>
+    <div id="debug-text-area3">text3</div>
+    
     <script type="text/javascript" src="../rwt_utils_3rdparty/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="3rdparty/ros/js/eventemitter2.js"></script>
     <script type="text/javascript" src="3rdparty/ros/js/roslib.js"></script>
