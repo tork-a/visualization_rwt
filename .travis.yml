@@ -15,8 +15,8 @@ branches:
 dist: xenial
 matrix:
   fast_finish: true
-  allow_failures:
-    - env: ROS_DISTRO=melodic DOCKER_IMAGE=ubuntu:bionic
+#  allow_failures:
+#    - env: ROS_DISTRO=melodic DOCKER_IMAGE=ubuntu:bionic
 before_script:
   - export CI_SOURCE_PATH=$(pwd)
   - export REPOSITORY_NAME=${PWD##*/}

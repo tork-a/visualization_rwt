@@ -20,6 +20,7 @@
  var robot_uri = null;
  var ros = null;
  var app_list_sub = null;
+ var running_user_name = null;
 
  var start_app = function(name, cb) {
    var srv_name = '/' + robot_name + '/start_app';
@@ -53,6 +54,38 @@
    }
  };
 
+ var get_running_user_name = function(next) {
+   var param = new ROSLIB.Param({
+     ros: ros,
+     name: "/app_manager/running_user_name",
+   });
+   param.get(function(value) {
+     console.log("Getting param: /app_manager/running_user_name " + value);
+     running_user_name = value;
+     next();
+   });
+ }
+
+ var set_running_user_name = function(param_value) {
+   var param = new ROSLIB.Param({
+     ros: ros,
+     name: "/app_manager/running_user_name",
+   });
+   console.log("Setting param: /app_manager/running_user_name " + param_value);
+   param.set(param_value);
+   running_user_name = param_value;
+ }
+
+ var delete_running_user_name = function(param_name) {
+   var param = new ROSLIB.Param({
+     ros: ros,
+     name: "/app_manager/running_user_name",
+   });
+   console.log("Deleting param: /app_manager/running_user_name");
+   param.delete();
+   running_user_name = null;
+ }
+
  var render_app_list = function(apps) {
    clear_app_list();
    var parent = document.querySelector("#app-list");
@@ -73,8 +106,10 @@
      item.on('tap', function() {
        var that = this;
        if (this.running) {
-         var prompt = phonon.prompt("Shutdown " + this.display_name + "?", "Kill application");
-         prompt.on("confirm", function(value) {
+         var confirm = phonon.confirm("Shutdown " + that.display_name + "?", "Kill application");
+         confirm.on("confirm", function() {
+           console.log("unregister app user name");
+           delete_running_user_name();
            stop_app(that.name, function(res) {
              console.log("stop_app", res);
              if (res.stopped) {
@@ -85,15 +120,23 @@
            });
          });
        } else {
-         var prompt = phonon.prompt("Launch " + this.display_name + "?", "Launch application");
+         var prompt = phonon.prompt("Please fill your user name.", "Register user name");
          prompt.on("confirm", function(value) {
-           start_app(that.name, function(res) {
-             console.log("start_app", res);
-             if (res.started) {
-               phonon.notif("Launched " + that.display_name, 3000, false, false);
-             } else {
-               phonon.notif(res.message + " (" + res.error_code + ")", 3000, false, false);
-             }
+           var user_name = String(value);
+           if (user_name.length > 0) {
+             console.log("register app user name: " + user_name);
+             set_running_user_name(user_name);
+           }
+           var confirm = phonon.confirm("Launch " + that.display_name + "?", "Launch application");
+           confirm.on("confirm", function() {
+             start_app(that.name, function(res) {
+               console.log("start_app", res);
+               if (res.started) {
+                 phonon.notif("Launched " + that.display_name, 3000, false, false);
+               } else {
+                 phonon.notif(res.message + " (" + res.error_code + ")", 3000, false, false);
+               }
+             });
            });
          });
        }
@@ -174,19 +217,26 @@
      console.log("subscribing: " + list_name);
 
      app_list_sub.subscribe(function(msg) {
-       console.log("subscribe");
-       var apps = [];
-       msg.available_apps.forEach(function(app) {
-         if (msg.running_apps.find(function(e) {
-           return e.name == app.name;
-         })) {
-           app["running"] = true;
-         } else {
-           app["running"] = false;
+       get_running_user_name(function() {
+         console.log("subscribe");
+         var apps = [];
+         var running = false;
+         msg.available_apps.forEach(function(app) {
+           if (msg.running_apps.find(function(e) {
+             return e.name == app.name;
+           })) {
+             app["running"] = true;
+             running = true;
+           } else {
+             app["running"] = false;
+           }
+           apps.push(app);
+         });
+         if (!running && running_user_name) {
+           delete_running_user_name();
          }
-         apps.push(app);
+         render_app_list(apps);
        });
-       render_app_list(apps);
      });
    });
  };

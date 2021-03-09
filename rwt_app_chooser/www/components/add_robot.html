@@ -56,8 +56,8 @@
      var rs = load_robots();
      for (var r of rs) {
        if (r.name == name) {
-         var prompt = phonon.alert("Robot " + name + " is already registered", "Error");
-         prompt.on("confirm", function() {});
+         var alert = phonon.alert("Robot " + name + " is already registered", "Error");
+         alert.on("confirm", function() {});
          return false;
        }
      }
