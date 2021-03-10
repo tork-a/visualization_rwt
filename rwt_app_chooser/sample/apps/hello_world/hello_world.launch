@@ -1,3 +1,4 @@
 <launch>
-  <node pkg="sound_play" type="say.py" name="say" args="'hello world'"/>
+  <!-- need to set voice and volume until https://github.com/ros-drivers/audio_common/pull/167 -->
+  <node pkg="sound_play" type="say.py" name="say" args="'hello world' voice_kal_diphone 1.0"/>
 </launch>
