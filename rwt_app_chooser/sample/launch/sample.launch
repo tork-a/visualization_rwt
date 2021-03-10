@@ -1,0 +1,13 @@
+<launch>
+  <arg name="app_list" default="$(find rwt_app_chooser)/sample/applist" />
+  <include file="$(find rwt_app_chooser)/launch/app_manager.launch" >
+    <arg name="app_list" value="$(arg app_list)" />
+  </include>
+  <include file="$(find rwt_app_chooser)/launch/rwt_app_chooser.launch" />
+
+
+  <!-- rwt_app_chooser)/sample/applist uses sound_play/say.py whcih
+       needs sound drivers -->
+  <include file="$(find sound_play)/soundplay_node.launch" />
+
+</launch>
