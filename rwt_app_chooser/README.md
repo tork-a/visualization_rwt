@@ -3,13 +3,38 @@ rwt_app_chooser
 
 App chooser client for web browsing device
 
+### Example
+
+1. Launch sample file
+
+    ```bash
+    roslaunch rwt_app_chooser sample.launch
+    ```
+
+2. You can now access to rwt_app_chooser page from http://localhost:8000/rwt_app_chooser/
+
+   You will see following main page, then add "ADD ROBOT" button.
+
+   ![rwt_app_chooser_main.png](images/rwt_app_chooser_main.png "rwt_app_chooser_main.png")
+
+   As for example, you can choose any robot type and name, but you need to set `ws://localhost:9090` for Robot URI
+
+   Then You will choose robot which you just added.
+
+   ![rwt_app_chooser_select.png](images/rwt_app_chooser_select.png "rwt_app_chooser_select.png")
+
+   Finally, you can see following task launch page. Clock the 'Hello World' Button.
+
+   ![rwt_app_chooser_task.png](images/rwt_app_chooser_task.png "rwt_app_chooser_task.png")
+
+
 ### Usage
 
 1. (On Robot) Launch app manager
 
     ```bash
     roscore &
-    rosparam set robot/type pr2     # set robot type as rosparam
+    rosparam set robot/type pr2     # aet robot type as rosparam
     rosparam set robot/name pr1012  # set robot name as rosparam
     roslaunch rwt_app_chooser app_manager.launch
     ```
@@ -27,16 +52,6 @@ App chooser client for web browsing device
     ```
     
     This can be run on the robot
-
-3. You can now access to rwt_app_chooser page from http://localhost:8000/rwt_app_chooser/
-
-   You will see following main page, then add "ADD ROBOT" button.
-
-   ![rwt_app_chooser_main.png](images/rwt_app_chooser_main.png "rwt_app_chooser_main.png")
-
-   Then You will see following task launch page
-
-   ![rwt_app_chooser_task.png](images/rwt_app_chooser_task.png "rwt_app_chooser_task.png")
 
 ### Register Your App (Optional)
 
