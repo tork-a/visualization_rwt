@@ -2,8 +2,8 @@
 Changelog for package rwt_app_chooser
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.0.5 (2021-03-12)
+------------------
 * add sample sccript/launch, update README.md (`#100 <https://github.com/tork-a/visualization_rwt/issues/100>`_ )
 
   * add sample/launch/sample.launch
