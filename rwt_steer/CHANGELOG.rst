@@ -2,6 +2,9 @@
 Changelog for package rwt_steer
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.0.4 (2021-03-09)
 ------------------
 * [rwt_steer] udpate package.xml in rwt_steer (`#98 <https://github.com/tork-a/visualization_rwt/issues/98>`_)

@@ -2,6 +2,9 @@
 Changelog for package rwt_speech_recognition
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.0.4 (2021-03-09)
 ------------------
 * Add settings for ROS connection (`#76 <https://github.com/tork-a/visualization_rwt//issues/76>`_)

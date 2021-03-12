@@ -2,6 +2,9 @@
 Changelog for package rwt_nav
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.0.4 (2021-03-09)
 ------------------
 * add rwt_nav package (`#96 <https://github.com/tork-a/visualization_rwt//issues/96>`_)

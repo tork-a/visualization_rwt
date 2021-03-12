@@ -2,6 +2,9 @@
 Changelog for package visualization_rwt
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.0.4 (2021-03-09)
 ------------------
 * update README and images (`#70 <https://github.com/tork-a/visualization_rwt//issues/70>`_)

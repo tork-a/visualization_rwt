@@ -2,6 +2,9 @@
 Changelog for package rwt_robot_monitor
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.0.4 (2021-03-09)
 ------------------
 

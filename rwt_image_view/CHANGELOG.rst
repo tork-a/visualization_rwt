@@ -2,6 +2,9 @@
 Changelog for package rwt_image_view
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.0.4 (2021-03-09)
 ------------------
 * add rwt_steer package (`#97 <https://github.com/tork-a/visualization_rwt/issues/97>`_)

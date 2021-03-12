@@ -2,6 +2,19 @@
 Changelog for package rwt_app_chooser
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* add sample sccript/launch, update README.md (`#100 <https://github.com/tork-a/visualization_rwt/issues/100>`_ )
+
+  * add sample/launch/sample.launch
+  * add README.md to refer sample.launch
+  * say.py needs voice and volume, see https://github.com/ros-drivers/audio_common/pull/167
+  * use default robot-uri setting to ocalhost
+  * if /robot/name rosparam is not set, use 'robot' as default name, see https://github.com/PR2/app_manager/blob/10638eaea566f6b6708f70fe1b952078cea4b23e/scripts/app_manager#L65
+  * rwt_app_chooser: make sample directory install
+
+* Contributors: Kei Okada
+
 0.0.4 (2021-03-09)
 ------------------
 * Register app running user name in rwt_app_chooser (`#95 <https://github.com/tork-a/visualization_rwt//issues/95>`_)
