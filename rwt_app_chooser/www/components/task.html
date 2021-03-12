@@ -200,8 +200,10 @@
      name: '/robot/name'
    });
    param.get(function(n) {
-     robot_name = n;
-     console.log("robot/name: " + n);
+     if ( n != null ) {
+       robot_name = n;
+     }
+     console.log("robot/name: " + robot_name);
      next();
    });
  };
