@@ -37,93 +37,153 @@
       <!-- <div class="row"> -->
       <!--   <div id="canvas-area" class="col-md-12"></div> -->
       <!-- </div> -->
-      <div id="canvas-area"></div>
 
+
+      <div id="canvas-area"></div>
       <div style="text-align:center; font-size:300%" id="servo-state-text">Servo state is here</div>
 
-      <div style="display:inline-block; width:50%; text-align:center; font-size:200%; float:left;"  id="l-clk-text">L control state</div>
-      <div style="display:inline-block; width:50%; text-align:center; font-size:200%; float:right;" id="r-clk-text">R control state</div>
-      <div style="display:inline-block; width:50%; text-align:center; font-size:200%; float:left;"  id="l-act-text">L action state</div>
-      <div style="display:inline-block; width:50%; text-align:center; font-size:200%; float:right;" id="r-act-text">R action state</div>
+      <div id="rwt-command-buttons" style="
+               padding:10px;
+               margin-bottom:10px;
+               border: 1px solid #333333;
+               text-align:center;
+               background:url('pr2.jpg') no-repeat 0% 0%;
+               background-size: cover;
+               background-color:rgba(255,255,255,0.8);
+               background-blend-mode:lighten;">
 
-      <div id="rwt-command-buttons" style="text-align:center;">
-        <button type="button" style="width:49%;" id="l_clickteleopmode" class="btn btn-primary">Move L Hand for Click</button>
-        <button type="button" style="width:49%;" id="r_clickteleopmode" class="btn btn-primary">Move R Hand for Click</button>
-        <br>
-        Manipulation Specific Control<br>
-        <button type="button" id="l_gripper_open"  class="btn btn-primary"><i class="glyphicon glyphicon-resize-full" ></i> L Open      </button>
-        <button type="button" id="l_gripper_close" class="btn btn-primary"><i class="glyphicon glyphicon-resize-small"></i> L Close     </button>
-        <button type="button" id="l_frontmode"     class="btn btn-primary"><i class="glyphicon glyphicon-hand-up"     ></i> L Front Mode</button>
-        <button type="button" id="l_tablemode"     class="btn btn-primary"><i class="glyphicon glyphicon-hand-down"   ></i> L Table Mode</button>
-        <button type="button" id="l_push_15"       class="btn btn-primary"><i class="glyphicon glyphicon-save"        ></i> L Push      </button>
-        L / R 
-        <button type="button" id="r_gripper_open"  class="btn btn-primary"><i class="glyphicon glyphicon-resize-full" ></i> R Open      </button>
-        <button type="button" id="r_gripper_close" class="btn btn-primary"><i class="glyphicon glyphicon-resize-small"></i> R Close     </button>
-        <button type="button" id="r_frontmode"     class="btn btn-primary"><i class="glyphicon glyphicon-hand-up"     ></i> R Front Mode</button>
-        <button type="button" id="r_tablemode"     class="btn btn-primary"><i class="glyphicon glyphicon-hand-down"   ></i> R Table Mode</button>
-        <button type="button" id="r_push_15"       class="btn btn-primary"><i class="glyphicon glyphicon-save"        ></i> R Push      </button>
-        <br>
-        <div style="display:inline-block; width:90%; text-align:center; float:left;">
-          Camera View Control<br>
-          <button type="button" style="width:20%;" id="h_look_u" class="btn btn-primary">Up    </button><br>
-          <button type="button" style="width:20%;" id="h_look_l" class="btn btn-primary">Left  </button>
-          <button type="button" style="width:10%;" id="h_look_c" class="btn btn-primary">Center</button>
-          <button type="button" style="width:20%;" id="h_look_r" class="btn btn-primary">Right </button><br>
-          <button type="button" style="width:20%;" id="h_look_d" class="btn btn-primary">Down  </button>
+        <!-- for camera -->
+        <div style="display:inline-block; padding:10px; margin-bottom:10px; border:1px solid; width:33.3%; float:center;">
+          Camera View<br>
+          <button type="button" style="width:30%;" id="h_look_u" class="btn btn-primary">Up    </button><br>
+          <button type="button" style="width:30%;" id="h_look_l" class="btn btn-primary">Left  </button>
+          <button type="button" style="width:30%;" id="h_look_c" class="btn btn-primary">Center</button>
+          <button type="button" style="width:30%;" id="h_look_r" class="btn btn-primary">Right </button><br>
+          <button type="button" style="width:30%;" id="h_look_d" class="btn btn-primary">Down  </button>
         </div>
-        <div style="display:inline-block; width:10%; text-align:center; float:left;">
-          Base Height Control<br>
+        <div style="clear:both;"></div>
+        <!-- for left hand -->
+        <div style="display:inline-block; padding:10px; margin-bottom: 10px; border: 1px solid; width:33.3%; float:left;">
+          <div style="font-size:200%;" id="l-act-text">L Arm Action</div>
+          <button type="button" style="width:100%; font-size:200%;" id="l_clickteleopmode" class="btn btn-primary">Move L Hand for Click</button>
+          Gripper<br>
+          <div class="btn-group"  style="width:100%;">
+            <button type="button" style="width:50%;" id="l_gripper_open"  class="btn btn-primary"><i class="glyphicon glyphicon-resize-full" ></i> Open      </button>
+            <button type="button" style="width:50%;" id="l_gripper_close" class="btn btn-primary"><i class="glyphicon glyphicon-resize-small"></i> Close     </button>
+          </div>
+          Misc<br>
+          <button type="button" id="l_frontmode"     class="btn btn-primary"><i class="glyphicon glyphicon-hand-up"     ></i> Front Mode</button>
+          <button type="button" id="l_tablemode"     class="btn btn-primary"><i class="glyphicon glyphicon-hand-down"   ></i> Table Mode</button>
+          <button type="button" id="l_push_15"       class="btn btn-primary"><i class="glyphicon glyphicon-save"        ></i> Push      </button>
+          <div style="display:inline-block; width:50%; float:left;">
+            Jog Pos<br>
+            <button type="button"   style="width:30%;" id="l_jogpos_+x" class="btn btn-primary">+X</button><br>
+            <button type="button"   style="width:30%;" id="l_jogpos_+y" class="btn btn-primary">+Y</button>
+            <div class="btn-group"  style="width:30%;">
+              <button type="button" style="width:50%;" id="l_jogpos_+z" class="btn btn-primary">+Z</button>
+              <button type="button" style="width:50%;" id="l_jogpos_-z" class="btn btn-primary">-Z</button>
+            </div>
+            <button type="button"   style="width:30%;" id="l_jogpos_-y" class="btn btn-primary">-Y</button><br>
+            <button type="button"   style="width:30%;" id="l_jogpos_-x" class="btn btn-primary">-X</button>
+          </div>
+          <div style="display:inline-block; width:50%; float:left;">
+            Jog Rot<br>
+            <button type="button"   style="width:30%;" id="l_jogrot_+y" class="btn btn-primary">+Y</button><br>
+            <button type="button"   style="width:30%;" id="l_jogrot_-x" class="btn btn-primary">-X</button>
+            <div class="btn-group"  style="width:30%;">
+              <button type="button" style="width:50%;" id="l_jogrot_+z" class="btn btn-primary">+Z</button>
+              <button type="button" style="width:50%;" id="l_jogrot_-z" class="btn btn-primary">-Z</button>
+            </div>
+            <button type="button"   style="width:30%;" id="l_jogrot_+x" class="btn btn-primary">+X</button><br>
+            <button type="button"   style="width:30%;" id="l_jogrot_-y" class="btn btn-primary">-Y</button>
+          </div>
+        </div>
+        <!-- for dual hand -->
+        <div style="display:inline-block; padding:10px; margin-bottom: 10px; border: 1px solid; width:33.3%; float:left;">
+          <div style="font-size:200%;" id="d-act-text">Dual Arm Action</div>
+          <button type="button" style="width:100%; font-size:200%;" id="d_clickteleopmode" class="btn btn-primary">Move Both Hand for Click</button>
+          Gripper<br>
+          <div class="btn-group"  style="width:100%;">
+            <button type="button" style="width:50%;" id="d_gripper_open"  class="btn btn-primary"><i class="glyphicon glyphicon-resize-full" ></i> Open      </button>
+            <button type="button" style="width:50%;" id="d_gripper_close" class="btn btn-primary"><i class="glyphicon glyphicon-resize-small"></i> Close     </button>
+          </div>
+          Misc<br>
+          <button type="button" id="d_frontmode"     class="btn btn-primary"><i class="glyphicon glyphicon-hand-up"     ></i> Front Mode</button>
+          <button type="button" id="d_tablemode"     class="btn btn-primary"><i class="glyphicon glyphicon-hand-down"   ></i> Table Mode</button>
+          <button type="button" id="d_push_15"       class="btn btn-primary"><i class="glyphicon glyphicon-save"        ></i> Push      </button>
+          <div style="display:inline-block; width:50%; float:left;">
+            Jog Pos<br>
+            <button type="button"   style="width:30%;" id="d_jogpos_+x" class="btn btn-primary">+X</button><br>
+            <button type="button"   style="width:30%;" id="d_jogpos_+y" class="btn btn-primary">+Y</button>
+            <div class="btn-group"  style="width:30%;">
+              <button type="button" style="width:50%;" id="d_jogpos_+z" class="btn btn-primary">+Z</button>
+              <button type="button" style="width:50%;" id="d_jogpos_-z" class="btn btn-primary">-Z</button>
+            </div>
+            <button type="button"   style="width:30%;" id="d_jogpos_-y" class="btn btn-primary">-Y</button><br>
+            <button type="button"   style="width:30%;" id="d_jogpos_-x" class="btn btn-primary">-X</button>
+          </div>
+          <div style="display:inline-block; width:50%; float:left;">
+            Jog Rot<br>
+            <button type="button"   style="width:30%;" id="d_jogrot_+y" class="btn btn-primary">+Y</button><br>
+            <button type="button"   style="width:30%;" id="d_jogrot_-x" class="btn btn-primary">-X</button>
+            <div class="btn-group"  style="width:30%;">
+              <button type="button" style="width:50%;" id="d_jogrot_+z" class="btn btn-primary">+Z</button>
+              <button type="button" style="width:50%;" id="d_jogrot_-z" class="btn btn-primary">-Z</button>
+            </div>
+            <button type="button"   style="width:30%;" id="d_jogrot_+x" class="btn btn-primary">+X</button><br>
+            <button type="button"   style="width:30%;" id="d_jogrot_-y" class="btn btn-primary">-Y</button>
+          </div>
+        </div>
+        <!-- for right hand -->
+        <div style="display:inline-block; padding:10px; margin-bottom: 10px; border: 1px solid; width:33.3%; float:left;">
+          <div style="font-size:200%;" id="r-act-text">R Arm action</div>
+          <button type="button" style="width:100%; font-size:200%;" id="r_clickteleopmode" class="btn btn-primary">Move R Hand for Click</button>
+          Gripper<br>
+          <div class="btn-group"  style="width:100%;">
+            <button type="button" style="width:50%;" id="r_gripper_open"  class="btn btn-primary"><i class="glyphicon glyphicon-resize-full" ></i> Open      </button>
+            <button type="button" style="width:50%;" id="r_gripper_close" class="btn btn-primary"><i class="glyphicon glyphicon-resize-small"></i> Close     </button>
+          </div>
+          Misc<br>
+          <button type="button" id="r_frontmode"     class="btn btn-primary"><i class="glyphicon glyphicon-hand-up"     ></i> Front Mode</button>
+          <button type="button" id="r_tablemode"     class="btn btn-primary"><i class="glyphicon glyphicon-hand-down"   ></i> Table Mode</button>
+          <button type="button" id="r_push_15"       class="btn btn-primary"><i class="glyphicon glyphicon-save"        ></i> Push      </button>
+          <div style="display:inline-block; width:50%; float:left;">
+            Jog Pos<br>
+            <button type="button"   style="width:30%;" id="r_jogpos_+x" class="btn btn-primary">+X</button><br>
+            <button type="button"   style="width:30%;" id="r_jogpos_+y" class="btn btn-primary">+Y</button>
+            <div class="btn-group"  style="width:30%;">
+              <button type="button" style="width:50%;" id="r_jogpos_+z" class="btn btn-primary">+Z</button>
+              <button type="button" style="width:50%;" id="r_jogpos_-z" class="btn btn-primary">-Z</button>
+            </div>
+            <button type="button"   style="width:30%;" id="r_jogpos_-y" class="btn btn-primary">-Y</button><br>
+            <button type="button"   style="width:30%;" id="r_jogpos_-x" class="btn btn-primary">-X</button>
+          </div>
+          <div style="display:inline-block; width:50%; float:left;">
+            Jog Rot<br>
+            <button type="button"   style="width:30%;" id="r_jogrot_+y" class="btn btn-primary">+Y</button><br>
+            <button type="button"   style="width:30%;" id="r_jogrot_-x" class="btn btn-primary">-X</button>
+            <div class="btn-group"  style="width:30%;">
+              <button type="button" style="width:50%;" id="r_jogrot_+z" class="btn btn-primary">+Z</button>
+              <button type="button" style="width:50%;" id="r_jogrot_-z" class="btn btn-primary">-Z</button>
+            </div>
+            <button type="button"   style="width:30%;" id="r_jogrot_+x" class="btn btn-primary">+X</button><br>
+            <button type="button"   style="width:30%;" id="r_jogrot_-y" class="btn btn-primary">-Y</button>
+          </div>
+        </div>
+        <div style="clear:both;"></div>
+        <!-- for base -->
+        <div style="display:inline-block; padding:10px; margin-bottom: 10px; border: 1px solid #333333; width:33.3%; float:center;">
+          Base Height<br>
           <button type="button" style="width:100%;" id="b_basepos_+z" class="btn btn-primary">Up    </button><br>
           <button type="button" style="width:100%;" id="b_basepos_-z" class="btn btn-primary">Down  </button>
         </div>
-        <div style="display:inline-block; width:25%; text-align:center; float:left;">
-          Left Arm Jog Rot<br>
-          <button type="button"   style="width:30%;" id="l_jogrot_+y" class="btn btn-primary">+Y</button><br>
-          <button type="button"   style="width:30%;" id="l_jogrot_-x" class="btn btn-primary">-X</button>
-          <div class="btn-group"  style="width:30%;">
-            <button type="button" style="width:50%;" id="l_jogrot_+z" class="btn btn-primary">+Z</button>
-            <button type="button" style="width:50%;" id="l_jogrot_-z" class="btn btn-primary">-Z</button>
-          </div>
-          <button type="button"   style="width:30%;" id="l_jogrot_+x" class="btn btn-primary">+X</button><br>
-          <button type="button"   style="width:30%;" id="l_jogrot_-y" class="btn btn-primary">-Y</button>
-        </div>
-        <div style="display:inline-block; width:25%; text-align:center; float:left;">
-          Left Arm Jog Pos<br>
-          <button type="button"   style="width:30%;" id="l_jogpos_+x" class="btn btn-primary">+X</button><br>
-          <button type="button"   style="width:30%;" id="l_jogpos_+y" class="btn btn-primary">+Y</button>
-          <div class="btn-group"  style="width:30%;">
-            <button type="button" style="width:50%;" id="l_jogpos_+z" class="btn btn-primary">+Z</button>
-            <button type="button" style="width:50%;" id="l_jogpos_-z" class="btn btn-primary">-Z</button>
-          </div>
-          <button type="button"   style="width:30%;" id="l_jogpos_-y" class="btn btn-primary">-Y</button><br>
-          <button type="button"   style="width:30%;" id="l_jogpos_-x" class="btn btn-primary">-X</button>
-        </div>
-        <div style="display:inline-block; width:25%; text-align:center; float:left">
-          Right Arm Jog Pos<br>
-          <button type="button"   style="width:30%;" id="r_jogpos_+x" class="btn btn-primary">+X</button><br>
-          <button type="button"   style="width:30%;" id="r_jogpos_+y" class="btn btn-primary">+Y</button>
-          <div class="btn-group"  style="width:30%;">
-            <button type="button" style="width:50%;" id="r_jogpos_+z" class="btn btn-primary">+Z</button>
-            <button type="button" style="width:50%;" id="r_jogpos_-z" class="btn btn-primary">-Z</button>
-          </div>
-          <button type="button"   style="width:30%;" id="r_jogpos_-y" class="btn btn-primary">-Y</button><br>
-          <button type="button"   style="width:30%;" id="r_jogpos_-x" class="btn btn-primary">-X</button>
-        </div>
-        <div style="display:inline-block; width:25%; text-align:center; float:left;">
-          Right Arm Jog Rot<br>
-          <button type="button"   style="width:30%;" id="r_jogrot_+y" class="btn btn-primary">+Y</button><br>
-          <button type="button"   style="width:30%;" id="r_jogrot_-x" class="btn btn-primary">-X</button>
-          <div class="btn-group"  style="width:30%;">
-            <button type="button" style="width:50%;" id="r_jogrot_+z" class="btn btn-primary">+Z</button>
-            <button type="button" style="width:50%;" id="r_jogrot_-z" class="btn btn-primary">-Z</button>
-          </div>
-          <button type="button"   style="width:30%;" id="r_jogrot_+x" class="btn btn-primary">+X</button><br>
-          <button type="button"   style="width:30%;" id="r_jogrot_-y" class="btn btn-primary">-Y</button>
-        </div>
+        <div style="clear:both;"></div>
       </div>
 
-      <div id="debug-text-area1">text1</div>
-      <div id="debug-text-area2">text2</div>
+    </div>
+
+    <div id="debug-text-area1">text1</div>
+    <div id="debug-text-area2">text2</div>
       <div id="debug-text-area3">text3</div>
       <div id="debug-text-area5">text5</div>
       <div id="connecting-user-info">connecting-user-info-default-text</div>
@@ -131,11 +191,8 @@
       <div id="net-rx-info">net-rx-info-default-text</div>
       <div id="net-delay-info">net-delay-info-default-text</div>
       <h1><div id="debug-text-area6">Your Mic is OFF</div></h1>
-
-
     </div>
 
-    
     <script type="text/javascript" src="/rwt_utils_3rdparty/jquery/jquery.min.js"></script>
     <script type="text/javascript" src="/rwt_image_view/3rdparty/ros/js/eventemitter2.js"></script>
     <script type="text/javascript" src="/rwt_image_view/3rdparty/ros/js/roslib.js"></script>
@@ -144,7 +201,6 @@
     <script type="text/javascript" src="/rwt_utils_3rdparty/mjpegcanvasjs/build/mjpegcanvas.min.js"></script>
     <script type="text/javascript" src="/rwt_utils_3rdparty/rwt_utils.js"></script>
     <script type="text/javascript" src="/rwt_image_view/js/rwt_image_view_main.js"></script>
-
 
     <!-- <iframe class="embed-responsive-item" style="width:100%;height:500px" src="../rwt_speech_recognition/index.html" ></iframe> -->
     <!-- <iframe class="embed-responsive-item" style="width:100%;height:500px" src="http://pr1040s.jsk.imi.i.u-tokyo.ac.jp:8000/rwt_image_view/?id=safgesfd" ></iframe> -->

@@ -72,24 +72,26 @@ $(function() {
     name : '/rwt_current_state',
     messageType : 'std_msgs/String'
   }).subscribe(message => {
-
     msg_part = message.data.split("_");
-    lr = msg_part[0]
-    isL = (lr == "l");
-
-    switch (msg_part[1]) {
+    tgt = msg_part[0];
+    cmd = msg_part[1];
+    switch (cmd) {
       case "forclick":
-        l_txt_area = document.getElementById("l-clk-text");
-        l_txt_area.innerText             = (isL  ? "L Arm Click Enable" : "L Arm Click Disable");
-        l_txt_area.style.backgroundColor = (isL  ? "green" : "gray");
-        l_txt_area.style.color           = (isL  ? "white" : "red");
-        r_txt_area = document.getElementById("r-clk-text");
-        r_txt_area.innerText             = (!isL ? "R Arm Click Enable" : "R Arm Click Disable");
-        r_txt_area.style.backgroundColor = (!isL ? "green" : "gray");
-        r_txt_area.style.color           = (!isL ? "white" : "red");
+        d_txt_area = document.getElementById("d_clickteleopmode");
+        d_txt_area.innerText             = (tgt == "d" ? "Dual Arm Click Enable" : "Dual Arm Click Disable");
+        d_txt_area.style.backgroundColor = (tgt == "d" ? "green" : "gray");
+        d_txt_area.style.color           = (tgt == "d" ? "white" : "red");
+        l_txt_area = document.getElementById("l_clickteleopmode");
+        l_txt_area.innerText             = (tgt == "l" ? "L Arm Click Enable" : "L Arm Click Disable");
+        l_txt_area.style.backgroundColor = (tgt == "l" ? "green" : "gray");
+        l_txt_area.style.color           = (tgt == "l" ? "white" : "red");
+        r_txt_area = document.getElementById("r_clickteleopmode");
+        r_txt_area.innerText             = (tgt == "r" ? "R Arm Click Enable" : "R Arm Click Disable");
+        r_txt_area.style.backgroundColor = (tgt == "r" ? "green" : "gray");
+        r_txt_area.style.color           = (tgt == "r" ? "white" : "red");
         break;
       case "push":
-        txt_area = document.getElementById(lr+"-act-text");
+        txt_area = document.getElementById(tgt+"-act-text");
         switch (msg_part[2]) {
           case "ok":
             txt_area.innerText             = "Push Completed!";
