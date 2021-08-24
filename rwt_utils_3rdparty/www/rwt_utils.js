@@ -1,4 +1,4 @@
-ROSLIB.Ros.prototype.install_config_button = function(id, auto_connect, port=8888) {
+ROSLIB.Ros.prototype.install_config_button = function(id, auto_connect, port=9090) {
   var auto_connect = typeof auto_connect !== 'undefined' ? auto_connect : true;
   var that = this;
   var parent = document.getElementById(id);
