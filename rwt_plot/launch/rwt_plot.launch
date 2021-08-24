@@ -1,11 +1,16 @@
 <launch>
   <arg name="launch_roswww" default="true" />
+  <arg name="launch_websocket" default="true" />
+  <arg name="roswww_port" default="8000" />
+  <arg name="websocket_port" default="9090" />
+
   <group if="$(arg launch_roswww)">
     <include file="$(find roswww)/launch/roswww.launch">
-      <arg name="port" value="8000" />
+      <arg name="port" value="$(arg roswww_port)" />
     </include>
   </group>
-  <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch">
-    <arg name="port" value="8888" />
+  <include file="$(find rosbridge_server)/launch/rosbridge_websocket.launch"
+           if="$(arg launch_websocket)">
+    <arg name="port" value="$(arg websocket_port)" />
   </include>
 </launch>
