@@ -35,7 +35,7 @@ $(function() {
     ros.getTopicsForType('sensor_msgs/Image', function(image_topics) {
       image_topics.sort();
       _.map(image_topics, function(topic) {
-        default_option = "/kinect_head/rgb/image_rect_color";
+        default_option = "/operator_view";
         $("#topic-select").append('<option value="' + topic + (topic == default_option ? '" selected>' : '">') + topic + "</option>");
       });
     });
