@@ -2,7 +2,7 @@ $(function() {
 
   /* ROS */
   var ros = new ROSLIB.Ros();
-  ros.install_config_button("config-button");
+  ros.install_config_button("config-button", true, 9090);
 
   var pub_speech = null;
   var publish = function(msg) {
