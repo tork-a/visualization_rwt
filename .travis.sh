@@ -24,6 +24,14 @@ function travis_time_end {
 
 travis_time_start setup_apt_sources
 
+if [[ "$ROS_DISTRO" =~ "indigo"|"jade" ]]; then
+    sudo apt-get install -q -y software-properties-common curl python
+    sudo add-apt-repository -y ppa:longsleep/python2.7-backports
+    sudo apt-get update
+    sudo apt-get dist-upgrade -y
+    curl https://bootstrap.pypa.io/pip/2.7/get-pip.py | sudo -E python
+fi
+
 apt-get update -qq && apt-get install -y -q wget sudo lsb-release gnupg # for docker
 DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata # https://stackoverflow.com/questions/44331836/apt-get-install-tzdata-noninteractive
 
