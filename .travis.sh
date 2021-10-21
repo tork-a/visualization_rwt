@@ -82,3 +82,10 @@ catkin build
 source devel/setup.bash
 
 travis_time_end
+
+travis_time_start catkin_test
+
+catkin run_tests
+catkin_test_results --verbose --all build
+
+travis_time_end
