@@ -1,0 +1,11 @@
+<launch>
+  <arg name="port" default="8000"/> <!-- avoid to use apache default port -->
+
+  <include file="$(find rwt_speech_recognition)/launch/rwt_speech_recognition.launch">
+  </include>
+  <param name='url_roswww_testserver' value='http://localhost:$(arg port)' />
+
+  <test type="test_rwt_speech_recognition.py" pkg="rwt_speech_recognition" test-name="test_rwt_speech_recognition"
+        time-limit="100" args="" />
+
+</launch>
