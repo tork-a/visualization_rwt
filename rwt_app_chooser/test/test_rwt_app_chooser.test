@@ -1,0 +1,11 @@
+<launch>
+  <arg name="port" default="8000"/> <!-- avoid to use apache default port -->
+
+  <include file="$(find rwt_app_chooser)/sample/launch/sample.launch">
+  </include>
+  <param name='url_roswww_testserver' value='http://localhost:$(arg port)' />
+
+  <test type="test_rwt_app_chooser.py" pkg="rwt_app_chooser" test-name="test_rwt_app_chooser"
+        time-limit="100" retry="3" args="" />
+
+</launch>
