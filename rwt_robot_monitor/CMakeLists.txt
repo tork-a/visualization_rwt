@@ -28,3 +28,14 @@ install(DIRECTORY www/
 install(DIRECTORY doc/
   DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/www/doc
 )
+
+if(CATKIN_ENABLE_TESTING)
+  find_package(catkin REQUIRED COMPONENTS roslaunch rostest)
+
+  file(GLOB LAUNCH_FILES launch/*.launch)
+  foreach(LAUNCH_FILE ${LAUNCH_FILES})
+    roslaunch_add_file_check(${LAUNCH_FILE})
+  endforeach()
+
+  add_rostest(test/test_rwt_robot_monitor.test)
+endif()

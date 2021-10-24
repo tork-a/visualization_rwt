@@ -2,24 +2,9 @@ cmake_minimum_required(VERSION 2.8.3)
 project(rwt_moveit)
 
 find_package(catkin REQUIRED COMPONENTS
-  interactive_marker_proxy
-  kdl_parser
-  moveit_msgs
-  robot_state_publisher
-  rosbridge_server
-  rospy
-  roswww
-  rwt_utils_3rdparty
-  sensor_msgs
   std_msgs
-  tf
-  tf2_web_republisher
-  visualization_msgs
   message_generation
 )
-
-# Workaround for this issue http://answers.ros.org/question/107346/could-not-find-a-configuration-file-for-package/
-find_package(orocos_kdl REQUIRED)
 
 add_message_files(
   FILES
@@ -32,7 +17,7 @@ generate_messages(
 )
 
 catkin_package(
-  CATKIN_DEPENDS interactive_marker_proxy kdl_parser moveit_msgs robot_state_publisher rosbridge_server rospy roswww rwt_utils_3rdparty sensor_msgs std_msgs tf tf2_web_republisher visualization_msgs message_runtime
+  CATKIN_DEPENDS std_msgs message_runtime
 )
 
 include_directories(
