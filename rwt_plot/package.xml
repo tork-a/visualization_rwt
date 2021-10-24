@@ -26,5 +26,7 @@
   <run_depend>rwt_utils_3rdparty</run_depend>
   <run_depend>roswww</run_depend>
 
+  <test_depend>rostest</test_depend>
+
   <export></export>
 </package>
