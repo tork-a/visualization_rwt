@@ -1,0 +1,16 @@
+<launch>
+  <arg name="port" default="8000"/> <!-- avoid to use apache default port -->
+
+  <node pkg="image_publisher" type="image_publisher" name="image_publisher"
+        args="$(find rviz)/images/splash.png" />
+  <node name="map_server" pkg="map_server" type="map_server"
+  	args="$(find rwt_nav)/test/maps/map.yaml" />
+
+  <include file="$(find rwt_nav)/launch/rwt_nav.launch">
+  </include>
+  <param name='url_roswww_testserver' value='http://localhost:$(arg port)' />
+
+  <test type="test_rwt_nav.py" pkg="rwt_nav" test-name="test_rwt_nav"
+        time-limit="100" args="" />
+
+</launch>
