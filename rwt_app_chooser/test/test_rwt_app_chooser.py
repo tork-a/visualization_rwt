@@ -139,12 +139,20 @@ class TestRwtAppChooser(unittest.TestCase):
 
         # Select Task
         self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "span[class='Title']")))
-        task_text = self.browser.find_element_by_css_selector("span[class='Title']")
+        task_texts = self.browser.find_elements_by_css_selector("span[class='Title']")
+        while len(task_texts) != 5:
+            task_texts = self.browser.find_elements_by_css_selector("span[class='Title']")
+            time.sleep(1)
+        task_text = task_texts[-1]
         self.assertIsNotNone(task_text, "Object span[class='Title']")
-        self.assertTrue(u'Hello World' in task_text.text)
+        self.assertTrue(u'Hello World' in task_text.text, "Hello World is not found in {}".format(task_text))
 
         self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "div[class='column large-1 tablet-3 phone-6']")))
-        task_image = self.browser.find_element_by_css_selector("div[class='column large-1 tablet-3 phone-6']")
+        task_images = self.browser.find_elements_by_css_selector("div[class='column large-1 tablet-3 phone-6']")
+        while len(task_images) != 5:
+            task_images = self.browser.find_elements_by_css_selector("div[class='column large-1 tablet-3 phone-6']")
+            time.sleep(1)
+        task_image = task_images[-1]
         self.assertIsNotNone(task_image, "Object div[class='column large-1 tablet-3 phone-6']")
         task_image.click()
         rospy.logwarn("Selected {} task".format(task_text.text))
