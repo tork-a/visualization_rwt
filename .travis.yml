@@ -2,7 +2,7 @@ env:
   global:
     - PUBLISHED_DIR=public
   matrix:
-    - ROS_DISTRO=indigo  DOCKER_IMAGE=ubuntu:trusty
+    # - ROS_DISTRO=indigo  DOCKER_IMAGE=ubuntu:trusty
     - ROS_DISTRO=kinetic DOCKER_IMAGE=ubuntu:xenial
     - ROS_DISTRO=melodic DOCKER_IMAGE=ubuntu:bionic
 sudo: required

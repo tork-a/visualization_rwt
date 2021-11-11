@@ -20,6 +20,9 @@
   <run_depend>rwt_utils_3rdparty</run_depend>
   <run_depend>speech_recognition_msgs</run_depend>
 
+  <test_depend>roslaunch</test_depend>
+  <test_depend>rostest</test_depend>
+
   <!-- The export tag contains other, unspecified, tags -->
   <export>
     <!-- You can specify that this package is a metapackage here: -->

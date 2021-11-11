@@ -45,6 +45,9 @@ travis_time_start install_ros
 sudo apt-get install -qq -y python-catkin-pkg python-catkin-tools python-pip python-rosdep python-wstool
 sudo apt-get install -qq -y ros-$ROS_DISTRO-ros ros-$ROS_DISTRO-catkin ros-$ROS_DISTRO-common-tutorials ros-$ROS_DISTRO-rospy-tutorials ros-$ROS_DISTRO-actionlib-tutorials
 sudo apt-get install -qq -y ros-$ROS_DISTRO-rosbridge-server ros-$ROS_DISTRO-tf2-web-republisher
+
+sudo apt-get install -qq -y firefox-geckodriver
+
 source /opt/ros/$ROS_DISTRO/setup.bash
 
 travis_time_end
@@ -80,5 +83,12 @@ travis_time_start catkin_build
 
 catkin build
 source devel/setup.bash
+
+travis_time_end
+
+travis_time_start catkin_test
+
+catkin run_tests -p1
+catkin_test_results --verbose --all build
 
 travis_time_end

@@ -1,0 +1,21 @@
+<launch>
+  <arg name="port" default="8000"/> <!-- avoid to use apache default port -->
+
+  <!-- copied from diagnostic_aggregator/test/launch/test_agg.launch -->
+  <node pkg="diagnostic_aggregator" type="aggregator_node"
+	name="diag_agg" output="screen" >
+    <rosparam command="load" 
+              file="$(find rwt_robot_monitor)/test/aggregator/simple_analyzers.yaml" />
+  </node>
+
+  <node pkg="rwt_robot_monitor" type="diag_pub.py"
+       	name="diag_pub" />
+
+  <include file="$(find rwt_robot_monitor)/launch/example.launch">
+  </include>
+  <param name='url_roswww_testserver' value='http://localhost:$(arg port)' />
+
+  <test type="test_rwt_robot_monitor.py" pkg="rwt_robot_monitor" test-name="test_rwt_robot_monitor"
+        time-limit="100" args="" />
+
+</launch>

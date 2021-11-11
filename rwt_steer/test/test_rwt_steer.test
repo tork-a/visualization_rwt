@@ -1,0 +1,14 @@
+<launch>
+  <arg name="port" default="8000"/> <!-- avoid to use apache default port -->
+
+  <node pkg="image_publisher" type="image_publisher" name="image_publisher"
+        args="$(find rviz)/images/splash.png" />
+
+  <include file="$(find rwt_steer)/launch/rwt_steer.launch">
+  </include>
+  <param name='url_roswww_testserver' value='http://localhost:$(arg port)' />
+
+  <test type="test_rwt_steer.py" pkg="rwt_steer" test-name="test_rwt_steer"
+        time-limit="100" args="" />
+
+</launch>

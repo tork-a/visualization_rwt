@@ -25,7 +25,12 @@
   <run_depend>rwt_utils_3rdparty</run_depend>
   <run_depend>std_srvs</run_depend>
   <run_depend>roswww</run_depend>
+  <run_depend>rosbridge_server</run_depend>
   <run_depend>message_runtime</run_depend>
+
+  <test_depend>rostest</test_depend>
+  <test_depend>image_publisher</test_depend>
+  <test_depend>rviz</test_depend>
 
   <export>
   </export>

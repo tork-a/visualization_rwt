@@ -13,6 +13,6 @@
     <arg name="port" value="9090" />
   </include>
 
-  <node name="robot_pose_publisher" pkg="robot_pose_publisher" type="robot_pose_publisher" />
+  <node name="robot_pose_publisher" pkg="rwt_nav" type="robot_pose_publisher" />
 
 </launch>
