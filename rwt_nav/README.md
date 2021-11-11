@@ -13,7 +13,7 @@ for example : `http://localhost:8000/rwt_nav/`
 To view live location of robot :
 
 ```bash
-rosrun robot_pose_publisher robot_pose_publisher
+rosrun rwt_nav robot_pose_publisher
 ```
 
 - Current position of the robot is shown by yellow arrow.
