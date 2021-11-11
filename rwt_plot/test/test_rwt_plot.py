@@ -105,7 +105,7 @@ class TestRwtPlot(unittest.TestCase):
         uri = self.browser.find_element_by_id("input-ros-master-uri")
         self.assertIsNotNone(uri, "Object id=input-ros-master-uri not found")
         uri.clear();
-        uri.send_keys('ws://localhost:8888/')
+        uri.send_keys('ws://localhost:9090/')
 
         self.wait.until(EC.presence_of_element_located((By.ID, "button-ros-master-connect")))
         connect = self.browser.find_element_by_id("button-ros-master-connect")
