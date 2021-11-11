@@ -1,4 +1,7 @@
 <launch>
+  <arg name="gui" default="false"/>
+  <arg name="test_option" default="--no-headless" if="$(arg gui)" />
+  <arg name="test_option" default="" unless="$(arg gui)" />
   <arg name="port" default="8000"/> <!-- avoid to use apache default port -->
 
   <!-- copied from diagnostic_aggregator/test/launch/test_agg.launch -->
@@ -16,6 +19,6 @@
   <param name='url_roswww_testserver' value='http://localhost:$(arg port)' />
 
   <test type="test_rwt_robot_monitor.py" pkg="rwt_robot_monitor" test-name="test_rwt_robot_monitor"
-        time-limit="100" args="" />
+        time-limit="100" args="$(arg test_option)" />
 
 </launch>

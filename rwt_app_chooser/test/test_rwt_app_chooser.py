@@ -34,6 +34,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
+import argparse
 import sys
 import time
 import rospy
@@ -62,6 +63,11 @@ class TestRwtAppChooser(unittest.TestCase):
         rospy.init_node('test_rwt_app_chooser')
 
     def setUp(self):
+        parser = argparse.ArgumentParser()
+        parser.add_argument('--no-headless', action='store_true',
+                            help='start webdriver with headless mode')
+        args, unknown = parser.parse_known_args()
+
         self.robotsound_msg = None
         self.robotsound_msg_received = 0
 
@@ -69,7 +75,8 @@ class TestRwtAppChooser(unittest.TestCase):
         self.url_base = rospy.get_param("url_roswww_testserver")
 
         opts = webdriver.firefox.options.Options()
-        opts.add_argument('-headless')
+        if not args.no_headless:
+            opts.add_argument('-headless')
         self.browser = webdriver.Firefox(options=opts)
 
         self.wait = webdriver.support.ui.WebDriverWait(self.browser, 10)
