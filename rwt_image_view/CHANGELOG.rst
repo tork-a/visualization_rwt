@@ -2,6 +2,9 @@
 Changelog for package rwt_image_view
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.1.0 (2021-11-12)
 ------------------
 * rwt_robot_monitor : fix css to have better plot view (`#113 <https://github.com/tork-a/visualization_rwt/issues/113>`_)
