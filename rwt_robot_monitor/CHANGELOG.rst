@@ -2,8 +2,8 @@
 Changelog for package rwt_robot_monitor
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.1 (2021-11-12)
+------------------
 * [rwt_robot_monitor] remove roslibjs_experimental from package.xml (`#114 <https://github.com/tork-a/visualization_rwt/issues/114>`_)
 * Contributors: Kei Okada
 
