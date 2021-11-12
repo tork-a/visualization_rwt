@@ -2,8 +2,8 @@
 Changelog for package rwt_image_view
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.0 (2021-11-12)
+------------------
 * rwt_robot_monitor : fix css to have better plot view (`#113 <https://github.com/tork-a/visualization_rwt/issues/113>`_)
 * use websocket_port 9090 as defaut (`#112 <https://github.com/tork-a/visualization_rwt/issues/112>`_)
 * add test for rwt tools (`#110 <https://github.com/tork-a/visualization_rwt/issues/110>`_)

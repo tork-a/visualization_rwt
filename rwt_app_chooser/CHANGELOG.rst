@@ -2,8 +2,8 @@
 Changelog for package rwt_app_chooser
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.0 (2021-11-12)
+------------------
 * use websocket_port 9090 as defaut (`#112 <https://github.com/tork-a/visualization_rwt/issues/112>`_)
 * Fix test code  (`#112 <https://github.com/tork-a/visualization_rwt/issues/112>`_)
 
