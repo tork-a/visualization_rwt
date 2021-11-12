@@ -52,9 +52,11 @@
 }
 .rwt-diagnostics-plot-window {
   position: relative;
+  margin; 0 auto;
 }
 .rwt-diagnostics-plot-window .plot-window-inner {
-  height: 100px;
+  height: 200px;
+  width: 70%;
 }
 .rwt-diagnostics-plot-window .background {
   position: absolute;

@@ -541,8 +541,8 @@ ROSLIB.DiagnosticsPlotInfo.prototype.preparePlotWindows = function(name, plot_wi
                       +     '</div>'
                       +   '</form>'
                       + '</div>'
-                      + '<div class="windows-inner"></div>'
-                      + '</div>');
+                      + '<center><div class="windows-inner"></div>'
+                      + '</div></center>');
   $('#' + plot_windows_id).prepend(self.$root_html);
   self.$root_html.find('.remove-info-button').click(function(e) {
     e.preventDefault();
@@ -654,9 +654,9 @@ ROSLIB.DiagnosticsPlotWindow.prototype.initialize = function(spec) {
     max_data: 10,
     timestamp: true
   });
-  
+
   // creating html
-  self.$html = $('<div class="rwt-diagnostics-plot-window col-xs-2"></div>');
+  self.$html = $('<div class="rwt-diagnostics-plot-window"></div>');
   self.$html.data('index', self.index);
   self.$html.append('<div class="background"><p>' + self.directory.status.name +'</p></div>');
   self.$html.append('<div class="plot-window-inner" id="rwt-plot-window-' + self.index + '"></div>');
