@@ -81,6 +81,7 @@ ROSLIB.Ros.prototype.install_config_button = function(id, auto_connect, port=909
       that.close();
     }
     that.connect(e.value);
+    $("#button-ros-master-settings").dropdown("toggle")
   };
 
   // connect with default location
