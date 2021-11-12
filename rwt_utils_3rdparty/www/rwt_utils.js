@@ -44,7 +44,8 @@ ROSLIB.Ros.prototype.install_config_button = function(id, auto_connect, port=909
   var label = document.createElement("label");
   li.appendChild(label);
   label.setAttribute("for", "input-ros-master-uri");
-  label.textContent = "ROS Master URI";
+  label.textContent = "Rosbridge WebSocket URI";
+  label.style.fontSize = '12px'
   
   var input = document.createElement("input");
   li.appendChild(input);
