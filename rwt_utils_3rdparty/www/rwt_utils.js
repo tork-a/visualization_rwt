@@ -1,4 +1,4 @@
-ROSLIB.Ros.prototype.install_config_button = function(id, auto_connect, port=8888) {
+ROSLIB.Ros.prototype.install_config_button = function(id, auto_connect, port=9090) {
   var auto_connect = typeof auto_connect !== 'undefined' ? auto_connect : true;
   var that = this;
   var parent = document.getElementById(id);
@@ -44,7 +44,8 @@ ROSLIB.Ros.prototype.install_config_button = function(id, auto_connect, port=888
   var label = document.createElement("label");
   li.appendChild(label);
   label.setAttribute("for", "input-ros-master-uri");
-  label.textContent = "ROS Master URI";
+  label.textContent = "Rosbridge WebSocket URI";
+  label.style.fontSize = '12px'
   
   var input = document.createElement("input");
   li.appendChild(input);
@@ -80,6 +81,7 @@ ROSLIB.Ros.prototype.install_config_button = function(id, auto_connect, port=888
       that.close();
     }
     that.connect(e.value);
+    $("#button-ros-master-settings").dropdown("toggle")
   };
 
   // connect with default location

@@ -34,6 +34,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
+import argparse
 import sys
 import time
 import rospy
@@ -62,6 +63,11 @@ class TestRwtAppChooser(unittest.TestCase):
         rospy.init_node('test_rwt_app_chooser')
 
     def setUp(self):
+        parser = argparse.ArgumentParser()
+        parser.add_argument('--no-headless', action='store_true',
+                            help='start webdriver with headless mode')
+        args, unknown = parser.parse_known_args()
+
         self.robotsound_msg = None
         self.robotsound_msg_received = 0
 
@@ -69,7 +75,8 @@ class TestRwtAppChooser(unittest.TestCase):
         self.url_base = rospy.get_param("url_roswww_testserver")
 
         opts = webdriver.firefox.options.Options()
-        opts.add_argument('-headless')
+        if not args.no_headless:
+            opts.add_argument('-headless')
         self.browser = webdriver.Firefox(options=opts)
 
         self.wait = webdriver.support.ui.WebDriverWait(self.browser, 10)
@@ -124,22 +131,18 @@ class TestRwtAppChooser(unittest.TestCase):
         self.assertIsNotNone(select_robot, "Object div[class='item-content']/span[class='title']")
         self.assertTrue(u'pr1012' in select_robot.text)
         rospy.logwarn("Selected {} robot".format(select_robot.text))
-        
+
         self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "li[class='item-expanded robot-list-item']")))
         select = self.browser.find_element_by_css_selector("li[class='item-expanded robot-list-item']")
         self.assertIsNotNone(select, "Object li[class='item-expanded robot-list-item']")
         select.click()
 
         # Select Task
-        self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "span[class='Title']")))
-        task_text = self.browser.find_element_by_css_selector("span[class='Title']")
+        self.wait.until(EC.presence_of_element_located((By.XPATH, "//div/span[@class='Title' and contains(text(), 'Hello World')]")))
+        task_text = self.browser.find_element_by_xpath("//div/span[@class='Title' and contains(text(), 'Hello World')]")
         self.assertIsNotNone(task_text, "Object span[class='Title']")
-        self.assertTrue(u'Hello World' in task_text.text)
-
-        self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "div[class='column large-1 tablet-3 phone-6']")))
-        task_image = self.browser.find_element_by_css_selector("div[class='column large-1 tablet-3 phone-6']")
-        self.assertIsNotNone(task_image, "Object div[class='column large-1 tablet-3 phone-6']")
-        task_image.click()
+        self.assertTrue(u'Hello World' in task_text.text, "Hello World is not found in {}".format(task_text))
+        task_text.click()
         rospy.logwarn("Selected {} task".format(task_text.text))
 
         # input user name

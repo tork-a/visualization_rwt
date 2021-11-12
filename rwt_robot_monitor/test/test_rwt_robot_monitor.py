@@ -34,6 +34,7 @@
 # POSSIBILITY OF SUCH DAMAGE.
 #
 
+import argparse
 import sys
 import time
 import rospy
@@ -61,6 +62,11 @@ class TestRwtRobotMonitor(unittest.TestCase):
         rospy.init_node('test_rwt_robot_monitor')
 
     def setUp(self):
+        parser = argparse.ArgumentParser()
+        parser.add_argument('--no-headless', action='store_true',
+                            help='start webdriver with headless mode')
+        args, unknown = parser.parse_known_args()
+
         self.sin_msg = None
         self.sin_msg_received = 0
 
@@ -68,7 +74,8 @@ class TestRwtRobotMonitor(unittest.TestCase):
         self.url_base = rospy.get_param("url_roswww_testserver")
 
         opts = webdriver.firefox.options.Options()
-        opts.add_argument('-headless')
+        if not args.no_headless:
+            opts.add_argument('-headless')
         self.browser = webdriver.Firefox(options=opts)
 
         self.wait = webdriver.support.ui.WebDriverWait(self.browser, 10)
@@ -92,7 +99,7 @@ class TestRwtRobotMonitor(unittest.TestCase):
         uri = self.browser.find_element_by_id("input-ros-master-uri")
         self.assertIsNotNone(uri, "Object id=input-ros-master-uri not found")
         uri.clear();
-        uri.send_keys('ws://localhost:8888/')
+        uri.send_keys('ws://localhost:9090/')
 
         self.wait.until(EC.presence_of_element_located((By.ID, "button-ros-master-connect")))
         connect = self.browser.find_element_by_id("button-ros-master-connect")
