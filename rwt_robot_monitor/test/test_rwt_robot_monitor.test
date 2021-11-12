@@ -21,4 +21,7 @@
   <test type="test_rwt_robot_monitor.py" pkg="rwt_robot_monitor" test-name="test_rwt_robot_monitor"
         time-limit="100" args="$(arg test_option)" />
 
+  <test type="test_rwt_robot_monitor_plotter.py" pkg="rwt_robot_monitor" test-name="test_rwt_robot_monitor_plotter"
+        time-limit="100" args="$(arg test_option)" />
+
 </launch>

@@ -105,9 +105,9 @@ class TestRwtRobotMonitor(unittest.TestCase):
         connect = self.browser.find_element_by_id("button-ros-master-connect")
         self.assertIsNotNone(connect, "Object id=button-ros-master-connect")
         connect.click()
-        
-    def test_rwt_robot_monitor(self):
-        url = '%s/rwt_robot_monitor' % (self.url_base)
+
+    def test_rwt_robot_monitor_plotter(self):
+        url = '%s/rwt_robot_monitor/plotter.html' % (self.url_base)
         rospy.logwarn("Accessing to %s" % url)
 
         self.browser.get(url)
@@ -115,36 +115,53 @@ class TestRwtRobotMonitor(unittest.TestCase):
         # check settings
         self.set_ros_websocket_port_settings()
 
-        # check error-list
-        error_text = ''
-        while error_text == '':
+        # wait for /First/pref1a topic
+        topic_text = ''
+        while topic_text == '':
             time.sleep(1)
-            self.wait.until(EC.presence_of_element_located((By.ID, "error-list")))
-            error = self.browser.find_element_by_id("error-list")
-            self.assertIsNotNone(error, "Object id=error-list not found")
-            error_text = error.text
-        rospy.logwarn('error {}'.format(error_text))
+            self.wait.until(EC.presence_of_element_located((By.ID, "name-select")))
+            topic = self.browser.find_element_by_id("name-select")
+            self.assertIsNotNone(topic, "Object id=name-select not found")
+            topic_text = topic.text
+        self.assertTrue(u'/First/pref1a' in topic_text)
+        Select(topic).select_by_value('/First/pref1a')
 
-        # check warn-list
-        warn_text = ''
-        while warn_text == '':
+        # wait for test topic
+        topic_text = ''
+        while topic_text == '':
             time.sleep(1)
-            self.wait.until(EC.presence_of_element_located((By.ID, "warn-list")))
-            warn = self.browser.find_element_by_id("warn-list")
-            self.assertIsNotNone(warn, "Object id=warn-list not found")
-            warn_text = warn.text
-        rospy.logwarn('warn {}'.format(warn_text))
+            self.wait.until(EC.presence_of_element_located((By.ID, "plot-field-select")))
+            topic = self.browser.find_element_by_id("plot-field-select")
+            self.assertIsNotNone(topic, "Object id=plot-field-select not found")
+            topic_text = topic.text
+        self.assertTrue(u'test' in topic_text)
+        Select(topic).select_by_value('test')
 
-        # check all-list
-        all_text = ''
-        while all_text == '':
+        self.wait.until(EC.presence_of_element_located((By.ID, "add-button")))
+        add = self.browser.find_element_by_id("add-button")
+        self.assertIsNotNone(add, "Object id=add-button")
+        add.click()
+
+        # check plot is updated
+        self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "g.y")))
+        y_axis = self.browser.find_element_by_css_selector("g.y")
+        self.assertIsNotNone(y_axis, "Object id=y_axis")
+        y_axis_value = y_axis.text
+        loop = 0
+        y_axis_value_updated = 0
+        while loop < 60:
+            loop = loop + 1
             time.sleep(1)
-            self.wait.until(EC.presence_of_element_located((By.ID, "all-list")))
-            all = self.browser.find_element_by_id("all-list")
-            self.assertIsNotNone(all, "Object id=all-list not found")
-            all_text = all.text
-        rospy.logwarn('all {}'.format(warn_text))
+            y_axis = self.browser.find_element_by_css_selector("g.y")
+            rospy.logwarn("check if tick updated {} < {} ({})".format(y_axis_value, y_axis.text, y_axis_value_updated))
+            if y_axis_value != y_axis.text:
+                y_axis_value_updated =  y_axis_value_updated + 1
+                if y_axis_value_updated >= 2:
+                    break
+            y_axis_value = y_axis.text
 
+        self.assertNotEqual(y_axis_value, y_axis.text)
+            
 
 if __name__ == '__main__':
     try:
