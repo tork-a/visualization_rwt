@@ -2,6 +2,9 @@
 Changelog for package visualization_rwt
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
 0.0.5 (2021-03-12)
 ------------------
 

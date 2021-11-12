@@ -1,4 +1,4 @@
-visualization_rwt [![Build Status](https://api.travis-ci.org/tork-a/visualization_rwt.png)](https://travis-ci.org/tork-a/visualization_rwt)
+visualization_rwt [![Build Status](https://app.travis-ci.com/tork-a/visualization_rwt.svg?branch=kinetic-devel)](https://app.travis-ci.com/tork-a/visualization_rwt)
 =================
 
 visualization packages based on RobotWebTools

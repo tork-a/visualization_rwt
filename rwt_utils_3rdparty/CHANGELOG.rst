@@ -2,6 +2,13 @@
 Changelog for package rwt_utils_3rdparty
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* use websocket_port 9090 as defaut (`#112 <https://github.com/tork-a/visualization_rwt/issues/112>`_)
+* close after pushing connect on roswebsocket setting menu (`#112 <https://github.com/tork-a/visualization_rwt/issues/112>`_)
+* change Setting label from ROS Master URI -> Rosbridge Websocket URI (`#112 <https://github.com/tork-a/visualization_rwt/issues/112>`_)
+* Contributors: Kei Okada, Shingo Kitagawa
+
 0.0.5 (2021-03-12)
 ------------------
 

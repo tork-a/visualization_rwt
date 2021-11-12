@@ -2,6 +2,19 @@
 Changelog for package rwt_app_chooser
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* use websocket_port 9090 as defaut (`#112 <https://github.com/tork-a/visualization_rwt/issues/112>`_)
+* Fix test code  (`#112 <https://github.com/tork-a/visualization_rwt/issues/112>`_)
+
+  * use xpath to get Hello World Task Icon
+  * wait until system actually reads HelloWorld task
+  * support gui argument
+
+* add test for rwt tools (`#110 <https://github.com/tork-a/visualization_rwt/issues/110>`_)
+* Pr/add spot support (`#108 <https://github.com/tork-a/visualization_rwt/issues/108>`_)
+* Contributors: Kei Okada, Koki Shinjo
+
 0.0.5 (2021-03-12)
 ------------------
 * add sample sccript/launch, update README.md (`#100 <https://github.com/tork-a/visualization_rwt/issues/100>`_ )
