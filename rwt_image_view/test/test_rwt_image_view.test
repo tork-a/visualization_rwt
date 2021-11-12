@@ -12,6 +12,6 @@
   <param name='url_roswww_testserver' value='http://localhost:$(arg port)' />
 
   <test type="test_rwt_image_view.py" pkg="rwt_image_view" test-name="test_rwt_image_view"
-        time-limit="100" args="$(arg test_option)" />
+        time-limit="100" retry="2" args="$(arg test_option)" />
 
 </launch>
