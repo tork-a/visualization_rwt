@@ -1,4 +1,4 @@
-visualization_rwt [![Build Status](https://app.travis-ci.com/tork-a/visualization_rwt.svg?branch=kinetic-devel)](https://app.travis-ci.com/tork-a/visualization_rwt)
+visualization_rwt [![Build Status](https://app.travis-ci.com/tork-a/visualization_rwt.svg?branch=kinetic-devel)](https://app.travis-ci.com/tork-a/visualization_rwt) [![CLA assistant](https://cla-assistant.io/readme/badge/tork-a/visualization_rwt)](https://cla-assistant.io/tork-a/visualization_rwt)
 =================
 
 visualization packages based on RobotWebTools
