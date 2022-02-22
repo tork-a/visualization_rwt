@@ -108,7 +108,7 @@ NAV2D.Navigator = function(options) {
       goalMessage : {
         target_pose : {
           header : {
-            frame_id : '/map'
+            frame_id : 'map'
           },
           pose : pose
         }
