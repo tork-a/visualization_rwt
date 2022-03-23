@@ -5,6 +5,10 @@ env:
     # - ROS_DISTRO=indigo  DOCKER_IMAGE=ubuntu:trusty
     - ROS_DISTRO=kinetic DOCKER_IMAGE=ubuntu:xenial
     - ROS_DISTRO=melodic DOCKER_IMAGE=ubuntu:bionic
+# due to https://github.blog/2021-09-01-improving-git-protocol-security-github/
+# we need to use https:// instead of git//
+git:
+  submodules: false
 sudo: required
 language: node_js
 services:
@@ -18,6 +22,11 @@ matrix:
 #  allow_failures:
 #    - env: ROS_DISTRO=melodic DOCKER_IMAGE=ubuntu:bionic
 before_script:
+# due to https://github.blog/2021-09-01-improving-git-protocol-security-github/
+# we need to use https:// instead of git//
+  - i=1; while [ $i -le 3 ]; do find . -iname .gitmodules -exec ls -al {} \; -exec  cat {} \; -exec sed -i s@git://github@https://github@ {} \; -exec sh -c 'cd $(dirname "$1"); git submodule sync;' sh {} \; -exec cat {} \; ; git submodule update --init --recursive || echo "OK"; i=`expr $i + 1`; done;
+  - git submodule update --init --recursive
+#
   - export CI_SOURCE_PATH=$(pwd)
   - export REPOSITORY_NAME=${PWD##*/}
   - echo "Testing branch $TRAVIS_BRANCH of $REPOSITORY_NAME from $CI_SOURCE_PATH"
