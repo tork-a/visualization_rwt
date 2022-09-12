@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="../rwt_utils_3rdparty/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="css/rwt_steer.css">
+    <title>rwt_steer</title>
+</head>
+  <body>
+    <div class="container">
+      <h1><span class="glyphicon glyphicon-star"></span>rwt_steer <small>robotwebtools steer</small> <span id="config-button"></span></h1>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-6">
+        <div id="Head">Joystick</div>
+        <form id="joy-topic-form" role="form" class="form-inline">
+          <div class="form-group">
+            <label class="sr-only" for="joy-topic-select">joy-topic</label>
+            <select id="joy-topic-select" class="form-control"></select>
+          </div>
+          <button type="submit" id="joy-topic-button" class="btn btn-primary">select</button>
+        </form>
+        <div id = "linvel">
+          <div id="display">Current linear velocity (m/s)  : <span id="lindisp">0.5</span></div>
+          <button id="bl1"> + 0.1 </button>
+          <button id="bl2"> - 0.1 </button>
+        </div>
+        <div id = "angvel">
+          <div id="display">Current angular velocity (rad/s) : <span id="angdisp">1.0</span></div>
+          <button id="ba1"> + 0.1 </button>
+          <button id="ba2"> - 0.1 </button>
+        </div>
+        <div id="joystick"></div>
+      </div>
+      <div id="topic-area">
+        <div id="Head">Camera Feed</div>
+        <form id="image-topic-form" role="form" class="form-inline">
+          <div class="form-group">
+            <label class="sr-only" for="image-topic-select">image-topic</label>
+            <select id="image-topic-select" class="form-control"></select>
+          </div>
+          <button type="submit" id="image-topic-button" class="btn btn-primary">view</button>
+        </form>
+        <div id="canvas-area" class="col-lg-6"></div>
+      </div>
+    </div>
+
+    <script type="text/javascript" src="3rdparty/ros/js/roslib.js"></script>
+    <script type="text/javascript" src="3rdparty/ros/js/eventemitter2.js"></script>
+    <script type="text/javascript" src="3rdparty/ros/js/nipplejs.js"></script>
+    <script type="text/javascript" src="../rwt_utils_3rdparty/lodash.min.js"></script>
+    <script type="text/javascript" src="../rwt_utils_3rdparty/jquery.min.js"></script>
+    <script type="text/javascript" src="../rwt_utils_3rdparty/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="../rwt_utils_3rdparty/mjpegcanvasjs/build/mjpegcanvas.min.js"></script>
+    <script type="text/javascript" src="../rwt_utils_3rdparty/rwt_utils.js"></script>
+    <script type="text/javascript" src="js/rwt_steer.js"></script>
+  </body>
+</html>

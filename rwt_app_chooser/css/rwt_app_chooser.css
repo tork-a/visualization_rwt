@@ -1,0 +1,30 @@
+body, html {
+    height: 100%;
+}
+home {
+    height: 100%;
+}
+.button-parent {
+    padding: 10px;
+}
+footer {
+    position: fixed;
+    bottom: 0;
+    height: auto;
+    width: 100%;
+}
+.list li img {
+    height: 100%;
+}
+.row div.column {
+    padding: 2%;
+}
+.row div.column.running {
+    padding: 2%;
+    border-radius: 10px;
+    border: 3px solid #73AD21;
+}
+.row .column img {
+    max-width: 70%;
+    height: auto;
+}

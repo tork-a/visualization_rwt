@@ -1,0 +1,13 @@
+svg.rwt-plot {
+  font: 10px sans-serif;
+}
+svg.rwt-plot .line {
+  fill: none;
+  stroke-width: 1.5px;
+}
+svg.rwt-plot .axis path,
+svg.rwt-plot .axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}

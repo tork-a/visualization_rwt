@@ -1,0 +1,82 @@
+<add_robot class="app-page">
+  <header class="header-bar">
+    <button class="btn icon icon-arrow-back pull-left" data-navigation="$previous-page"></button>
+    <div class="center">
+      <h1 class="title">Add Robot</h1>
+    </div>
+  </header>
+  <div class="content">
+    <div class="padded-full">
+      <form>
+        <div class="input-wrapper">
+          <label class="with-label" for="robot-type">Robot type (e.g. PR2)</label>
+          <select name="robot-type" id="robot-type" focused>
+            <option value="pr2">PR2</option>
+            <option value="fetch">Fetch</option>
+            <option value="baxter">Baxter</option>
+            <option value="turtlebot">Turtlebot</option>
+            <option value="pepper">Pepper</option>
+            <option value="hrp2">HRP2</option>
+            <option value="spot">Spot</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="input-wrapper">
+          <input class="with-label" type="text" id="robot-name" pattern="[a-zA-Z0-9-_]{1,}" required>
+          <label class="floating-label" for="robot-name">Robot name (e.g. PR1012)</label>
+        </div>
+        <div class="input-wrapper">
+          <input class="with-label" type="text" id="robot-uri" pattern="^ws://[a-zA-Z0-9\-\._]+:[0-9]+/$" required>
+          <label class="floating-label" for="robot-uri">Robot URI (e.g. ws://127.0.0.0:9090/)</label>
+        </div>
+        <div class="padded-bottom"></div>
+        <button type="submit" class="btn fit-parent primary" id="add-btn" disabled>Add Robot</button>
+      </form>
+    </div>
+  </div>
+</add_robot>
+
+<script>
+ page.onCreate = function() {
+   document.querySelector("form").on("input", function(e) {
+     var btn = document.querySelector("#add-btn");
+     if (document.querySelector("form").checkValidity()) {
+       btn.setAttribute("disabled", false);
+       btn.removeAttribute("disabled");
+     } else {
+       btn.setAttribute("disabled", true);
+     }
+   });
+   document.querySelector("#add-btn").on("tap", function(e) {
+     e.preventDefault();
+     var name = document.querySelector("#robot-name").value;
+     var uri = document.querySelector("#robot-uri").value;
+     var type = document.querySelector("#robot-type").value;
+
+     // validation
+     var rs = load_robots();
+     for (var r of rs) {
+       if (r.name == name) {
+         var alert = phonon.alert("Robot " + name + " is already registered", "Error");
+         alert.on("confirm", function() {});
+         return false;
+       }
+     }
+
+     rs.push({
+       "name": name,
+       "uri": uri,
+       "type": type
+     });
+
+     var fmt = "Type: " + type + "<br>Name: " + name + "<br>Uri: " + uri;
+     var confirm = phonon.confirm(fmt, "Are you sure?", true, "OK", "No");
+
+     confirm.on("confirm", function() {
+       save_robots(rs);
+       phonon.navigator().changePage("robot", name);
+     });
+     confirm.on("cancel", function(){});
+   });
+ };
+</script>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <link rel="stylesheet" href="/rwt_utils_3rdparty/bootstrap/css/bootstrap.min.css"></link>
+    <link rel="stylesheet" type="text/css" href="/rwt_image_view/css/rwt_image_view.css"></link>
+    <title>rwt_image_view</title>
+  </head>
+  <body>
+    <div class="container">
+      <div class="page-header">
+        <h1><span class="glyphicon glyphicon-star"></span>rwt_image_view <small>robotwebtools image view</small> <span id="config-button"></span></h1>
+      </div>
+      
+      <div id="topic-area">
+        <form id="topic-form" role="form" class="form-inline">
+          <div class="form-group">
+            <label class="sr-only" for="topic-select">topic</label>
+            <select id="topic-select" class="form-control">
+            </select>
+          </div>
+          <button type="submit" class="btn btn-primary">view</button>
+          <button type="button" id="record-button" class="btn btn-success">record</button>
+	  <button type="button" id="reset-gazebo-button" class="btn btn-success">reset-gazebo</button>
+        </form>
+      </div>
+      <!-- click point goes wrong -->
+      <!-- <div class="row"> -->
+      <!--   <div id="canvas-area" class="col-md-12"></div> -->
+      <!-- </div> -->
+      <div id="canvas-area"></div>
+    </div>
+
+    <div id="debug-text-area1">mousemove (pos.x, pos.y)</div>
+    <div id="debug-text-area2">screenpoint (pos.x, pos.y)</div>
+    <div id="debug-text-area3">camera (width x height)</div>
+    
+    <!-- <script type="text/javascript" src="/rwt_utils_3rdparty/jquery/jquery.min.js"></script> -->
+    <script type="text/javascript" src="/rwt_utils_3rdparty/jquery.min.js"></script>
+    <script type="text/javascript" src="/rwt_image_view/3rdparty/ros/js/eventemitter2.js"></script>
+    <script type="text/javascript" src="/rwt_image_view/3rdparty/ros/js/roslib.js"></script>
+    <script type="text/javascript" src="/rwt_utils_3rdparty/lodash.min.js"></script>
+    <script type="text/javascript" src="/rwt_utils_3rdparty/bootstrap/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/rwt_utils_3rdparty/mjpegcanvasjs/build/mjpegcanvas.min.js"></script>
+    <script type="text/javascript" src="/rwt_utils_3rdparty/rwt_utils.js"></script>
+    <script type="text/javascript" src="/rwt_image_view/js/rwt_image_view_main.js"></script>
+
+  </body>
+</html>
+
