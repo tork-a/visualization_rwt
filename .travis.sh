@@ -33,7 +33,8 @@ if [[ "$ROS_DISTRO" =~ "indigo"|"jade" ]]; then
 fi
 
 apt-get update -qq && apt-get install -y -q wget sudo lsb-release gnupg # for docker
-DEBIAN_FRONTEND=noninteractive apt-get install -y tzdata # https://stackoverflow.com/questions/44331836/apt-get-install-tzdata-noninteractive
+# set non interactive tzdata https://stackoverflow.com/questions/8671308/non-interactive-method-for-dpkg-reconfigure-tzdata
+echo 'debconf debconf/frontend select Noninteractive' | sudo debconf-set-selections
 
 sudo sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
 wget http://packages.ros.org/ros.key -O - | sudo apt-key add -
@@ -42,7 +43,8 @@ sudo apt-get update -qq || echo Ignore error on apt-get update
 travis_time_end
 travis_time_start install_ros
 
-sudo apt-get install -qq -y python-catkin-pkg python-catkin-tools python-pip python-rosdep python-wstool
+sudo apt-get install -qq -y python-catkin-pkg python-catkin-tools python-pip python-rosdep python-wstool || \
+    sudo apt-get install -qq -y python3-catkin-pkg python3-catkin-tools python3-pip python3-rosdep python3-wstool
 sudo apt-get install -qq -y ros-$ROS_DISTRO-ros ros-$ROS_DISTRO-catkin ros-$ROS_DISTRO-common-tutorials ros-$ROS_DISTRO-rospy-tutorials ros-$ROS_DISTRO-actionlib-tutorials
 sudo apt-get install -qq -y ros-$ROS_DISTRO-rosbridge-server ros-$ROS_DISTRO-tf2-web-republisher
 
