@@ -46,6 +46,13 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 
+import pkg_resources
+selenium_version = pkg_resources.get_distribution("selenium").version
+# Check if selenium version is greater than 4.3.0
+if pkg_resources.parse_version(selenium_version) >= pkg_resources.parse_version("4.3.0"):
+    from selenium.webdriver.support.ui import WebDriverWait
+    from selenium.webdriver.common.by import By
+
 from geometry_msgs.msg import Twist
 
 CLASSNAME = 'rwt_steer'
@@ -80,7 +87,10 @@ class TestRwtSteer(unittest.TestCase):
 
         self.wait = webdriver.support.ui.WebDriverWait(self.browser, 10)
         # maximize screen
-        self.browser.find_element_by_tag_name("html").send_keys(Keys.F11)
+        if pkg_resources.parse_version(selenium_version) >= pkg_resources.parse_version("4.3.0"):
+            self.browser.fullscreen_window()
+        else:
+            self.browser.find_element_by_tag_name("html").send_keys(Keys.F11)
 
     def tearDown(self):
         try:
@@ -97,57 +107,57 @@ class TestRwtSteer(unittest.TestCase):
 
         # check settings
         self.wait.until(EC.presence_of_element_located((By.ID, "button-ros-master-settings")))
-        settings = self.browser.find_element_by_id("button-ros-master-settings")
+        settings = self.find_element_by_id("button-ros-master-settings")
         self.assertIsNotNone(settings, "Object id=button-ros-master-settings not found")
         settings.click()
 
         self.wait.until(EC.presence_of_element_located((By.ID, "input-ros-master-uri")))
-        uri = self.browser.find_element_by_id("input-ros-master-uri")
+        uri = self.find_element_by_id("input-ros-master-uri")
         self.assertIsNotNone(uri, "Object id=input-ros-master-uri not found")
         uri.clear();
         uri.send_keys('ws://localhost:9090/')
 
         self.wait.until(EC.presence_of_element_located((By.ID, "button-ros-master-connect")))
-        connect = self.browser.find_element_by_id("button-ros-master-connect")
+        connect = self.find_element_by_id("button-ros-master-connect")
         self.assertIsNotNone(connect, "Object id=button-ros-master-connect")
         connect.click()
 
         # check image topic
         self.wait.until(EC.presence_of_element_located((By.ID, "image-topic-select")))
-        image_topic = self.browser.find_element_by_id("image-topic-select")
+        image_topic = self.find_element_by_id("image-topic-select")
         self.assertIsNotNone(image_topic, "Object id=image-topic-select not found")
         loop = 0
         while image_topic.text == u'' and loop < 10:
             loop = loop + 1
             time.sleep(1)
-            image_topic = self.browser.find_element_by_id("image-topic-select")
+            image_topic = self.find_element_by_id("image-topic-select")
             self.assertIsNotNone(image_topic, "Object id=image-topic-select not found")
         self.assertTrue(u'/image_publisher/image_raw' in image_topic.text)
 
         self.wait.until(EC.presence_of_element_located((By.ID, "image-topic-button")))
-        view= self.browser.find_element_by_id("image-topic-button")
+        view= self.find_element_by_id("image-topic-button")
         self.assertIsNotNone(view, "Object id=image-topic-button")
         view.click()
 
         # check joy topic
         self.wait.until(EC.presence_of_element_located((By.ID, "joy-topic-select")))
-        joy_topic = self.browser.find_element_by_id("joy-topic-select")
+        joy_topic = self.find_element_by_id("joy-topic-select")
         self.assertIsNotNone(joy_topic, "Object id=joy-topic-select not found")
         loop = 0
         while joy_topic.text == u'' and loop < 10:
             loop = loop + 1
             time.sleep(1)
-            joy_topic = self.browser.find_element_by_id("joy-topic-select")
+            joy_topic = self.find_element_by_id("joy-topic-select")
             self.assertIsNotNone(joy_topic, "Object id=joy-topic-select not found")
         self.assertTrue(u'/joy' in joy_topic.text)
 
         self.wait.until(EC.presence_of_element_located((By.ID, "joy-topic-button")))
-        select = self.browser.find_element_by_id("joy-topic-button")
+        select = self.find_element_by_id("joy-topic-button")
         self.assertIsNotNone(select, "Object id=joy-topic-button")
         select.click()
 
         self.wait.until(EC.presence_of_element_located((By.CLASS_NAME, "front")))
-        front = self.browser.find_element_by_class_name("front")
+        front = self.find_element_by_class_name("front")
         self.assertIsNotNone(select, "Object class=front")
         front.click()
 
@@ -161,6 +171,18 @@ class TestRwtSteer(unittest.TestCase):
             time.sleep(1)
 
         self.assertIsNotNone(self.joy_msg)
+
+    def find_element_by_id(self, name):
+        if pkg_resources.parse_version(selenium_version) >= pkg_resources.parse_version("4.3.0"):
+            return self.browser.find_element(By.ID, name)
+        else:
+            return self.browser.find_element_by_id(name)
+
+    def find_element_by_class_name(self, name):
+        if pkg_resources.parse_version(selenium_version) >= pkg_resources.parse_version("4.3.0"):
+            return self.browser.find_element(By.CLASS_NAME, name)
+        else:
+            return self.browser.find_element_by_class_name(name)
 
 if __name__ == '__main__':
     try:

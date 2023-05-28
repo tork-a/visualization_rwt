@@ -47,6 +47,12 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
 
+import pkg_resources
+selenium_version = pkg_resources.get_distribution("selenium").version
+# Check if selenium version is greater than 4.3.0
+if pkg_resources.parse_version(selenium_version) >= pkg_resources.parse_version("4.3.0"):
+    from selenium.webdriver.common.by import By
+
 from std_msgs.msg import Float64
 
 CLASSNAME = 'rwt_robot_monitor'
@@ -80,7 +86,10 @@ class TestRwtRobotMonitor(unittest.TestCase):
 
         self.wait = webdriver.support.ui.WebDriverWait(self.browser, 10)
         # maximize screen
-        self.browser.find_element_by_tag_name("html").send_keys(Keys.F11)
+        if pkg_resources.parse_version(selenium_version) >= pkg_resources.parse_version("4.3.0"):
+            self.browser.fullscreen_window()
+        else:
+            self.browser.find_element_by_tag_name("html").send_keys(Keys.F11)
 
     def tearDown(self):
         try:
@@ -91,18 +100,18 @@ class TestRwtRobotMonitor(unittest.TestCase):
 
     def set_ros_websocket_port_settings(self):
         self.wait.until(EC.presence_of_element_located((By.ID, "button-ros-master-settings")))
-        settings = self.browser.find_element_by_id("button-ros-master-settings")
+        settings = self.find_element_by_id("button-ros-master-settings")
         self.assertIsNotNone(settings, "Object id=button-ros-master-settings not found")
         settings.click()
 
         self.wait.until(EC.presence_of_element_located((By.ID, "input-ros-master-uri")))
-        uri = self.browser.find_element_by_id("input-ros-master-uri")
+        uri = self.find_element_by_id("input-ros-master-uri")
         self.assertIsNotNone(uri, "Object id=input-ros-master-uri not found")
         uri.clear();
         uri.send_keys('ws://localhost:9090/')
 
         self.wait.until(EC.presence_of_element_located((By.ID, "button-ros-master-connect")))
-        connect = self.browser.find_element_by_id("button-ros-master-connect")
+        connect = self.find_element_by_id("button-ros-master-connect")
         self.assertIsNotNone(connect, "Object id=button-ros-master-connect")
         connect.click()
 
@@ -120,7 +129,7 @@ class TestRwtRobotMonitor(unittest.TestCase):
         while topic_text == '':
             time.sleep(1)
             self.wait.until(EC.presence_of_element_located((By.ID, "name-select")))
-            topic = self.browser.find_element_by_id("name-select")
+            topic = self.find_element_by_id("name-select")
             self.assertIsNotNone(topic, "Object id=name-select not found")
             topic_text = topic.text
         self.assertTrue(u'/First/pref1a' in topic_text)
@@ -131,20 +140,20 @@ class TestRwtRobotMonitor(unittest.TestCase):
         while topic_text == '':
             time.sleep(1)
             self.wait.until(EC.presence_of_element_located((By.ID, "plot-field-select")))
-            topic = self.browser.find_element_by_id("plot-field-select")
+            topic = self.find_element_by_id("plot-field-select")
             self.assertIsNotNone(topic, "Object id=plot-field-select not found")
             topic_text = topic.text
         self.assertTrue(u'test' in topic_text)
         Select(topic).select_by_value('test')
 
         self.wait.until(EC.presence_of_element_located((By.ID, "add-button")))
-        add = self.browser.find_element_by_id("add-button")
+        add = self.find_element_by_id("add-button")
         self.assertIsNotNone(add, "Object id=add-button")
         add.click()
 
         # check plot is updated
         self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "g.y")))
-        y_axis = self.browser.find_element_by_css_selector("g.y")
+        y_axis = self.find_element_by_css_selector("g.y")
         self.assertIsNotNone(y_axis, "Object id=y_axis")
         y_axis_value = y_axis.text
         loop = 0
@@ -152,7 +161,7 @@ class TestRwtRobotMonitor(unittest.TestCase):
         while loop < 60:
             loop = loop + 1
             time.sleep(1)
-            y_axis = self.browser.find_element_by_css_selector("g.y")
+            y_axis = self.find_element_by_css_selector("g.y")
             rospy.logwarn("check if tick updated {} < {} ({})".format(y_axis_value, y_axis.text, y_axis_value_updated))
             if y_axis_value != y_axis.text:
                 y_axis_value_updated =  y_axis_value_updated + 1
@@ -162,6 +171,18 @@ class TestRwtRobotMonitor(unittest.TestCase):
 
         self.assertNotEqual(y_axis_value, y_axis.text)
             
+    def find_element_by_id(self, name):
+        if pkg_resources.parse_version(selenium_version) >= pkg_resources.parse_version("4.3.0"):
+            return self.browser.find_element(By.ID, name)
+        else:
+            return self.browser.find_element_by_id(name)
+
+    def find_element_by_css_selector(self, name):
+        if pkg_resources.parse_version(selenium_version) >= pkg_resources.parse_version("4.3.0"):
+            return self.browser.find_element(By.CSS_SELECTOR, name)
+        else:
+            return self.browser.find_element_by_css_selector(name)
+
 
 if __name__ == '__main__':
     try:
