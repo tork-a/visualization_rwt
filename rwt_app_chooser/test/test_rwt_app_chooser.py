@@ -165,6 +165,17 @@ class TestRwtAppChooser(unittest.TestCase):
         self.assertIsNotNone(confirm, "Object a[class='btn btn-flat primary btn-confirm']")
         confirm.click()
 
+        # input app arguments
+        self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='text'][placeholder]")))
+        args = self.find_element_by_css_selector("input[type='text'][placeholder]")
+        self.assertIsNotNone(user, "Object input[type='text'][placeholder]")
+        args.send_keys('{}')
+
+        self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "a[class='btn btn-flat primary btn-confirm']")))
+        confirm = self.find_element_by_css_selector("a[class='btn btn-flat primary btn-confirm']")
+        self.assertIsNotNone(confirm, "Object a[class='btn btn-flat primary btn-confirm']")
+        confirm.click()
+
         # confirm
         self.wait.until(EC.presence_of_element_located((By.XPATH,"//h3[contains(text(), 'Launch application')]")))
         self.wait.until(EC.presence_of_element_located((By.XPATH,"//p[contains(text(), 'Launch Hello World?')]")))
