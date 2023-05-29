@@ -155,26 +155,44 @@ class TestRwtAppChooser(unittest.TestCase):
         rospy.logwarn("Selected {} task".format(task_text.text))
 
         # input user name
+        rospy.logerr('Username Input')
+        self.wait.until(EC.presence_of_element_located((By.XPATH, '//h3[text()="Register user name"]')))
         self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='text'][placeholder]")))
         user = self.find_element_by_css_selector("input[type='text'][placeholder]")
         self.assertIsNotNone(user, "Object input[type='text'][placeholder]")
         user.send_keys('user')
+        rospy.logerr('Done')
 
         self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "a[class='btn btn-flat primary btn-confirm']")))
         confirm = self.find_element_by_css_selector("a[class='btn btn-flat primary btn-confirm']")
         self.assertIsNotNone(confirm, "Object a[class='btn btn-flat primary btn-confirm']")
         confirm.click()
+        rospy.logerr('Done')
 
         # input app arguments
+        rospy.logerr('App args Input')
+        self.wait.until(EC.presence_of_element_located((By.XPATH, '//h3[text()="App arguments"]')))
         self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='text'][placeholder]")))
-        args = self.find_element_by_css_selector("input[type='text'][placeholder]")
+        args_candidate = self.find_elements_by_css_selector("input[type='text'][placeholder]")
+        args = None
+        for a in args_candidate:
+            if a.is_displayed():
+                args = a
+        self.assertTrue(args is not None)
         self.assertIsNotNone(user, "Object input[type='text'][placeholder]")
         args.send_keys('{}')
+        rospy.logerr('Done')
 
         self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "a[class='btn btn-flat primary btn-confirm']")))
-        confirm = self.find_element_by_css_selector("a[class='btn btn-flat primary btn-confirm']")
-        self.assertIsNotNone(confirm, "Object a[class='btn btn-flat primary btn-confirm']")
-        confirm.click()
+        ok_candidate = self.find_elements_by_css_selector("a[class='btn btn-flat primary btn-confirm']")
+        ok = None
+        for o in ok_candidate:
+            if o.is_displayed():
+                ok = o
+        self.assertTrue(ok is not None)
+        self.assertIsNotNone(ok, "Object a[class='btn btn-flat primary btn-confirm']")
+        ok.click()
+        rospy.logerr('Done')
 
         # confirm
         self.wait.until(EC.presence_of_element_located((By.XPATH,"//h3[contains(text(), 'Launch application')]")))
@@ -213,6 +231,12 @@ class TestRwtAppChooser(unittest.TestCase):
             return self.browser.find_element(By.CSS_SELECTOR, name)
         else:
             return self.browser.find_element_by_css_selector(name)
+
+    def find_elements_by_css_selector(self, name):
+        if pkg_resources.parse_version(selenium_version) >= pkg_resources.parse_version("4.3.0"):
+            return self.browser.find_elements(By.CSS_SELECTOR, name)
+        else:
+            return self.browser.find_elements_by_css_selector(name)
 
     def find_element_by_xpath(self, name):
         if pkg_resources.parse_version(selenium_version) >= pkg_resources.parse_version("4.3.0"):
