@@ -47,6 +47,12 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
 
+import pkg_resources
+selenium_version = pkg_resources.get_distribution("selenium").version
+# Check if selenium version is greater than 4.3.0
+if pkg_resources.parse_version(selenium_version) >= pkg_resources.parse_version("4.3.0"):
+    from selenium.webdriver.common.by import By
+
 from sound_play.msg import SoundRequest
 
 CLASSNAME = 'rwt_app_chooser'
@@ -81,7 +87,10 @@ class TestRwtAppChooser(unittest.TestCase):
 
         self.wait = webdriver.support.ui.WebDriverWait(self.browser, 10)
         # maximize screen
-        self.browser.find_element_by_tag_name("html").send_keys(Keys.F11)
+        if pkg_resources.parse_version(selenium_version) >= pkg_resources.parse_version("4.3.0"):
+            self.browser.fullscreen_window()
+        else:
+            self.browser.find_element_by_tag_name("html").send_keys(Keys.F11)
 
     def tearDown(self):
         try:
@@ -98,69 +107,98 @@ class TestRwtAppChooser(unittest.TestCase):
 
         # Add Robot
         self.wait.until(EC.presence_of_element_located((By.ID, "add")))
-        add_robot = self.browser.find_element_by_id("add")
+        add_robot = self.find_element_by_id("add")
         self.assertIsNotNone(add_robot, "Object id=add not found")
         add_robot.click()
 
         self.wait.until(EC.presence_of_element_located((By.ID, "robot-name")))
-        name = self.browser.find_element_by_id("robot-name")
+        name = self.find_element_by_id("robot-name")
         self.assertIsNotNone(name, "Object id=robot-name not found")
         name.clear();
         name.send_keys('pr1012')
 
         self.wait.until(EC.presence_of_element_located((By.ID, "robot-uri")))
-        uri = self.browser.find_element_by_id("robot-uri")
+        uri = self.find_element_by_id("robot-uri")
         self.assertIsNotNone(uri, "Object id=robot-uri not found")
         uri.clear();
         uri.send_keys('ws://localhost:9090/')
 
         self.wait.until(EC.presence_of_element_located((By.ID, "add-btn")))
-        add = self.browser.find_element_by_id("add-btn")
+        add = self.find_element_by_id("add-btn")
         self.assertIsNotNone(add, "Object id=add-btn not found")
         add.click()
 
         # confirm
         self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "a[class='btn btn-flat primary btn-confirm']")))
-        confirm = self.browser.find_element_by_css_selector("a[class='btn btn-flat primary btn-confirm']")
+        confirm = self.find_element_by_css_selector("a[class='btn btn-flat primary btn-confirm']")
         self.assertIsNotNone(confirm, "Object a[class='btn btn-flat primary btn-confirm']")
         confirm.click()
 
         # Select Robot
         self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "span[class='title']")))
-        select_robot = self.browser.find_element_by_css_selector("span[class='title']")
+        select_robot = self.find_element_by_css_selector("span[class='title']")
         self.assertIsNotNone(select_robot, "Object div[class='item-content']/span[class='title']")
         self.assertTrue(u'pr1012' in select_robot.text)
         rospy.logwarn("Selected {} robot".format(select_robot.text))
 
         self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "li[class='item-expanded robot-list-item']")))
-        select = self.browser.find_element_by_css_selector("li[class='item-expanded robot-list-item']")
+        select = self.find_element_by_css_selector("li[class='item-expanded robot-list-item']")
         self.assertIsNotNone(select, "Object li[class='item-expanded robot-list-item']")
         select.click()
 
         # Select Task
         self.wait.until(EC.presence_of_element_located((By.XPATH, "//div/span[@class='Title' and contains(text(), 'Hello World')]")))
-        task_text = self.browser.find_element_by_xpath("//div/span[@class='Title' and contains(text(), 'Hello World')]")
+        task_text = self.find_element_by_xpath("//div/span[@class='Title' and contains(text(), 'Hello World')]")
         self.assertIsNotNone(task_text, "Object span[class='Title']")
         self.assertTrue(u'Hello World' in task_text.text, "Hello World is not found in {}".format(task_text))
         task_text.click()
         rospy.logwarn("Selected {} task".format(task_text.text))
 
         # input user name
+        rospy.logerr('Username Input')
+        self.wait.until(EC.presence_of_element_located((By.XPATH, '//h3[text()="Register user name"]')))
         self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='text'][placeholder]")))
-        user = self.browser.find_element_by_css_selector("input[type='text'][placeholder]")
+        user = self.find_element_by_css_selector("input[type='text'][placeholder]")
         self.assertIsNotNone(user, "Object input[type='text'][placeholder]")
         user.send_keys('user')
+        rospy.logerr('Done')
 
         self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "a[class='btn btn-flat primary btn-confirm']")))
-        confirm = self.browser.find_element_by_css_selector("a[class='btn btn-flat primary btn-confirm']")
+        confirm = self.find_element_by_css_selector("a[class='btn btn-flat primary btn-confirm']")
         self.assertIsNotNone(confirm, "Object a[class='btn btn-flat primary btn-confirm']")
         confirm.click()
+        rospy.logerr('Done')
+
+        # input app arguments
+        rospy.logerr('App args Input')
+        self.wait.until(EC.presence_of_element_located((By.XPATH, '//h3[text()="App arguments"]')))
+        self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "input[type='text'][placeholder]")))
+        args_candidate = self.find_elements_by_css_selector("input[type='text'][placeholder]")
+        args = None
+        for a in args_candidate:
+            if a.is_displayed():
+                args = a
+        self.assertTrue(args is not None)
+        self.assertIsNotNone(user, "Object input[type='text'][placeholder]")
+        args.send_keys('{}')
+        rospy.logerr('Done')
+
+        self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "a[class='btn btn-flat primary btn-confirm']")))
+        ok_candidate = self.find_elements_by_css_selector("a[class='btn btn-flat primary btn-confirm']")
+        ok = None
+        for o in ok_candidate:
+            if o.is_displayed():
+                ok = o
+        self.assertTrue(ok is not None)
+        self.assertIsNotNone(ok, "Object a[class='btn btn-flat primary btn-confirm']")
+        ok.click()
+        rospy.logerr('Done')
 
         # confirm
         self.wait.until(EC.presence_of_element_located((By.XPATH,"//h3[contains(text(), 'Launch application')]")))
         self.wait.until(EC.presence_of_element_located((By.XPATH,"//p[contains(text(), 'Launch Hello World?')]")))
         self.wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, "a[class='btn btn-flat primary btn-confirm']")))
-        confirm = self.browser.find_element_by_css_selector("a[class='btn btn-flat primary btn-confirm']")
+        confirm = self.find_element_by_css_selector("a[class='btn btn-flat primary btn-confirm']")
         self.assertIsNotNone(confirm, "Object a[class='btn btn-flat primary btn-confirm']")
         self.browser.execute_script("arguments[0].scrollIntoView();", confirm)
         self.browser.execute_script("arguments[0].click();", confirm)
@@ -173,8 +211,8 @@ class TestRwtAppChooser(unittest.TestCase):
             rospy.logwarn("wait for message...")
             try:
                 # if we staill have Launch application window, retry execute script
-                if self.browser.find_element_by_xpath("//h3[contains(text(), 'Launch application')]"):
-                    confirm = self.browser.find_element_by_css_selector("a[class='btn btn-flat primary btn-confirm']")
+                if self.find_element_by_xpath("//h3[contains(text(), 'Launch application')]"):
+                    confirm = self.find_element_by_css_selector("a[class='btn btn-flat primary btn-confirm']")
                     self.browser.execute_script("arguments[0].scrollIntoView();", confirm)
                     self.browser.execute_script("arguments[0].click();", confirm)
             except:
@@ -182,6 +220,30 @@ class TestRwtAppChooser(unittest.TestCase):
 
         self.assertNotEqual(self.robotsound_msg, None, "robotsound_msg did not received")
             
+    def find_element_by_id(self, name):
+        if pkg_resources.parse_version(selenium_version) >= pkg_resources.parse_version("4.3.0"):
+            return self.browser.find_element(By.ID, name)
+        else:
+            return self.browser.find_element_by_id(name)
+
+    def find_element_by_css_selector(self, name):
+        if pkg_resources.parse_version(selenium_version) >= pkg_resources.parse_version("4.3.0"):
+            return self.browser.find_element(By.CSS_SELECTOR, name)
+        else:
+            return self.browser.find_element_by_css_selector(name)
+
+    def find_elements_by_css_selector(self, name):
+        if pkg_resources.parse_version(selenium_version) >= pkg_resources.parse_version("4.3.0"):
+            return self.browser.find_elements(By.CSS_SELECTOR, name)
+        else:
+            return self.browser.find_elements_by_css_selector(name)
+
+    def find_element_by_xpath(self, name):
+        if pkg_resources.parse_version(selenium_version) >= pkg_resources.parse_version("4.3.0"):
+            return self.browser.find_element(By.XPATH, name)
+        else:
+            return self.browser.find_element_by_xpath(name)
+
 
 if __name__ == '__main__':
     try:

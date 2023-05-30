@@ -22,7 +22,7 @@
  var app_list_sub = null;
  var running_user_name = null;
 
- var start_app = function(name, cb) {
+ var start_app = function(name, app_args, cb) {
    var srv_name = '/' + robot_name + '/start_app';
    console.log(srv_name);
    var srv = new ROSLIB.Service({
@@ -30,9 +30,15 @@
      name: srv_name,
      serviceType: "app_manager/StartApp"
    });
-   var req = new ROSLIB.ServiceRequest({name: name});
+   req_dict = {name: name, args: []};
+   for (var entry of app_args) {
+     req_dict['args'].push({"key": entry[0], "value": entry[1]});
+   }
+   console.log("app_args: " + app_args);
+   console.log("req_dict: " + req_dict);
+   var req = new ROSLIB.ServiceRequest(req_dict);
    console.log(req);
-   srv.callService(new ROSLIB.ServiceRequest({name: name}), cb);
+   srv.callService(req, cb);
  };
 
  var stop_app = function(name, cb) {
@@ -120,22 +126,32 @@
            });
          });
        } else {
-         var prompt = phonon.prompt("Please fill your user name.", "Register user name");
-         prompt.on("confirm", function(value) {
+         var prompt_username = phonon.prompt("Please fill your user name.", "Register user name");
+         prompt_username.on("confirm", function(value) {
            var user_name = String(value);
            if (user_name.length > 0) {
              console.log("register app user name: " + user_name);
              set_running_user_name(user_name);
            }
-           var confirm = phonon.confirm("Launch " + that.display_name + "?", "Launch application");
-           confirm.on("confirm", function() {
-             start_app(that.name, function(res) {
-               console.log("start_app", res);
-               if (res.started) {
-                 phonon.notif("Launched " + that.display_name, 3000, false, false);
-               } else {
-                 phonon.notif(res.message + " (" + res.error_code + ")", 3000, false, false);
-               }
+           var prompt_app_args = phonon.prompt("Please fill app args with yaml format.", "App arguments");
+           prompt_app_args.on("confirm", function(args) {
+             try {
+               var parsed_args = JSON.parse(args);
+               var app_args = Object.entries(parsed_args);
+             } catch (error) {
+               console.log("JSON parse error: " + error);
+               var app_args = [];
+             }
+             var confirm = phonon.confirm("Launch " + that.display_name + "?", "Launch application");
+             confirm.on("confirm", function() {
+               start_app(that.name, app_args, function(res) {
+                 console.log("start_app", res);
+                 if (res.started) {
+                   phonon.notif("Launched " + that.display_name, 3000, false, false);
+                 } else {
+                   phonon.notif(res.message + " (" + res.error_code + ")", 3000, false, false);
+                 }
+               });
              });
            });
          });

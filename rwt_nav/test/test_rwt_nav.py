@@ -47,6 +47,12 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import Select
 
+import pkg_resources
+selenium_version = pkg_resources.get_distribution("selenium").version
+# Check if selenium version is greater than 4.3.0
+if pkg_resources.parse_version(selenium_version) >= pkg_resources.parse_version("4.3.0"):
+    from selenium.webdriver.common.by import By
+
 from move_base_msgs.msg import MoveBaseActionGoal
 
 CLASSNAME = 'rwt_nav'
@@ -81,7 +87,10 @@ class TestRwtNav(unittest.TestCase):
 
         self.wait = webdriver.support.ui.WebDriverWait(self.browser, 10)
         # maximize screen
-        self.browser.find_element_by_tag_name("html").send_keys(Keys.F11)
+        if pkg_resources.parse_version(selenium_version) >= pkg_resources.parse_version("4.3.0"):
+            self.browser.fullscreen_window()
+        else:
+            self.browser.find_element_by_tag_name("html").send_keys(Keys.F11)
 
     def tearDown(self):
         try:
@@ -98,36 +107,36 @@ class TestRwtNav(unittest.TestCase):
 
         # check settings
         self.wait.until(EC.presence_of_element_located((By.ID, "button-ros-master-settings")))
-        settings = self.browser.find_element_by_id("button-ros-master-settings")
+        settings = self.find_element_by_id("button-ros-master-settings")
         self.assertIsNotNone(settings, "Object id=button-ros-master-settings not found")
         settings.click()
 
         self.wait.until(EC.presence_of_element_located((By.ID, "input-ros-master-uri")))
-        uri = self.browser.find_element_by_id("input-ros-master-uri")
+        uri = self.find_element_by_id("input-ros-master-uri")
         self.assertIsNotNone(uri, "Object id=input-ros-master-uri not found")
         uri.clear();
         uri.send_keys('ws://localhost:9090/')
 
         self.wait.until(EC.presence_of_element_located((By.ID, "button-ros-master-connect")))
-        connect = self.browser.find_element_by_id("button-ros-master-connect")
+        connect = self.find_element_by_id("button-ros-master-connect")
         self.assertIsNotNone(connect, "Object id=button-ros-master-connect")
         connect.click()
 
         # check image topic
         self.wait.until(EC.presence_of_element_located((By.ID, "image-topic-select")))
-        image_topic = self.browser.find_element_by_id("image-topic-select")
+        image_topic = self.find_element_by_id("image-topic-select")
         self.assertIsNotNone(image_topic, "Object id=topic-select not found")
         loop = 0
         while image_topic.text == u'' and loop < 10:
             loop = loop + 1
             time.sleep(1)
-            image_topic = self.browser.find_element_by_id("image-topic-select")
+            image_topic = self.find_element_by_id("image-topic-select")
             self.assertIsNotNone(image_topic, "Object id=image-topic-select not found")
         self.assertEqual(image_topic.text, u'/image_publisher/image_raw')
 
         # wait for /map topic
         self.wait.until(EC.presence_of_element_located((By.ID, "map")))
-        map = self.browser.find_element_by_id("map")
+        map = self.find_element_by_id("map")
         self.assertIsNotNone(map, "Object id=map not found")
         map.click()
 
@@ -138,6 +147,12 @@ class TestRwtNav(unittest.TestCase):
             map.click()
 
         self.assertNotEqual(self.goal_msg, None)
+
+    def find_element_by_id(self, name):
+        if pkg_resources.parse_version(selenium_version) >= pkg_resources.parse_version("4.3.0"):
+            return self.browser.find_element(By.ID, name)
+        else:
+            return self.browser.find_element_by_id(name)
 
 
 if __name__ == '__main__':
