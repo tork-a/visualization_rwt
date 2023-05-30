@@ -15,6 +15,8 @@ var goal_joint_states;
 var start_im_client;
 var goal_im_client;
 var tfClient;
+var start_marker_visible = true;
+var goal_marker_visible = true;
 
 function init() {
     // Connect to ROS.
@@ -129,6 +131,11 @@ function init() {
     // Add a grid.
     viewer.addObject(new ROS3D.Grid());
 
+    // add a rear light
+    var directionalLight = new THREE.DirectionalLight(0xffffff);
+    directionalLight.position.y = -1;
+    viewer.addObject( directionalLight );
+
 
     fixed_frame_param = new ROSLIB.Param({
         ros: real_ros,
@@ -228,7 +235,17 @@ function init() {
 
             start_listener.subscribe(function(message) {
                 start_joint_states = message;
-                if($('input[name="manip"]:checked').val() != 0) return;
+                if ($('input[name="manip"]:checked').val() != 0 && $('input[name="manip"]:checked').val() != undefined)
+                {
+                    if (start_marker_visible == true)
+                    {
+                        start_im_client.unsubscribe("/start/marker");
+                        start_marker_visible = false;
+                        goal_im_client.subscribe("/goal/marker");
+                        goal_marker_visible = true;
+                    }
+                    return;
+                }
 
                 var fk_link_name;
 
@@ -300,7 +317,18 @@ function init() {
 
             goal_listener.subscribe(function(message) {
                 goal_joint_states = message;
-                if($('input[name="manip"]:checked').val() != 1) return;
+
+                if ($('input[name="manip"]:checked').val() != 1)
+                {
+                    if (goal_marker_visible == true)
+                    {
+                        goal_im_client.unsubscribe("/goal/marker");
+                        goal_marker_visible = false;
+                        start_im_client.subscribe("/start/marker");
+                        start_marker_visible = true;
+                        return;
+                    }
+                }
 
                 var fk_link_name;
 
@@ -404,45 +432,19 @@ function init() {
                 rootObject : viewer.scene
             });
 
-            $('#start_state').change(function() {
-                if($(this).is(':checked')) {
-                    if ($('input[name="manip"]:radio')[0].checked == true) {
-                        start_im_client.showIntMarker('start');
-                    }
-                    startState.add();
-                }
-                else {
-                    start_im_client.hideIntMarker('start');
-                    startState.remove();
-                }
-            });
 
-            $('#goal_state').change(function() {
-                if($(this).is(':checked')) {
-                    if ($('input[name="manip"]:radio')[1].checked == true) {
-                        goal_im_client.showIntMarker('goal');
-                    }
-                    goalState.add();
+            if ($('input[name="manip"]:checked').val() != 0 && $('input[name="manip"]:checked').val() != undefined)
+            {
+                if (start_marker_visible == true)
+                {
+                    start_im_client.unsubscribe("/start/marker");
+                    start_marker_visible = false;
+                    goal_im_client.subscribe("/goal/marker");
+                    goal_marker_visible = true;
                 }
-                else {
-                    goal_im_client.hideIntMarker('goal');
-                    goalState.remove();
-                }
-            });
+                return;
+            }
 
-            $('input[name="manip"]:radio').change(function() {
-                if($(this).val() == 0){
-                    if($('#start_state').is(':checked')) {
-                        start_im_client.showIntMarker('start');
-                    }
-                    goal_im_client.hideIntMarker('goal');
-                }else {
-                    if($('#goal_state').is(':checked')) {
-                        goal_im_client.showIntMarker('goal');
-                    }
-                    start_im_client.hideIntMarker('start');
-                }
-            });
 
         }, 1500);
     });
@@ -462,9 +464,9 @@ function init() {
 
         $("#" + current_group).children("label").each(function() {
             var dim = new ROSLIB.Message({
-                label: ($(this).attr("id").split("-")[0]),
-                size: ($(this).attr("id").split("-")[0]).length,
-                stride: ($(this).attr("id").split("-")[0]).length
+                label: $(this).text(),
+                size: 1, // these arguments aren't used
+                stride: 1
             });
             dims.push(dim);
             for (var i = 0; i < joint_states.name.length;i++) {
@@ -506,9 +508,9 @@ function init() {
 
                     $("#" + current_group).children("label").each(function() {
                         var dim = new ROSLIB.Message({
-                            label: ($(this).attr("id").split("-")[0]),
-                            size: ($(this).attr("id").split("-")[0]).length,
-                            stride: ($(this).attr("id").split("-")[0]).length
+                            label: $(this).text(),
+                            size: 1, // these arguments aren't used
+                            stride: 1
                         });
                         dims.push(dim);
                         for (var i = 0; i < tmp_start_joint_states.name.length;i++) {
@@ -575,9 +577,9 @@ function create_joint_position_msg(type, plan_only) {
 
     $("#" + current_group).children("label").each(function() {
         var dim = new ROSLIB.Message({
-            label: ($(this).attr("id").split("-")[0]),
-            size: ($(this).attr("id").split("-")[0]).length,
-            stride: ($(this).attr("id").split("-")[0]).length
+            label: $(this).text(),
+            size: 1, // these arguments aren't used
+            stride: 1
         });
         dims.push(dim);
         if (type == 0) {
@@ -590,7 +592,7 @@ function create_joint_position_msg(type, plan_only) {
             }
         }
         else {
-        positions.push(parseFloat($(this).next().children("input").next().children("a").attr("aria-valuenow")));
+            positions.push(parseFloat($(this).next().val()));
         }
     });
 
@@ -672,7 +674,7 @@ function createSliderView() {
                 }
             }
         }
-        $.getScript("js/jquery-mobile/jquery.mobile-1.3.2.min.js");
+        $.getScript("http://code.jquery.com/jquery-1.12.4.js");
         var msg = new ROSLIB.Message({
             data: current_group
         });
@@ -686,19 +688,4 @@ function im_size_callback() {
     var msg = new ROSLIB.Message({
         data: size
     });
-
-    if ($('input[name="manip"]:radio')[0].checked == true && $('#start_state').is(':checked')) {
-        im_size_pub.publish(msg);
-        start_im_client.hideIntMarker('start');
-        setTimeout(function() {
-            start_im_client.showIntMarker('start');
-        }, 500);
-    }
-    else if($('input[name="manip"]:radio')[1].checked == true && $('#goal_state').is(':checked')){
-        im_size_pub.publish(msg);
-        goal_im_client.hideIntMarker('goal');
-        setTimeout(function() {
-            goal_im_client.showIntMarker('goal');
-        }, 500);
-    }
 }
