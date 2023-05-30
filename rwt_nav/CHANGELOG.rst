@@ -2,6 +2,23 @@
 Changelog for package rwt_nav
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+
+* fix for noetic (`#130 <https://github.com/tork-a/visualization_rwt//issues/130>`_)
+
+  * fix test code for selenium version >= 4.3.0
+
+* move_base/goal requires frame_id, without starting '/' (`#119 <https://github.com/tork-a/visualization_rwt//issues/119>`_)
+
+  * Warning: Invalid argument /map passed to canTransform argument source_frame in tf2 frame_ids cannot start with a '/' like:
+    at line 134 in /tmp/binarydeb/ros-melodic-tf2-0.6.5/src/buffer_core.cpp
+    [ WARN] [1645522151.660224428, 19134.759000000]: Failed to transform the goal pose from /map into the map frame: Invalid argument /map passed to lookupTransform argument source_frame in tf2 frame_ids cannot start with a '/' like:
+    [ERROR] [1645522151.660344650, 19134.759000000]: The goal pose passed to this planner must be in the map frame.  It is instead in the /map frame.
+    Closes `#118 <https://github.com/tork-a/visualization_rwt//issues/118>`_
+
+* Contributors: Kei Okada
+
 0.1.1 (2021-11-12)
 ------------------
 

@@ -2,6 +2,14 @@
 Changelog for package rwt_speech_recognition
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* fix for noetic (`#130 <https://github.com/tork-a/visualization_rwt//issues/130>`_)
+
+  * fix test code for selenium version >= 4.3.0
+
+* Contributors: Kei Okada
+
 0.1.1 (2021-11-12)
 ------------------
 

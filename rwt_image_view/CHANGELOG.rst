@@ -2,6 +2,17 @@
 Changelog for package rwt_image_view
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* Merge branch 'kinetic-devel' of https://github.com/tork-a/visualization_rwt into kinetic-devel
+* fix for noetic (`#130 <https://github.com/tork-a/visualization_rwt//issues/130>`_)
+
+  * fix test code for selenium version >= 4.3.0
+
+* [rwt_utils_3rdparty] update jquery from 1.8.3 to 1.12.4 (`#124 <https://github.com/tork-a/visualization_rwt//issues/124>`_)
+* [rwt_plot][rwt_image_view] use rwt_utils_3rdparty/www/jquery.min.js instead of rwt_utils_3rdparty/www/jquery/jquery.min.js
+* Contributors: Kei Okada, Koki Shinjo
+
 0.1.1 (2021-11-12)
 ------------------
 

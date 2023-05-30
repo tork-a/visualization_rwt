@@ -2,6 +2,11 @@
 Changelog for package rwt_utils_3rdparty
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [rwt_utils_3rdparty] update jquery from 1.8.3 to 1.12.4 (`#124 <https://github.com/tork-a/visualization_rwt//issues/124>`_)
+* Contributors: Koki Shinjo
+
 0.1.1 (2021-11-12)
 ------------------
 

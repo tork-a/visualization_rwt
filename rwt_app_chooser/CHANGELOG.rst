@@ -2,6 +2,20 @@
 Changelog for package rwt_app_chooser
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* [rwt_app_chooser] support app args (`#117 <https://github.com/tork-a/visualization_rwt//issues/117>`_)
+
+  * It is introduced in https://github.com/PR2/app_manager/pull/27 and released as 1.3.0 on Nov, 8, 2021
+
+* fix for noetic (`#130 <https://github.com/tork-a/visualization_rwt//issues/130>`_)
+
+  * fix test code for selenium version >= 4.3.0
+
+* Fix typo in disconnect notification (`#120 <https://github.com/tork-a/visualization_rwt//issues/120>`_)
+
+* Contributors: Guilherme Affonso, Kei Okada, Koki Shinjo
+
 0.1.1 (2021-11-12)
 ------------------
 
