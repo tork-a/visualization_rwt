@@ -2,8 +2,8 @@
 Changelog for package rwt_nav
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.2 (2023-05-30)
+------------------
 
 * fix for noetic (`#130 <https://github.com/tork-a/visualization_rwt//issues/130>`_)
 

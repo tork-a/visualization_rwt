@@ -2,8 +2,8 @@
 Changelog for package rwt_image_view
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.2 (2023-05-30)
+------------------
 * Merge branch 'kinetic-devel' of https://github.com/tork-a/visualization_rwt into kinetic-devel
 * fix for noetic (`#130 <https://github.com/tork-a/visualization_rwt//issues/130>`_)
 

@@ -1,6 +1,6 @@
 <package>
   <name>rwt_plot</name>
-  <version>0.1.1</version>
+  <version>0.1.2</version>
   <description>rwt_plot</description>
   <maintainer email="ueda@jsk.imi.i.u-tokyo.ac.jp">Ryohei Ueda</maintainer>
   <maintainer email="iiysaito@opensource-robotics.tokyo.jp">Isaac IY Saito</maintainer>

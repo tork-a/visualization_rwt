@@ -2,8 +2,8 @@
 Changelog for package rwt_robot_monitor
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.2 (2023-05-30)
+------------------
 * fix for noetic (`#130 <https://github.com/tork-a/visualization_rwt//issues/130>`_)
 
   * fix test code for selenium version >= 4.3.0

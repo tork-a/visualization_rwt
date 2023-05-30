@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>rwt_nav</name>
-  <version>0.1.1</version>
+  <version>0.1.2</version>
   <description>The rwt_nav package</description>
 
   <author email="yugajmera@gmail.com">Yug Ajmera</author>

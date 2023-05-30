@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>rwt_app_chooser</name>
-  <version>0.1.1</version>
+  <version>0.1.2</version>
   <description>The simple web frontend for app_manager</description>
 
   <maintainer email="furushchev@jsk.imi.i.u-tokyo.ac.jp">Yuki Furuta</maintainer>

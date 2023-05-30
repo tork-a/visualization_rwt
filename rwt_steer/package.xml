@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>rwt_steer</name>
-  <version>0.1.1</version>
+  <version>0.1.2</version>
   <description>The rwt_steer package</description>
   <author email="shingogo.5511@gmail.com">Shingo Kitagawa</author>
   <author email="yugajmera@gmail.com">Yug Ajmera</author>
