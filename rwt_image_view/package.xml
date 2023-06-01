@@ -29,6 +29,7 @@
   <run_depend>message_runtime</run_depend>
 
   <test_depend>rostest</test_depend>
+  <test_depend>roslaunch</test_depend>
   <test_depend>image_publisher</test_depend>
   <test_depend>rviz</test_depend>
 

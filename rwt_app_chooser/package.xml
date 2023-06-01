@@ -19,5 +19,6 @@
   <test_depend>phantomjs</test_depend>
   <test_depend>python-selenium-pip</test_depend>
   <test_depend>rostest</test_depend>
+  <test_depend>roslaunch</test_depend>
 
 </package>
