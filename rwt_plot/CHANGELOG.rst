@@ -2,8 +2,8 @@
 Changelog for package rwt_plot
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.3 (2023-06-01)
+------------------
 * add missing test_depends (`#131 <https://github.com/tork-a/visualization_rwt//issues/131>`_)
   fixes https://build.ros.org/job/Nbin_uF64__rwt_app_chooser__ubuntu_focal_amd64__binary/1/console
   ```

@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <name>rwt_speech_recognition</name>
-  <version>0.1.2</version>
+  <version>0.1.3</version>
   <description>The rwt_speech_recognition package</description>
   <maintainer email="iiysaito@opensource-robotics.tokyo.jp">Isaac IY Saito</maintainer>
   <author email="furushchev@jsk.imi.i.u-tokyo.ac.jp">Yuki Furuta</author>
