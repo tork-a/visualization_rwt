@@ -2,7 +2,6 @@
 
 import roslib; roslib.load_manifest('joint_state_publisher')
 import rospy
-import wx
 import xml.dom.minidom
 from sensor_msgs.msg import JointState
 from math import pi

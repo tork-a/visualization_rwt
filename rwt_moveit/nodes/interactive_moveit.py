@@ -17,6 +17,10 @@ from visualization_msgs.msg import (
     InteractiveMarkerFeedback)
 from interactive_markers.interactive_marker_server import InteractiveMarkerServer
 server = None
+group_name = 'manipulator'
+joint_states = None
+joint_names = []
+initial_joint_position = []
 
 
 def makeInteractiveMarker(name, description):
@@ -49,7 +53,7 @@ def setColor(red, green, blue, alpha, marker):
 
 
 def callback(req):
-    print req
+    rospy.logwarn(req)
     return GetPositionIKResponse
 
 def initial_callback(msg):
@@ -107,9 +111,9 @@ def feedback(feedback):
 
         request.ik_request.pose_stamped = pose_stamped
         response = service(request)
-        print response
+        rospy.logwarn(response)
         if len(response.solution.joint_state.position) != 0:
-            print "success"
+            rospy.loginfo("GetPositionIK succeeded")
             msg = Float64MultiArray()
             for i,joint_name in enumerate(response.solution.joint_state.name):
                 for j, name in enumerate(joint_names):

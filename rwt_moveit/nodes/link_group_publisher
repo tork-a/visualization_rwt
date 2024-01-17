@@ -2,7 +2,9 @@
 
 import roslib
 import rospy
+import sys
 import xml.dom.minidom
+from urdf_parser_py.urdf import URDF
 
 def get_param(name, value=None):
     private = "~%s" % name
@@ -19,6 +21,7 @@ def set_param(name, value):
 
 
 def set_param():
+    robot = URDF.from_parameter_server()
     description = get_param('robot_description_semantic')
     group_description = xml.dom.minidom.parseString(description).getElementsByTagName('group')
     effector_description = xml.dom.minidom.parseString(description).getElementsByTagName('end_effector')
@@ -28,13 +31,18 @@ def set_param():
         for child in group_name.childNodes:
             if child.nodeType is child.TEXT_NODE:
                 continue
-            links.append(child.getAttribute('name'))
-        rospy.set_param('~' + name, links)
+            if child.getAttribute('name'):
+                links.append(child.getAttribute('name'))
+            if child.getAttribute('base_link') and child.getAttribute('tip_link') :
+                links.extend(robot.get_chain(child.getAttribute('base_link'),child.getAttribute('tip_link'), joints=True, links=False, fixed=False))
+        print('SET PARAM : ' + '/link_group/' + name, links)
+        rospy.set_param('/link_group/' + name, links)
     for effector_name in effector_description:
         if effector_name.nodeType is effector_name.TEXT_NODE:
             continue
         link_name = effector_name.getAttribute('parent_link')
-        group_name = effector_name.getAttribute('parent_group')
+        group_name = effector_name.getAttribute('group')
+        print('SET PARAM : ' + '/end_effector_link/' + group_name, link_name)
         rospy.set_param('/end_effector_link/' + group_name, link_name)
 
 
@@ -44,3 +52,4 @@ if __name__ == '__main__':
         rospy.init_node('link_group_publisher')
         set_param()
     except rospy.ROSInterruptException: pass
+    sys.exit(0)
